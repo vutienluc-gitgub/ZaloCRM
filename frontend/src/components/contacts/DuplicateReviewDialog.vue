@@ -254,9 +254,6 @@ const filteredGroups = computed<(DupGroup & { matchType: string; confidence?: nu
 function matchTypeLabel(t: string) {
   return matchTypeOptions.find(o => o.value === t)?.label || t;
 }
-function matchTypeIcon(_t: string) {
-  return '';
-}
 function badgeClass(t: string) {
   if (t === 'zalo_global_id') return 'badge-strong';
   if (t.includes('conflict')) return 'badge-warn';
