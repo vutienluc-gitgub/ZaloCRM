@@ -162,7 +162,7 @@
               </span>
               <div class="cell-name-text">
                 <div class="cell-name-main">{{ u.fullName || '(chưa đặt tên)' }}</div>
-                <div v-if="u.role === 'owner'" class="cell-name-sub owner-tag">👑 Chủ tổ chức</div>
+                <div v-if="u.role === 'owner'" class="cell-name-sub owner-tag"><Crown :size="12" class="inline-icon" /> Chủ tổ chức</div>
               </div>
             </td>
             <td class="cell-phone">
@@ -172,26 +172,26 @@
             <td v-if="showEmailColumn" class="cell-email">{{ u.email || '—' }}</td>
             <td class="cell-dept">
               <span v-if="u.departmentMember" class="at-chip chip-dept">
-                🏢 {{ u.departmentMember.department.name }}
+                <Building2 :size="12" class="inline-icon" /> {{ u.departmentMember.department.name }}
               </span>
               <span v-else class="at-empty">—</span>
             </td>
             <td class="cell-role">
               <template v-if="u.departmentMember">
                 <span v-if="u.departmentMember.deptRole === 'leader'" class="at-chip chip-leader">
-                  👑 Trưởng phòng
+                  <Crown :size="12" class="inline-icon" /> Trưởng phòng
                 </span>
                 <span v-else-if="u.departmentMember.deptRole === 'deputy'" class="at-chip chip-deputy">
-                  🎖️ Phó phòng
+                  <Award :size="12" class="inline-icon" /> Phó phòng
                 </span>
-                <span v-else class="at-chip chip-member">👤 Nhân viên</span>
+                <span v-else class="at-chip chip-member"><UserCheck :size="12" class="inline-icon" /> Nhân viên</span>
               </template>
               <span v-else class="at-empty">—</span>
             </td>
             <td class="cell-group">
               <template v-if="u.permissionGroup">
                 <span class="at-chip" :class="u.permissionGroup.isSystem ? 'chip-system' : 'chip-custom'">
-                  🛡 {{ u.permissionGroup.name }}
+                  <Shield :size="12" class="inline-icon" /> {{ u.permissionGroup.name }}
                 </span>
               </template>
               <span v-else class="at-empty">—</span>
@@ -323,6 +323,7 @@ import {
 } from '@/stores/rbac';
 import { useAuthStore } from '@/stores/auth';
 import { api } from '@/api/index';
+import { Crown, Building2, User, Award, Shield, UserCheck } from 'lucide-vue-next';
 import UserEditPanel from '@/components/rbac/UserEditPanel.vue';
 import CreateUserWithZaloModal from '@/components/users/CreateUserWithZaloModal.vue';
 
@@ -949,6 +950,12 @@ function onboardingTooltip(s: OnboardingSummary): string {
 .at-empty {
   color: #c9ccd1;
   font-size: 12px;
+}
+
+.inline-icon {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 4px;
 }
 
 .cell-actions { text-align: right; }

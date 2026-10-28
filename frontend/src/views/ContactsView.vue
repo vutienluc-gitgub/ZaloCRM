@@ -8,44 +8,44 @@
       <div class="page-header-row">
         <div class="ph-title">
           <h1>Khách hàng</h1>
-          <span class="count-pill"><svg class="lc" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>{{ total }} khách</span>
+          <span class="count-pill"><Check :size="12" class="inline-icon" />{{ total }} khách</span>
         </div>
         <!-- Hàng 1: action căn lề phải -->
         <div class="header-actions">
           <button class="btn btn-primary" @click="openCreate">
-            <svg class="lc" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg> Thêm Khách Hàng
+            <Plus :size="15" class="inline-icon" /> Thêm Khách Hàng
           </button>
           <div class="seg-cluster">
           <button class="seg-btn" :class="{ on: showAdvanced }" @click="showAdvanced = !showAdvanced">
-            <svg class="lc" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M11 18h2"/></svg> Lọc nâng cao
+            <Filter :size="14" class="inline-icon" /> Lọc nâng cao
             <span v-if="advancedActiveCount > 0" class="btn-badge">{{ advancedActiveCount }}</span>
           </button>
           <!-- Công cụ -->
           <v-menu :close-on-content-click="false" location="bottom end">
             <template #activator="{ props: act }">
               <button v-bind="act" class="seg-btn" title="Công cụ dữ liệu & tùy chọn cột">
-                <svg class="lc" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg> Công cụ
+                <SlidersHorizontal :size="14" class="inline-icon" /> Công cụ
                 <span v-if="toolsBadgeTotal > 0" class="btn-badge">{{ toolsBadgeTotal }}</span>
               </button>
             </template>
             <v-list density="compact" min-width="300">
               <v-list-subheader>Công cụ dữ liệu</v-list-subheader>
               <v-list-item @click="showDuplicateDialog = true">
-                <template #prepend><span class="tools-emoji">⊜</span></template>
+                <template #prepend><CopyCheck :size="16" class="mr-2 text-action inline-icon" /></template>
                 <v-list-item-title>Quét khách trùng lặp</v-list-item-title>
                 <template #append><span v-if="duplicateTotal > 0" class="btn-badge">{{ duplicateTotal }}</span></template>
               </v-list-item>
               <v-list-item @click="showCandidateDialog = true">
-                <template #prepend><span class="tools-emoji">💡</span></template>
+                <template #prepend><Lightbulb :size="16" class="mr-2 text-action inline-icon" /></template>
                 <v-list-item-title>Gợi ý gộp KH Cha</v-list-item-title>
                 <template #append><span v-if="candidateCount > 0" class="btn-badge">{{ candidateCount }}</span></template>
               </v-list-item>
               <v-list-item :disabled="runningDetector" @click="onRunDetector">
-                <template #prepend><span class="tools-emoji">🔄</span></template>
+                <template #prepend><RefreshCw :size="16" class="mr-2 text-action inline-icon" :class="{ 'spin-icon': runningDetector }" /></template>
                 <v-list-item-title>{{ runningDetector ? 'Đang quét…' : 'Quét lại ngay' }}</v-list-item-title>
               </v-list-item>
               <v-list-item @click="onExport">
-                <template #prepend><span class="tools-emoji">⬇</span></template>
+                <template #prepend><Download :size="16" class="mr-2 text-action inline-icon" /></template>
                 <v-list-item-title>Xuất danh sách</v-list-item-title>
               </v-list-item>
               <v-divider class="my-1" />
@@ -71,8 +71,8 @@
           </v-menu>
           <!-- Bảng / Chi tiết -->
           <div class="view-toggle" role="radiogroup" aria-label="View mode">
-            <button class="view-btn" :class="{ active: viewMode === 'm1' }" @click="setViewMode('m1')" title="Bảng đầy đủ — click row mở Friend rows inline"><svg class="lc" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18"/></svg> Bảng</button>
-            <button class="view-btn" :class="{ active: viewMode === 'm2' }" @click="setViewMode('m2')" title="Chi tiết bên — click row mở panel chi tiết bên phải"><svg class="lc" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM15 3v18"/></svg> Chi tiết</button>
+            <button class="view-btn" :class="{ active: viewMode === 'm1' }" @click="setViewMode('m1')" title="Bảng đầy đủ — click row mở Friend rows inline"><Table :size="14" class="inline-icon" /> Bảng</button>
+            <button class="view-btn" :class="{ active: viewMode === 'm2' }" @click="setViewMode('m2')" title="Chi tiết bên — click row mở panel chi tiết bên phải"><PanelRight :size="14" class="inline-icon" /> Chi tiết</button>
           </div>
           </div><!-- /seg-cluster -->
         </div>
@@ -82,7 +82,7 @@
     <!-- ════════ Toolbar Row 2: search + filter + Thêm KH Nhanh ════════ -->
     <div class="toolbar toolbar-primary">
       <div class="tb-search">
-        <svg class="lc" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <Search :size="14" class="inline-icon" />
         <input
           v-model="filters.search"
           class="toolbar-search"
@@ -115,7 +115,7 @@
 
       <!-- Thêm KH Nhanh (2026-06-05 Anh chốt: đưa từ FAB góc phải lên đây) -->
       <button class="btn btn-quick-add" @click="showAddCustomerDialog = true" title="Thêm khách hàng nhanh">
-        ⚡ Thêm KH Nhanh
+        <Zap :size="13" class="inline-icon" /> Thêm KH Nhanh
       </button>
       <button v-if="hasAnyFilter" class="btn-clear" @click="clearAllFilters" title="Xoá tất cả bộ lọc">
         × Xoá lọc
@@ -292,13 +292,13 @@
                   </div>
                   <div v-if="contact.fullName && contact.crmName && contact.fullName !== contact.crmName" class="cl-name-sub">{{ contact.fullName }}</div>
                   <div v-if="(contact.childrenCount ?? 0) > 1" class="cl-name-sub">
-                    <span class="chip chip-cung-cham" :title="`${contact.childrenCount} nick chăm KH này — mở ▸ để xem`">🤝 Cùng chăm ({{ contact.childrenCount }})</span>
+                    <span class="chip chip-cung-cham" :title="`${contact.childrenCount} nick chăm KH này — mở ▸ để xem`"><Users :size="11" class="inline-icon" /> Cùng chăm ({{ contact.childrenCount }})</span>
                   </div>
                   <div v-if="(contact.sequenceAttachCount ?? 0) > 0" class="cl-name-sub">
-                    <span class="chip chip-seq" :title="`Đã gắn ${contact.sequenceAttachCount} sequence (${contact.sequenceActiveCount ?? 0} đang chạy) — tính cả tự động lẫn thủ công`">🔁 {{ contact.sequenceAttachCount }} sequence<template v-if="(contact.sequenceActiveCount ?? 0) > 0"> · {{ contact.sequenceActiveCount }} chạy</template></span>
+                    <span class="chip chip-seq" :title="`Đã gắn ${contact.sequenceAttachCount} sequence (${contact.sequenceActiveCount ?? 0} đang chạy) — tính cả tự động lẫn thủ công`"><Repeat :size="11" class="inline-icon" /> {{ contact.sequenceAttachCount }} sequence<template v-if="(contact.sequenceActiveCount ?? 0) > 0"> · {{ contact.sequenceActiveCount }} chạy</template></span>
                   </div>
                   <div v-if="(contact.friendInviteSentCount ?? 0) > 0" class="cl-name-sub">
-                    <span class="chip chip-fi" :title="`Đã gửi lời mời kết bạn ${contact.friendInviteSentCount} lần cho SĐT này (cộng dồn mọi chiến dịch)`">📨 {{ contact.friendInviteSentCount }} lần kết bạn</span>
+                    <span class="chip chip-fi" :title="`Đã gửi lời mời kết bạn ${contact.friendInviteSentCount} lần cho SĐT này (cộng dồn mọi chiến dịch)`"><UserPlus :size="11" class="inline-icon" /> {{ contact.friendInviteSentCount }} lần kết bạn</span>
                   </div>
                 </div>
               </td>
@@ -483,7 +483,7 @@
                     <div class="cl-name-stack">
                       <div class="cl-name-line">
                         <span class="cl-nm fr-nm" :title="row.nickName">{{ row.nickName }}</span>
-                        <span v-if="idx === 0" class="fr-trophy" title="Nick chính">🏆</span>
+                        <span v-if="idx === 0" class="fr-trophy" title="Nick chính"><Trophy :size="12" class="inline-icon text-amber-500" /></span>
                         <span class="fr-chatdot" :class="{ off: !row.hasConversation }" :title="row.hasConversation ? 'đang chat' : 'chưa chat'"></span>
                       </div>
                       <input
@@ -575,9 +575,9 @@
                   <!-- col16 Action (💬 / ⚡ / ⬆) -->
                   <td class="c-extra">
                     <div class="cl-action">
-                      <button class="cl-btn cl-btn-primary" @click.stop="onChildAction('chat', row)" title="Mở chat">💬</button>
-                      <button class="cl-btn" @click.stop="onChildAction('auto', row)" title="Marketing">⚡</button>
-                      <button class="cl-btn" @click.stop="onPromoteFriend(row)" title="Tách nick này thành KH Cha riêng">⬆</button>
+                      <button class="cl-btn cl-btn-primary" @click.stop="onChildAction('chat', row)" title="Mở chat"><MessageSquare :size="12" class="inline-icon" /></button>
+                      <button class="cl-btn" @click.stop="onChildAction('auto', row)" title="Marketing"><Zap :size="12" class="inline-icon" /></button>
+                      <button class="cl-btn" @click.stop="onPromoteFriend(row)" title="Tách nick này thành KH Cha riêng"><ArrowUp :size="12" class="inline-icon" /></button>
                     </div>
                   </td>
                 </tr>
@@ -685,6 +685,11 @@ import type { Contact } from '@/composables/use-contacts';
 import MobileContactView from '@/views/MobileContactView.vue';
 import { useMobile } from '@/composables/use-mobile';
 import { useFriendSocket, type FriendUpdatedPayload } from '@/composables/use-friend-socket';
+import {
+  Check, Plus, Filter, SlidersHorizontal, Table, PanelRight,
+  Search, Zap, CopyCheck, Lightbulb, RefreshCw, Download,
+  Users, Repeat, UserPlus, Trophy, MessageSquare, ArrowUp,
+} from 'lucide-vue-next';
 
 const { isMobile } = useMobile();
 const router = useRouter();
@@ -2796,4 +2801,8 @@ watch(
 /* KPI stats — colored dot instead of emoji */
 .sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
 .stat-box .sdot { margin-right: 1px; }
+
+.inline-icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
