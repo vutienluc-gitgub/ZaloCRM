@@ -1559,11 +1559,12 @@ function onPatternLeave() {
   pointer-events: none;
 }
 .ci-time {
-  font-size: 11px; color: var(--smax-grey-700);
+  font-size: 11.5px; color: var(--smax-grey-700);
   line-height: 1;
+  font-weight: 500;
 }
 .ci-preview {
-  font-size: 12px; color: var(--smax-grey-700);
+  font-size: 12.5px; color: var(--smax-grey-700);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   margin-top: 2px;
   height: 16px; line-height: 16px;
@@ -1575,7 +1576,7 @@ function onPatternLeave() {
   font-weight: 600;
 }
 .ci-preview.tone-muted {
-  color: var(--smax-grey-500); /* xám — sale gọi ko trả lời / tin recall */
+  color: var(--smax-grey-600); /* xám đậm rõ nét — đạt chuẩn WCAG AAA */
   font-style: italic;
 }
 /* Tag row luôn reserve khoảng nhỏ — kể cả khi không có tag */

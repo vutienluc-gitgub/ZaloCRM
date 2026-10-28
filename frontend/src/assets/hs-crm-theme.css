@@ -35,9 +35,9 @@
 
   /* Cool neutrals */
   --ink:          #141a24;   /* primary text */
-  --ink-2:        #475066;   /* secondary text */
-  --ink-3:        #6b7488;   /* tertiary / captions */
-  --ink-4:        #97a0b3;   /* placeholder / disabled */
+  --ink-2:        #334155;   /* secondary text */
+  --ink-3:        #475569;   /* tertiary / captions (WCAG AAA >= 7:1) */
+  --ink-4:        #64748b;   /* placeholder / disabled (WCAG AA >= 4.5:1) */
   --line:         #e7eaf0;   /* hairline border */
   --line-2:       #eef1f6;   /* faint divider */
   --surface:      #ffffff;
@@ -49,7 +49,7 @@
   --shell-2:      #114a61;
   --shell-line:   rgba(255,255,255,.10);
   --shell-ink:    #cfe2ec;
-  --shell-ink-2:  #7fa6b8;
+  --shell-ink-2:  #9ec5d8;
 
   /* Semantic */
   --success:      #12b76a;   --success-soft: #e7f7ef;
@@ -60,7 +60,7 @@
   --male:         #2e88e5;
 
   /* Lead score ramp (0 → 100) */
-  --score-0:      #94a3b8;
+  --score-0:      #64748b;
   --score-low:    #f5a524;
   --score-mid:    #2e90fa;
   --score-high:   #12b76a;

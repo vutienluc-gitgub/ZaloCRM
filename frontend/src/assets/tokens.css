@@ -18,7 +18,9 @@
   --smax-grey-100: #f5f6fa;
   --smax-grey-200: #ebedf0;
   --smax-grey-300: #d4d8de;
-  --smax-grey-700: #5a6478;
+  --smax-grey-500: #64748b;
+  --smax-grey-600: #475569;
+  --smax-grey-700: #334155;
   --smax-text: #212121;
 
   /* Surfaces */
@@ -65,11 +67,11 @@
   padding: 2px 7px; border-radius: 9px;
   font-size: 10px; font-weight: 500;
 }
-.smax-pill-success { background: rgba(0,200,83,0.12); color: #00897b; }
-.smax-pill-warning { background: rgba(255,145,0,0.12); color: #ef6c00; }
-.smax-pill-info    { background: rgba(33,150,243,0.12); color: #1565c0; }
-.smax-pill-grey    { background: rgba(90,100,120,0.10); color: var(--smax-grey-700); }
-.smax-pill-error   { background: rgba(255,82,82,0.12); color: #c62828; }
+.smax-pill-success { background: rgba(0,200,83,0.12); color: #0f766e; }
+.smax-pill-warning { background: rgba(255,145,0,0.12); color: #c2410c; }
+.smax-pill-info    { background: rgba(33,150,243,0.12); color: #1e40af; }
+.smax-pill-grey    { background: rgba(90,100,120,0.10); color: #334155; }
+.smax-pill-error   { background: rgba(255,82,82,0.12); color: #b91c1c; }
 
 /* CRM label chip (bordered, optional .active state) */
 .smax-label-chip {

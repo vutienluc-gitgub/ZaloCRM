@@ -990,7 +990,7 @@ async function openFile(href: string, name?: string) {
 .sender-name {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--smax-primary, #2962ff);
+  color: var(--brand-700, #0b5880);
   margin-bottom: 4px;
   line-height: 1.2;
 }
