@@ -4,7 +4,7 @@
   <v-dialog :model-value="modelValue" max-width="480" persistent @update:model-value="emit('update:modelValue', $event)">
     <v-card class="invite-card">
       <v-card-title class="invite-title">
-        <span class="ic">👋</span> Gửi lời mời kết bạn
+        <span class="ic"><UserPlus :size="14" class="inline-icon" /></span> Gửi lời mời kết bạn
       </v-card-title>
       <v-card-text class="invite-body">
         <div class="receiver" v-if="receiverName">
@@ -115,4 +115,5 @@ function onSubmit() {
   border-color: rgba(0,0,0,0.2);
 }
 .invite-actions { padding: 8px 20px 16px; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

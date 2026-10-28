@@ -5,14 +5,14 @@
     <!-- Header: title + count + today badge + filter chip + ⚙ settings -->
     <div class="tl-header">
       <div class="tl-title">
-        📋 Timeline KH
+        <ClipboardList :size="13" class="inline-icon" /> Timeline KH
         <span v-if="rootNoteCount" class="tl-count">#{{ rootNoteCount }}</span>
         <button
           v-if="todayCount > 0"
           class="today-badge"
           :title="`${todayCount} hoạt động hôm nay — click để xem chi tiết`"
           @click="goToFullPage"
-        >🕐 {{ todayCount }} hôm nay</button>
+        ><Clock :size="11" class="inline-icon" /> {{ todayCount }} hôm nay</button>
       </div>
       <!-- Segmented (con trượt trắng) + cog vuông 38px tách riêng — hs-chat .cx-tl-seg / .cx-tl-cog (2026-06-06) -->
       <div class="tl-controls">
@@ -73,14 +73,14 @@
         @click="submitRoot"
       >
         <span v-if="saving">…</span>
-        <span v-else>➤</span>
+        <span v-else><Send :size="12" /></span>
       </button>
     </div>
 
     <!-- Loading + Empty -->
     <div v-if="loading && !items.length" class="tl-state">Đang tải…</div>
     <div v-else-if="!items.length" class="tl-state empty">
-      <span class="empty-icon">📋</span>
+      <span class="empty-icon"><ClipboardList :size="24" /></span>
       <p>Chưa có hoạt động nào. Thêm ghi chú đầu tiên ở trên!</p>
     </div>
 
@@ -110,7 +110,7 @@
             v-if="aiNoIntent.has((item.data as Note).id)"
             class="ai-suggestion-banner muted"
           >
-            <span class="ai-icon">🤖</span>
+            <span class="ai-icon"><Bot :size="12" /></span>
             <span class="ai-text muted">Không phát hiện ý định hẹn — đã ẩn nút AI.</span>
           </div>
 
@@ -141,7 +141,7 @@
               @keydown="onReplyKeydown"
             />
             <button class="send-btn small" :disabled="!replyDraft.trim() || saving" @click="submitReply">
-              <span v-if="saving">…</span><span v-else>➤</span>
+              <span v-if="saving">…</span><span v-else><Send :size="12" /></span>
             </button>
             <button class="btn-x" @click="cancelReply">×</button>
           </div>
@@ -216,8 +216,8 @@ const toast = useToast();
 const currentUserId = computed(() => auth.user?.id || '');
 
 const FILTER_OPTIONS = [
-  { value: 'notes',    label: '📝 Ghi chú' },
-  { value: 'activity', label: '⚡ Hoạt động' },
+  { value: 'notes',    label: 'Ghi chú' },
+  { value: 'activity', label: 'Hoạt động' },
   { value: 'all',      label: 'Tất cả' },
 ];
 // Default 'notes' — ghi chú là tác vụ user thường xuyên nhất khi mở panel KH
@@ -422,7 +422,7 @@ async function onDelete(noteId: string) {
       toast.undo('Đã xoá ghi chú', async () => {
         const restored = await create(targetNote.body, targetNote.parentNoteId);
         if (restored) {
-          toast.success('✓ Đã khôi phục');
+          toast.success('Đã khôi phục');
           await timeline.refresh(effectiveCategories.value);
         } else {
           toast.error('Khôi phục thất bại');
@@ -441,7 +441,7 @@ async function onDelete(noteId: string) {
  */
 async function onAiParse(noteId: string) {
   if (aiDisabled.value.has(noteId)) return;
-  toast.push('🤖 AI đang phân tích…');
+  toast.push('AI đang phân tích…');
   const parsed = await aiParse(noteId);
   if (parsed && parsed.hasIntent) {
     // Tìm note để gắn body làm form.notes (reference cho sale)
@@ -464,7 +464,7 @@ async function onAiParse(noteId: string) {
     };
     showAptDialog.value = true;
     if (parsed.source === 'fallback') {
-      toast.push('⚙️ AI hết quota — đã phân tích bằng quy tắc local');
+      toast.push('AI hết quota — đã phân tích bằng quy tắc local');
     }
   } else {
     aiDisabled.value.add(noteId);
@@ -483,7 +483,7 @@ async function onAppointmentCreated(apt: { id: string }) {
   aptPrefillNoteId.value = null;
   aptPrefill.value = null;
   showAptDialog.value = false;
-  toast.success('📅 Đã tạo lịch hẹn');
+  toast.success('Đã tạo lịch hẹn');
   emit('appointment-created');
   await timeline.refresh(effectiveCategories.value);
 }
@@ -824,4 +824,5 @@ defineExpose({ rootCount: rootNoteCount });
   cursor: pointer;
   padding: 0 4px;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

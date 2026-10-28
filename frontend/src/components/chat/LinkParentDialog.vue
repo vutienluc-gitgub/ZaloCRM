@@ -3,7 +3,7 @@
 <template>
   <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="500">
     <v-card>
-      <v-card-title>🔗 Gắn KH này vào KH Cha (merge: KH hiện tại sẽ trở thành Friend của Cha)</v-card-title>
+      <v-card-title><Link :size="16" class="inline-icon" /> Gắn KH này vào KH Cha (merge: KH hiện tại sẽ trở thành Friend của Cha)</v-card-title>
       <v-card-text>
         <v-text-field
           v-model="search"
@@ -30,8 +30,8 @@
             <div class="info">
               <div class="name">{{ r.fullName || '— chưa đặt —' }}</div>
               <div class="meta">
-                <span v-if="r.phone">📞 {{ r.phone }}</span>
-                <span v-if="r.childrenCount && r.childrenCount > 0">👥 {{ r.childrenCount }} con</span>
+                <span v-if="r.phone"><Phone :size="12" class="inline-icon" /> {{ r.phone }}</span>
+                <span v-if="r.childrenCount && r.childrenCount > 0"><Users :size="12" class="inline-icon" /> {{ r.childrenCount }} con</span>
               </div>
             </div>
           </div>
@@ -125,4 +125,5 @@ function close() {
 .info { flex: 1; min-width: 0; }
 .name { font-weight: 500; font-size: 13px; }
 .meta { display: flex; gap: 10px; font-size: 11px; color: var(--smax-grey-600); }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

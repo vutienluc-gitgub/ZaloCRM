@@ -5,7 +5,7 @@
        Sale tick từng field rồi bấm Áp dụng. Default UN-checked tránh AI hallucinate. -->
   <div class="ai-suggest-card">
     <div class="ai-suggest-header">
-      <div class="ai-suggest-title">💡 Em đề xuất cập nhật thông tin KH</div>
+      <div class="ai-suggest-title"><Lightbulb :size="15" class="inline-icon text-amber-500" /> Em đề xuất cập nhật thông tin KH</div>
       <span v-if="confidencePercent !== null" class="confidence-badge">
         Độ tin cậy {{ confidencePercent }}%
       </span>
@@ -28,8 +28,8 @@
         <td class="field-label">{{ row.label }}</td>
         <td class="field-value">
           <span class="value-inline">
-            <span v-if="row.isExisting" class="existing-pill">✓ Đã có</span>
-            <span v-if="row.isExisting && checked[row.field]" class="overwrite-pill" title="Sẽ ghi đè giá trị cũ">⚠ Sẽ ghi đè</span>
+            <span v-if="row.isExisting" class="existing-pill"><Check :size="10" class="inline-icon" /> Đã có</span>
+            <span v-if="row.isExisting && checked[row.field]" class="overwrite-pill" title="Sẽ ghi đè giá trị cũ"><AlertTriangle :size="10" class="inline-icon" /> Sẽ ghi đè</span>
             <span class="value-text">{{ row.displayValue }}</span>
           </span>
         </td>
@@ -40,14 +40,14 @@
     </table>
 
     <div class="suggest-actions">
-      <button class="btn-skip" :disabled="applying" @click="onSkip">✗ Bỏ qua</button>
+      <button class="btn-skip" :disabled="applying" @click="onSkip"><X :size="12" class="inline-icon" /> Bỏ qua</button>
       <button
         class="btn-apply"
         :disabled="!hasChecked || applying"
         @click="onApply"
       >
-        <span v-if="applying">⏳ Đang áp dụng...</span>
-        <span v-else>✓ Áp dụng ({{ checkedCount }} chọn)</span>
+        <span v-if="applying"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang áp dụng...</span>
+        <span v-else><Check :size="12" class="inline-icon" /> Áp dụng ({{ checkedCount }} chọn)</span>
       </button>
     </div>
 
@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
+import { Lightbulb, Check, AlertTriangle, X, Loader2 } from 'lucide-vue-next';
 import { api } from '@/api/index';
 
 interface PropertyNeed {
@@ -449,4 +450,8 @@ function onSkip() {
   font-size: 13px;
   border: 1px solid #fbd2d2;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-amber-500 { color: #f59e0b; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

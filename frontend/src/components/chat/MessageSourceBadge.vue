@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { User, Settings, Sparkles, Bell, Smartphone, RefreshCw } from 'lucide-vue-next';
 import type { Message } from '@/composables/use-chat';
 
 const props = defineProps<{
@@ -185,7 +186,7 @@ const labelData = computed(() => {
   switch (badgeKind.value) {
     case 'user_crm':
       return {
-        icon: '👤',
+        iconComp: User,
         label: `Sale CRM · ${name}`,
         tooltip: syncedFromNative.value
           ? 'Tin sale gõ trên app Zalo, sync về CRM'
@@ -197,7 +198,7 @@ const labelData = computed(() => {
       const detail = meta?.detail ?? '';
       const seqName = name && detail ? `${name} · ${detail}` : (name || detail || 'Sequence');
       return {
-        icon: '⚙️',
+        iconComp: Settings,
         label: `Tự động · ${seqName}`,
         tooltip: 'Tin gửi tự động bởi Sequence — click xem chi tiết',
         clickable: true,
@@ -206,7 +207,7 @@ const labelData = computed(() => {
     }
     case 'bot_ai':
       return {
-        icon: '✨',
+        iconComp: Sparkles,
         label: `Trợ lý AI · ${meta?.detail ?? 'phản hồi tự động'}`,
         tooltip: 'AI Trợ lý reply tự động — click audit',
         clickable: true,
@@ -214,7 +215,7 @@ const labelData = computed(() => {
       };
     case 'bot_system':
       return {
-        icon: '🔔',
+        iconComp: Bell,
         label: `Hệ thống · ${meta?.detail ?? 'CRM thông báo'}`,
         tooltip: 'Tin tự động do CRM gửi',
         clickable: false,
@@ -222,7 +223,7 @@ const labelData = computed(() => {
       };
     case 'bridge':
       return {
-        icon: '📱',
+        iconComp: Smartphone,
         label: `Telegram · ${name}`,
         tooltip: 'Tin sale gửi từ Telegram (qua cầu Zalo↔Telegram)',
         clickable: false,
@@ -267,14 +268,15 @@ function handleClick(): void {
     :style="{ cursor: labelData.clickable ? 'pointer' : 'help' }"
     @click="handleClick"
   >
-    <span class="source-badge-icon">{{ labelData.icon }}</span>
+    <component :is="labelData.iconComp" :size="11" class="source-badge-icon" />
     <span class="source-badge-label">{{ labelData.label }}</span>
     <!-- Icon sync trailing cho Sale gõ trên Zalo Real (Anh chốt 2026-06-02) -->
-    <span
+    <RefreshCw
       v-if="labelData.showSyncIcon"
+      :size="10"
       class="source-badge-sync"
       title="Tin sync từ app Zalo Real"
-    >🔄</span>
+    />
   </div>
 </template>
 

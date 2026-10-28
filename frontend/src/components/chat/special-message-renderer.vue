@@ -241,7 +241,7 @@
         <div class="location-title">
           <v-icon size="16" class="mr-1" color="error">mdi-map-marker</v-icon>
           <strong>{{ locationTitle || 'Vị trí được chia sẻ' }}</strong>
-          <span v-if="locationIsLive" class="location-live-chip">🟢 LIVE</span>
+          <span v-if="locationIsLive" class="location-live-chip"><span class="live-dot"></span> LIVE</span>
         </div>
         <div v-if="locationAddress" class="location-address">{{ locationAddress }}</div>
         <div class="location-coords">{{ locationCoords.lat.toFixed(5) }}, {{ locationCoords.lng.toFixed(5) }}</div>
@@ -276,7 +276,7 @@
 
       <!-- Link -->
       <a v-if="richHref" :href="richHref" target="_blank" rel="noopener" class="rich-link">
-        🔗 {{ richHrefLabel }}
+        <v-icon size="13" class="mr-1">mdi-link-variant</v-icon>{{ richHrefLabel }}
       </a>
 
       <!-- Thumbnail image -->
@@ -1347,4 +1347,5 @@ const linkDescription = computed<string>(() => {
   margin-top: 4px;
   display: flex; align-items: center; gap: 2px;
 }
+.live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-right: 4px; vertical-align: middle; }
 </style>

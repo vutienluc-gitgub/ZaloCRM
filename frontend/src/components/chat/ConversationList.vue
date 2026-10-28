@@ -131,15 +131,15 @@
             v-if="cungChamCount(conv) >= 2"
             class="ci-cung-cham-badge"
             :title="cungChamTooltip(conv)"
-          >🤝 {{ cungChamCount(conv) }}</span>
+          ><Users :size="10" class="inline-icon" /> {{ cungChamCount(conv) }}</span>
         </div>
 
 
         <div class="ci-body">
           <div class="ci-name-row">
             <div class="ci-name">
-              <span v-if="conv.threadType === 'group'" class="group-icon">👥</span>
-              <span v-if="conv.isVirtual" class="virtual-chip" title="Chat nội bộ — KH chưa có Zalo, tin nhắn KHÔNG gửi đi">🔒</span>
+              <span v-if="conv.threadType === 'group'" class="group-icon"><Users :size="12" class="inline-icon text-muted" /></span>
+              <span v-if="conv.isVirtual" class="virtual-chip" title="Chat nội bộ — KH chưa có Zalo, tin nhắn KHÔNG gửi đi"><Lock :size="11" class="inline-icon text-amber-500" /></span>
               {{ displayName(conv) }}
               <!-- Theo dõi (anh chốt 2026-06-15): khách đang trong "theo dõi" → chuông ngay sau tên.
                    Icon hệ thống mdi (đồng bộ), không emoji. -->
@@ -164,7 +164,11 @@
                 @mouseenter="onPatternHover($event, (conv as any).contact)"
                 @mouseleave="onPatternLeave"
               >
-                {{ patternIcon((conv as any).contact?.engagementPattern) }}
+                <Flame v-if="(conv as any).contact?.engagementPattern === 'hot'" :size="11" class="text-error inline-icon" />
+                <Award v-else-if="(conv as any).contact?.engagementPattern === 'champion'" :size="11" class="text-brand inline-icon" />
+                <TrendingUp v-else-if="(conv as any).contact?.engagementPattern === 'stable'" :size="11" class="text-success inline-icon" />
+                <AlertTriangle v-else-if="(conv as any).contact?.engagementPattern === 'cooling'" :size="11" class="text-warning inline-icon" />
+                <Snowflake v-else-if="(conv as any).contact?.engagementPattern === 'cold'" :size="11" class="text-slate-400 inline-icon" />
               </span>
             </div>
           </div>
@@ -287,7 +291,7 @@
         :style="patternTipStyle"
         role="tooltip"
       >
-        <strong class="ept-title">{{ patternIcon(patternTipData.pattern) }} {{ patternLabel(patternTipData.pattern) }}</strong>
+        <strong class="ept-title">{{ patternLabel(patternTipData.pattern) }}</strong>
         <span class="ept-meaning">{{ patternMeaning(patternTipData.pattern) }}</span>
         <span v-if="patternTipData.score != null" class="ept-detail">
           Điểm {{ patternTipData.score }}/100
@@ -305,7 +309,10 @@ import { ref, reactive, watch, onMounted, computed, nextTick } from 'vue';
 import type { Conversation, AiSentiment } from '@/composables/use-chat';
 import { api } from '@/api/index';
 // Icon chrome — Lucide line (anh chốt 2026-06-08, bỏ ký tự thô).
-import { ChevronUp as ChevronUpIcon, X as XIcon } from 'lucide-vue-next';
+import {
+  ChevronUp as ChevronUpIcon, X as XIcon,
+  Users, Lock, Flame, Award, TrendingUp, AlertTriangle, Snowflake,
+} from 'lucide-vue-next';
 import AiSentimentBadge from '@/components/ai/ai-sentiment-badge.vue';
 import Avatar from '@/components/ui/Avatar.vue';
 import NewMessageDialog from '@/components/chat/NewMessageDialog.vue';
@@ -615,7 +622,7 @@ function cungChamTooltip(conv: Conversation): string {
   if (!total) return '';
   const names = list.map((a) => {
     const n = a.user?.fullName || a.user?.email || 'Sale';
-    return a.role === 'primary' ? `⭐ ${n} (chính)` : `🤝 ${n}`;
+    return a.role === 'primary' ? `${n} (phụ trách chính)` : `${n} (cùng chăm)`;
   });
   const more = total - list.length;
   if (more > 0) names.push(`… và ${more} người khác`);
@@ -909,7 +916,7 @@ function computeLastMessagePreview(conv: Conversation): PreviewResult {
   if (!msg) return { text: '' };
 
   // E04 Tin thu hồi — anh chốt icon 🔂 (proposal 2026-05-21), tone muted
-  if (msg.isDeleted) return { text: '🔂 Tin nhắn đã thu hồi', tone: 'muted' };
+  if (msg.isDeleted) return { text: '[Tin nhắn đã thu hồi]', tone: 'muted' };
 
   const prefix = msg.senderType === 'self' ? 'Bạn: ' : '';
   const isInbound = msg.senderType !== 'self';
@@ -931,41 +938,41 @@ function computeLastMessagePreview(conv: Conversation): PreviewResult {
     const isMissed = action.includes('misscall');
     // isCaller=1 nghĩa là bên SDK đang dùng là CALLER. Map sang sender ZaloCRM:
     // senderType='self' (sale gửi) đồng nghĩa sale là caller.
-    const icon = isVideo ? '📹' : '📞';
+    const icon = '';
     const kind = isVideo ? 'video' : 'gọi';
 
     if (isMissed) {
       // E17/E19: KH gọi đến NHỠ (sale chưa bắt) — DANGER đỏ
-      if (isInbound) return { text: `${icon} Cuộc ${kind} nhỡ`, tone: 'danger' };
+      if (isInbound) return { text: `[Cuộc ${kind} nhỡ]`, tone: 'danger' };
       // E18: sale gọi đi KH không trả lời — muted xám
-      return { text: `${prefix}${icon} KH không trả lời`, tone: 'muted' };
+      return { text: `${prefix}[KH không trả lời]`, tone: 'muted' };
     }
 
     // E14/E15/E16: đã nghe — bình thường
     const dur = Number(params?.duration ?? 0);
     const durStr = dur > 0 ? ` · ${fmtDuration(dur)}` : '';
     const dirLabel = isInbound ? 'đến' : 'đi';
-    return { text: `${prefix}${icon} Cuộc ${kind} ${dirLabel}${durStr}` };
+    return { text: `${prefix}[Cuộc ${kind} ${dirLabel}${durStr}]` };
   }
 
   // E28 Reminder
   if (action === 'msginfo.actionlist' && titleText) {
-    return { text: prefix + '⏰ ' + truncate(titleText, 50) };
+    return { text: prefix + '[Nhắc hẹn] ' + truncate(titleText, 50) };
   }
 
   // E20 Link share có preview (sau khi P1 reclassify thì content_type='link' rồi)
   // Vẫn để fallback nếu rows mới chưa reclassify.
   if (action === 'recommened.link' || action === 'recommended.link') {
-    return { text: prefix + '🔗 ' + truncate(titleText || 'Liên kết', 40) };
+    return { text: prefix + '[Liên kết] ' + truncate(titleText || 'Liên kết', 40) };
   }
 
   // E22 Gợi ý bạn bè (action recommened.user) — khác E21 show.profile (danh thiếp)
   if (action === 'recommened.user' || action === 'recommended.user') {
-    return { text: prefix + '👥 Gợi ý bạn bè' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
+    return { text: prefix + '[Gợi ý bạn bè]' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
   }
   // E21 Danh thiếp profile thực
   if (action === 'show.profile') {
-    return { text: prefix + '👤 Danh thiếp' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
+    return { text: prefix + '[Danh thiếp]' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
   }
 
   // E25 Bank transfer — extract tên bank từ title hoặc description
@@ -973,43 +980,43 @@ function computeLastMessagePreview(conv: Conversation): PreviewResult {
     const desc = typeof parsed?.description === 'string' ? parsed.description : '';
     const bankName = titleText || desc.split('\n')[0] || '';
     return {
-      text: prefix + '💳 Chuyển khoản' + (bankName ? ` · ${truncate(bankName, 25)}` : ''),
+      text: prefix + '[Chuyển khoản]' + (bankName ? ` · ${truncate(bankName, 25)}` : ''),
     };
   }
 
   // Rich content có title → preview bằng title thật, không phải "rich" raw
   if (msg.contentType === 'rich' && titleText) {
-    return { text: prefix + (action === 'rtf' ? '✨ ' : '') + truncate(titleText.replace(/\n/g, ' · '), 60) };
+    return { text: prefix + (action === 'rtf' ? '[Định dạng] ' : '') + truncate(titleText.replace(/\n/g, ' · '), 60) };
   }
 
   // Per content-type chuẩn
   switch (msg.contentType) {
     case 'image': {
       // E06: nếu có caption (title) → hiện caption, không có → "Hình ảnh"
-      if (titleText) return { text: prefix + '📷 ' + truncate(titleText, 40) };
+      if (titleText) return { text: prefix + '[Hình ảnh] ' + truncate(titleText, 40) };
       // E07 Album — sẽ override ở MessageThread khi group; preview vẫn theo msg cuối
       const albumTotal = (msg as { albumTotal?: number | null }).albumTotal;
-      if (albumTotal && albumTotal > 1) return { text: prefix + `🖼️ Bộ ảnh (${albumTotal})` };
-      return { text: prefix + '📷 Hình ảnh' };
+      if (albumTotal && albumTotal > 1) return { text: prefix + `[Bộ ảnh (${albumTotal})]` };
+      return { text: prefix + '[Hình ảnh]' };
     }
-    case 'sticker': return { text: prefix + '🎴 Sticker' };
+    case 'sticker': return { text: prefix + '[Sticker]' };
     case 'video': {
       // E08: kèm duration nếu lấy được từ params
       const vdur = Number(params?.duration ?? 0);
-      return { text: prefix + '🎥 Video' + (vdur > 0 ? ` (${fmtDuration(vdur)})` : '') };
+      return { text: prefix + '[Video]' + (vdur > 0 ? ` (${fmtDuration(vdur)})` : '') };
     }
     case 'voice':
     case 'audio': {
       // E10/E11: tin thoại có duration
       const adur = Number(params?.duration ?? 0);
-      return { text: prefix + '🎤 Tin thoại' + (adur > 0 ? ` (${fmtDuration(adur)})` : '') };
+      return { text: prefix + '[Tin thoại]' + (adur > 0 ? ` (${fmtDuration(adur)})` : '') };
     }
-    case 'gif': return { text: prefix + '🎞 GIF' };
-    case 'file': return { text: prefix + '📎 ' + (titleText ? truncate(titleText, 40) : 'Tệp đính kèm') };
-    case 'link': return { text: prefix + '🔗 ' + (titleText ? truncate(titleText, 40) : 'Liên kết') };
-    case 'call': return { text: prefix + '📞 Cuộc gọi' };
-    case 'qr_code': return { text: prefix + '🔲 Mã QR' };
-    case 'reminder': return { text: prefix + '⏰ ' + (titleText ? truncate(titleText, 40) : 'Nhắc hẹn') };
+    case 'gif': return { text: prefix + '[GIF]' };
+    case 'file': return { text: prefix + (titleText ? truncate(titleText, 40) : '[Tệp đính kèm]') };
+    case 'link': return { text: prefix + (titleText ? truncate(titleText, 40) : '[Liên kết]') };
+    case 'call': return { text: prefix + '[Cuộc gọi]' };
+    case 'qr_code': return { text: prefix + '[Mã QR]' };
+    case 'reminder': return { text: prefix + (titleText ? truncate(titleText, 40) : '[Nhắc hẹn]') };
     case 'poll': {
       // E29-E32 phân biệt 4 action
       const label =
@@ -1018,17 +1025,17 @@ function computeLastMessagePreview(conv: Conversation): PreviewResult {
         : action === 'update' ? 'Cập nhật bình chọn'
         : action === 'close' ? 'Đã đóng bình chọn'
         : 'Bình chọn';
-      return { text: prefix + '📊 ' + label + (titleText ? `: ${truncate(titleText, 25)}` : '') };
+      return { text: prefix + `[${label}]` + (titleText ? `: ${truncate(titleText, 25)}` : '') };
     }
-    case 'note': return { text: prefix + '📝 Ghi chú' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
-    case 'forwarded': return { text: prefix + '↪️ Chuyển tiếp' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
+    case 'note': return { text: prefix + '[Ghi chú]' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
+    case 'forwarded': return { text: prefix + '[Chuyển tiếp]' + (titleText ? `: ${truncate(titleText, 30)}` : '') };
     case 'location': {
       const desc = typeof parsed?.description === 'string' ? parsed.description.trim() : '';
       const label = titleText || desc || 'Vị trí';
-      return { text: prefix + '📍 ' + truncate(label, 50) };
+      return { text: prefix + '[Vị trí] ' + truncate(label, 50) };
     }
-    case 'contact_card': return { text: prefix + (titleText ? truncate(titleText, 40) : '👤 Danh thiếp') };
-    case 'rich': return { text: prefix + '✨ Tin có định dạng' };
+    case 'contact_card': return { text: prefix + (titleText ? truncate(titleText, 40) : '[Danh thiếp]') };
+    case 'rich': return { text: prefix + '[Tin định dạng]' };
   }
 
   // Plain text — E01
@@ -1066,15 +1073,8 @@ function parseSentiment(conv: Conversation): AiSentiment | null {
 // qua component con ConvTime (2026-06-11 perf). Không còn định nghĩa ở đây.
 
 // ─── Phase 8 — Engagement pattern badge ──────────────────
-function patternIcon(pattern: string | null | undefined): string {
-  switch (pattern) {
-    case 'hot': return '🔥';
-    case 'champion': return '💎';
-    case 'stable': return '📈';
-    case 'cooling': return '⚠';
-    case 'cold': return '😴';
-    default: return '';
-  }
+function patternIcon(_pattern: string | null | undefined): string {
+  return '';
 }
 
 function patternLabel(pattern: string | null | undefined): string {
@@ -1842,4 +1842,8 @@ function onPatternLeave() {
   font-weight: 600;
   margin-top: 2px;
 }
+</style>
+
+<style scoped>
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; flex-shrink: 0; }
 </style>

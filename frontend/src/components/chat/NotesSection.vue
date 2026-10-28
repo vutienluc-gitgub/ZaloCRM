@@ -5,7 +5,7 @@
     <!-- Header: title + count + Enter-mode toggle -->
     <div class="notes-header">
       <div class="notes-title">
-        📝 Ghi chú
+        <FileText :size="13" class="inline-icon" /> Ghi chú
         <span v-if="rootCount" class="notes-count">#{{ rootCount }}</span>
       </div>
       <label class="enter-toggle" :title="enterToSave ? 'Enter = Lưu · Shift+Enter = xuống dòng' : 'Enter = xuống dòng · Ctrl+Enter = Lưu'">
@@ -34,14 +34,14 @@
         @click="submitRoot"
       >
         <span v-if="saving">…</span>
-        <span v-else>➤</span>
+        <span v-else><Send :size="12" /></span>
       </button>
     </div>
 
     <!-- Scroll area -->
     <div v-if="loading && !notes.length" class="notes-loading">Đang tải…</div>
     <div v-else-if="!notes.length" class="notes-empty">
-      <span class="empty-icon">💭</span>
+      <span class="empty-icon"><MessageSquare :size="24" /></span>
       <p>Chưa có ghi chú. Thử: <em>"Thứ 6 gọi lại khách báo giá"</em> — AI có thể đề xuất lịch hẹn.</p>
     </div>
 
@@ -61,7 +61,7 @@
 
         <!-- AI no-intent banner — 5s auto-hide, chỉ hiện khi cả rule-based + AI fail -->
         <div v-if="aiNoIntent.has(note.id)" class="ai-suggestion-banner muted">
-          <span class="ai-icon">🤖</span>
+          <span class="ai-icon"><Bot :size="12" /></span>
           <span class="ai-text muted">Không phát hiện ý định hẹn rõ ràng — đã ẩn nút AI.</span>
         </div>
 
@@ -93,7 +93,7 @@
           />
           <button class="send-btn small" :disabled="!replyDraft.trim() || saving" @click="submitReply">
             <span v-if="saving">…</span>
-            <span v-else>➤</span>
+            <span v-else><Send :size="12" /></span>
           </button>
           <button class="btn-link small-x" @click="cancelReply" title="Hủy">×</button>
         </div>
@@ -117,7 +117,7 @@
         v-if="flyAnim"
         class="fly-calendar"
         :style="{ left: flyAnim.x + 'px', top: flyAnim.y + 'px', '--tx': flyAnim.dx + 'px', '--ty': flyAnim.dy + 'px' }"
-      >📅</div>
+      ><Calendar :size="12" /></div>
     </Teleport>
   </section>
 </template>
@@ -282,7 +282,7 @@ async function onDelete(noteId: string) {
  */
 async function onAiParse(noteId: string) {
   if (aiDisabled.value.has(noteId)) return;
-  toast.push('🤖 AI đang phân tích…');
+  toast.push('AI đang phân tích…');
   const parsed = await aiParse(noteId);
   if (parsed && parsed.hasIntent) {
     // Build prefill cho AppointmentEditor + note body làm reference field notes
@@ -310,7 +310,7 @@ async function onAiParse(noteId: string) {
 
     // Toast badge nếu fallback (AI hết quota) để sale biết
     if (parsed.source === 'fallback') {
-      toast.push('⚙️ AI hết quota — đã phân tích bằng quy tắc local');
+      toast.push('AI hết quota — đã phân tích bằng quy tắc local');
     }
   } else {
     // Cả rule-based + AI đều fail → ẩn nút + banner 5s
@@ -330,7 +330,7 @@ async function onAptEditorCreated(apt: { id: string }) {
     await linkAppointment(noteId, apt.id);
     triggerFlyAnimation(noteId);
   }
-  toast.success('📅 Đã tạo lịch hẹn');
+  toast.success('Đã tạo lịch hẹn');
   showAptEditor.value = false;
   aiEditorPrefill.value = null;
   aiEditorContact.value = null;
@@ -609,4 +609,5 @@ defineExpose({ rootCount });
     opacity: 0;
   }
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

@@ -84,7 +84,7 @@
         <section class="ip-form" :class="{ collapsed: !infoExpanded }">
           <!-- Always visible: Tên Zalo -->
           <div class="ip-form-row">
-            <span class="ip-icon">👤</span>
+            <span class="ip-icon"><UserIcon :size="13" /></span>
             <span class="ip-label">Tên Zalo</span>
             <input v-model="form.fullName" placeholder="Tên Zalo cung cấp" @blur="saveContact" />
           </div>
@@ -92,7 +92,7 @@
           <!-- Always visible: SĐT chính. Hiển thị '0359 944 488' (+tooltip +84) khi không focus,
                raw khi focus để sửa. Giá trị lưu giữ raw → backend normalizePhone tự chuẩn hoá. -->
           <div class="ip-form-row">
-            <span class="ip-icon">📞</span>
+            <span class="ip-icon"><PhoneIcon :size="13" /></span>
             <span class="ip-label">SĐT</span>
             <div class="phone-cell">
               <input
@@ -122,14 +122,14 @@
           -->
           <button class="info-expand-toggle" :class="{ 'is-sticky': isSticky }" @click="toggleInfoExpand">
             <span v-if="!infoExpanded">▾ Xem đầy đủ</span>
-            <span v-else-if="isSticky">▴ Thu gọn <span class="sticky-badge" title="Đã ghim — không tự thu">📌</span></span>
-            <span v-else>📌 Ghim mở (tự thu sau {{ collapseRemain }}s)</span>
+            <span v-else-if="isSticky">▴ Thu gọn <span class="sticky-badge" title="Đã ghim — không tự thu"><PinIcon :size="11" class="inline-icon" /></span></span>
+            <span v-else><PinIcon :size="12" class="inline-icon" /> Ghim mở (tự thu sau {{ collapseRemain }}s)</span>
           </button>
 
           <!-- Expanded fields -->
           <template v-if="infoExpanded">
             <div class="ip-form-row">
-              <span class="ip-icon">✏</span>
+              <span class="ip-icon"><EditIcon :size="13" /></span>
               <span class="ip-label" title="Tên gợi nhớ Zalo per-pair — sync 2-way với Zalo Real">Tên gợi nhớ</span>
               <input
                 :value="aliasDraft"
@@ -140,12 +140,12 @@
               />
             </div>
             <div class="ip-form-row">
-              <span class="ip-icon">📅</span>
+              <span class="ip-icon"><CalendarIcon :size="13" /></span>
               <span class="ip-label">Ngày sinh</span>
               <input type="date" v-model="form.birthDate" @blur="saveContact" />
             </div>
             <div class="ip-form-row">
-              <span class="ip-icon">⚧</span>
+              <span class="ip-icon"><HelpCircleIcon :size="13" /></span>
               <span class="ip-label">Giới tính</span>
               <select v-model="form.gender" @change="saveContact">
                 <option :value="null">Không rõ</option>
@@ -188,7 +188,7 @@
               :title="'Xem hồ sơ KH tổng hợp (email, địa chỉ, nghề, ...)'"
               @click="openFullProfile"
             >
-              <span>✨ Xem hồ sơ KH tổng hợp →</span>
+              <span><SparklesIcon :size="12" class="inline-icon" /> Xem hồ sơ KH tổng hợp →</span>
             </button>
           </template>
         </section>
@@ -224,14 +224,14 @@
         <!-- Widget 1: Liên kết CRM (placeholder) -->
         <section class="crm-widget crm-w-getfly">
           <div class="crm-w-row">
-            <span class="crm-w-icon">🔗</span>
+            <span class="crm-w-icon"><LinkIcon :size="13" /></span>
             <span class="crm-w-title">Liên kết CRM</span>
           </div>
           <div class="crm-w-row crm-w-row-status">
             <span v-if="cockpit?.getflyLink?.linked" class="getfly-pill ok">
-              ✅ GF-{{ cockpit.getflyLink.getflyId }}
+              <CheckCircle2Icon :size="12" class="inline-icon text-success" /> GF-{{ cockpit.getflyLink.getflyId }}
             </span>
-            <span v-else class="getfly-pill off">⚪ Chưa liên kết</span>
+            <span v-else class="getfly-pill off">Chưa liên kết</span>
             <button class="crm-btn-ghost" disabled title="Sẽ phát triển sau">Liên kết →</button>
           </div>
         </section>
@@ -239,7 +239,7 @@
         <!-- Widget 2: Next Action — AI suggestion -->
         <section class="crm-widget crm-w-suggest">
           <div class="crm-w-row">
-            <span class="crm-w-icon">⚡</span>
+            <span class="crm-w-icon"><ZapIcon :size="13" /></span>
             <span class="crm-w-title">Hành động đề xuất</span>
             <button class="crm-w-refresh" :disabled="suggestLoading" title="Đổi gợi ý" @click="onRefreshSuggest">↻</button>
           </div>
@@ -248,7 +248,7 @@
           </div>
           <div v-else-if="suggestText" class="crm-suggest-box">
             <div class="crm-suggest-text">{{ suggestText }}</div>
-            <button class="crm-btn-primary" @click="onInsertSuggest">💬 Gửi ngay</button>
+            <button class="crm-btn-primary" @click="onInsertSuggest"><MessageSquareIcon :size="13" class="inline-icon" /> Gửi ngay</button>
           </div>
           <div v-else class="crm-w-empty">Chưa có gợi ý. Nhấn ↻ để AI soạn.</div>
         </section>
@@ -256,7 +256,7 @@
         <!-- Widget 3: Nhiệt KH -->
         <section class="crm-widget crm-w-heat">
           <div class="crm-w-row">
-            <span class="crm-w-icon">📊</span>
+            <span class="crm-w-icon"><BarChart2Icon :size="13" /></span>
             <span class="crm-w-title">Nhiệt KH</span>
           </div>
           <div v-if="cockpit?.priorityScore != null" class="heat-stack">
@@ -270,14 +270,14 @@
               <span class="heat-bar-num">{{ cockpit.priorityScore }}/100</span>
             </div>
             <div class="heat-meta">
-              <span class="heat-pattern">{{ patternIcon }} {{ patternLabel }}</span>
+              <span class="heat-pattern">{{ patternLabel }}</span>
               <span v-if="cockpit.engagementTrend != null" :class="['heat-trend', cockpit.engagementTrend > 0 ? 'up' : cockpit.engagementTrend < 0 ? 'down' : '']">
                 {{ cockpit.engagementTrend > 0 ? '↑' : cockpit.engagementTrend < 0 ? '↓' : '→' }}
                 {{ cockpit.engagementTrend > 0 ? '+' : '' }}{{ cockpit.engagementTrend }}% tuần
               </span>
             </div>
             <div v-if="cockpit.stuckSinceAggregate" class="heat-stuck">
-              ⚠ Stuck {{ daysFrom(cockpit.stuckSinceAggregate) }} ngày qua mọi nick
+              <AlertTriangleIcon :size="12" class="inline-icon text-warning" /> Stuck {{ daysFrom(cockpit.stuckSinceAggregate) }} ngày qua mọi nick
             </div>
           </div>
           <div v-else class="crm-w-empty">Chưa đủ dữ liệu nhiệt</div>
@@ -286,23 +286,23 @@
         <!-- Widget 4: Timeline -->
         <section class="crm-widget crm-w-timeline">
           <div class="crm-w-row">
-            <span class="crm-w-icon">⏰</span>
+            <span class="crm-w-icon"><ClockIcon :size="13" /></span>
             <span class="crm-w-title">Timeline</span>
           </div>
           <div class="timeline-lines">
             <div v-if="cockpit?.firstContactDate || cockpit?.source" class="tl-line">
-              <span v-if="cockpit.firstContactDate">📅 Quen {{ daysFrom(cockpit.firstContactDate) }} ngày</span>
+              <span v-if="cockpit.firstContactDate"><CalendarIcon :size="12" class="inline-icon" /> Quen {{ daysFrom(cockpit.firstContactDate) }} ngày</span>
               <span v-if="cockpit.source" class="tl-sep">·</span>
-              <span v-if="cockpit.source">📞 {{ cockpit.source }}<span v-if="cockpit.sourceDate"> {{ shortDate(cockpit.sourceDate) }}</span></span>
+              <span v-if="cockpit.source"><PhoneIcon :size="12" class="inline-icon" /> {{ cockpit.source }}<span v-if="cockpit.sourceDate"> {{ shortDate(cockpit.sourceDate) }}</span></span>
             </div>
             <div v-if="cockpit?.lastInboundAt" class="tl-line">
-              🟢 KH chat cuối: {{ relativeTime(cockpit.lastInboundAt) }}
+              <span class="sdot sdot-inbound"></span> KH chat cuối: {{ relativeTime(cockpit.lastInboundAt) }}
             </div>
             <div v-if="cockpit?.lastOutboundAt" class="tl-line">
-              🔵 Bạn chat cuối: {{ relativeTime(cockpit.lastOutboundAt) }}
+              <span class="sdot sdot-outbound"></span> Bạn chat cuối: {{ relativeTime(cockpit.lastOutboundAt) }}
             </div>
             <div v-if="cockpit?.nextAppointment" class="tl-line tl-appt">
-              📍 Lịch hẹn: {{ shortDateTime(cockpit.nextAppointment.at) }}
+              <CalendarClockIcon :size="12" class="inline-icon" /> Lịch hẹn: {{ shortDateTime(cockpit.nextAppointment.at) }}
               <span class="tl-appt-rel"> ({{ relativeFuture(cockpit.nextAppointment.at) }})</span>
             </div>
             <div v-if="!cockpit?.firstContactDate && !cockpit?.lastInboundAt && !cockpit?.lastOutboundAt && !cockpit?.nextAppointment" class="crm-w-empty">
@@ -314,7 +314,7 @@
         <!-- Widget 5: Sản phẩm quan tâm (placeholder) -->
         <section class="crm-widget crm-w-interest">
           <div class="crm-w-row">
-            <span class="crm-w-icon">🎯</span>
+            <span class="crm-w-icon"><TargetIcon :size="13" /></span>
             <span class="crm-w-title">Sản phẩm quan tâm</span>
           </div>
           <div class="crm-w-placeholder">
@@ -327,7 +327,7 @@
              lẫn no-Zalo). Hiện luôn cả khi chỉ 1 sale chăm để minh bạch ai phụ trách. -->
         <section v-if="cungChamList.length > 0" class="crm-widget crm-w-cung-cham">
           <div class="crm-w-row">
-            <span class="crm-w-icon">👥</span>
+            <span class="crm-w-icon"><UsersIcon :size="13" /></span>
             <span class="crm-w-title">Sale đang/đã chăm KH ({{ cungChamList.length }})</span>
           </div>
           <div class="cung-cham-list">
@@ -338,8 +338,8 @@
               <div class="cc-info">
                 <div class="cc-name">
                   {{ acc.user?.fullName || acc.user?.email || 'Sale' }}
-                  <span v-if="acc.role === 'primary'" class="cc-role-primary" title="Sale phụ trách chính">⭐ Chính</span>
-                  <span v-else class="cc-role-collab" title="Sale cùng chăm">🤝 Cùng chăm</span>
+                  <span v-if="acc.role === 'primary'" class="cc-role-primary" title="Sale phụ trách chính"><StarIcon :size="11" class="inline-icon" /> Chính</span>
+                  <span v-else class="cc-role-collab" title="Sale cùng chăm"><UsersIcon :size="11" class="inline-icon" /> Cùng chăm</span>
                 </div>
                 <div class="cc-meta">{{ ccSourceLabel(acc.source) }} · {{ ccDateLabel(acc.createdAt) }}</div>
               </div>
@@ -350,11 +350,11 @@
         <!-- Widget 6: Đồng đội chăm KH (chỉ hiện cho KH có Zalo — based on Friend nicks chăm) -->
         <section v-if="teammatesFiltered.length > 0" class="crm-widget crm-w-team">
           <div class="crm-w-row">
-            <span class="crm-w-icon">🤝</span>
+            <span class="crm-w-icon"><UsersIcon :size="13" /></span>
             <span class="crm-w-title">Nick CRM cùng chăm ({{ teammatesFiltered.length }})</span>
           </div>
           <div v-if="teammatesFiltered.length" class="team-banner">
-            💡 {{ teammatesFiltered.length }} sale khác cùng chăm KH này — phối hợp để win-win
+            {{ teammatesFiltered.length }} sale khác cùng chăm KH này — phối hợp để win-win
           </div>
           <div v-if="teammatesLoading" class="crm-w-loading">
             <div class="crm-spinner" /><span>Đang tải...</span>
@@ -369,8 +369,8 @@
                 </div>
               </div>
               <div class="team-counts">
-                <span>📥 <strong>{{ t.totalInbound }}</strong></span>
-                <span>📤 <strong>{{ t.totalOutbound }}</strong></span>
+                <span><InboxIcon :size="11" class="inline-icon" /> <strong>{{ t.totalInbound }}</strong></span>
+                <span><SendIcon :size="11" class="inline-icon" /> <strong>{{ t.totalOutbound }}</strong></span>
               </div>
               <button
                 class="crm-btn-handoff"
@@ -378,7 +378,7 @@
                 :title="!t.owner ? 'Nick chưa gán cho sale nào' : ''"
                 @click="onOpenHandoff(t)"
               >
-                ✨ AI nhắn {{ shortName(t.owner?.fullName) || 'sale' }} phối hợp
+                <SparklesIcon :size="11" class="inline-icon" /> AI nhắn {{ shortName(t.owner?.fullName) || 'sale' }} phối hợp
               </button>
             </div>
           </div>
@@ -388,7 +388,7 @@
         <!-- Widget 7: Push to Getfly (placeholder) -->
         <section class="crm-widget crm-w-push">
           <button class="crm-btn-push" disabled title="Sẽ phát triển sau">
-            📤 Đẩy thông tin KH lên Getfly CRM
+            <SendIcon :size="12" class="inline-icon" /> Đẩy thông tin KH lên Getfly CRM
           </button>
           <div class="crm-w-hint">Chức năng đang phát triển</div>
         </section>
@@ -415,7 +415,7 @@
         <section v-if="aiSummary || aiSummaryLoading" class="ip-section">
           <div class="ip-section-title">
             <span class="accent" style="background: #9c27b0" />
-            ✨ AI Tóm tắt
+            <SparklesIcon :size="13" class="inline-icon" /> AI Tóm tắt
             <button class="refresh-mini" :disabled="aiSummaryLoading" @click="$emit('refresh-ai-summary')">↻</button>
           </div>
           <AiSummaryCard :summary="aiSummary" :loading="aiSummaryLoading" />
@@ -425,7 +425,7 @@
         <section v-if="aiSentiment || aiSentimentLoading" class="ip-section">
           <div class="ip-section-title">
             <span class="accent" style="background: #ec407a" />
-            💗 Cảm xúc khách hàng
+            <HeartIcon :size="13" class="inline-icon text-rose-500" /> Cảm xúc khách hàng
             <button class="refresh-mini" :disabled="aiSentimentLoading" @click="$emit('refresh-ai-sentiment')">↻</button>
           </div>
           <AiSentimentBadge :sentiment="aiSentiment" />
@@ -484,7 +484,7 @@
         :nick-name="props.activeZaloAccountName"
       />
       <div v-else class="main-tab-placeholder">
-        <div class="mtp-icon">🗂️</div>
+        <div class="mtp-icon"><FolderArchiveIcon :size="24" /></div>
         <h3>Media</h3>
         <p>Chưa chọn hội thoại để gửi ảnh/video/tệp/khối cho khách.</p>
       </div>
@@ -493,10 +493,10 @@
     <!-- ════════ TAB AI (placeholder) ════════ -->
     <div v-if="mainTab === 'ai'" class="main-tab-body">
       <div class="main-tab-placeholder">
-        <div class="mtp-icon">✨</div>
+        <div class="mtp-icon"><SparklesIcon :size="24" /></div>
         <h3>Trợ lý AI Bất động sản</h3>
         <p>Hỏi đáp về sản phẩm, dự án BĐS, giá, ưu đãi để tư vấn KH.</p>
-        <div class="mtp-coming">🚧 Đang phát triển — kết nối knowledge base BĐS HS Holding</div>
+        <div class="mtp-coming">Đang phát triển — kết nối knowledge base BĐS HS Holding</div>
       </div>
     </div>
 
@@ -511,7 +511,7 @@
         @add-flow="openAddFlowModal"
       />
       <div v-else class="main-tab-placeholder">
-        <div class="mtp-icon">🎯</div>
+        <div class="mtp-icon"><TargetIcon :size="24" /></div>
         <h3>Luồng bám đuổi</h3>
         <p>Chưa chọn khách hàng để xem các luồng đang chạy.</p>
       </div>
@@ -602,6 +602,24 @@ import {
   Target as TargetIcon,
   CalendarClock as CalendarClockIcon,
   Star as StarIcon,
+  Phone as PhoneIcon,
+  Calendar as CalendarIcon,
+  Edit2 as EditIcon,
+  Pin as PinIcon,
+  Sparkles as SparklesIcon,
+  Link as LinkIcon,
+  Zap as ZapIcon,
+  MessageSquare as MessageSquareIcon,
+  BarChart2 as BarChart2Icon,
+  Clock as ClockIcon,
+  Users as UsersIcon,
+  Heart as HeartIcon,
+  Send as SendIcon,
+  Inbox as InboxIcon,
+  CheckCircle2 as CheckCircle2Icon,
+  AlertTriangle as AlertTriangleIcon,
+  FolderArchive as FolderArchiveIcon,
+  HelpCircle as HelpCircleIcon,
 } from 'lucide-vue-next';
 import CustomerTimelineSection from './CustomerTimelineSection.vue';
 import EngagementHeatmap from './EngagementHeatmap.vue';
@@ -1074,13 +1092,7 @@ function ccDateLabel(iso: string): string {
 }
 
 const patternIcon = computed(() => {
-  const p = cockpit.value?.engagementPattern;
-  if (p === 'hot') return '🔥';
-  if (p === 'champion') return '👑';
-  if (p === 'stable') return '🟢';
-  if (p === 'cooling') return '🟡';
-  if (p === 'cold') return '🔵';
-  return '⚪';
+  return '';
 });
 
 const patternLabel = computed(() => {
@@ -1134,10 +1146,10 @@ function teammateStatus(t: Teammate): string {
   if (!t.lastInboundAt) return 'Chưa chat';
   const diff = Date.now() - new Date(t.lastInboundAt).getTime();
   const hours = diff / 3600000;
-  if (hours < 24) return `🟢 Active ${Math.max(1, Math.floor(hours))}h`;
+  if (hours < 24) return `Active ${Math.max(1, Math.floor(hours))}h`;
   const days = Math.floor(hours / 24);
-  if (days <= 7) return `🟡 Đang chăm ${days}d`;
-  return `🔵 Lạnh ${days}d`;
+  if (days <= 7) return `Đang chăm ${days}d`;
+  return `Lạnh ${days}d`;
 }
 
 function teammateStatusClass(t: Teammate): string {
@@ -2256,4 +2268,11 @@ async function onRegenerateHandoff() {
   font-weight: 600;
 }
 .mtp-link:hover { background: #0050cc; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.text-warning { color: #f59e0b; }
+.text-rose-500 { color: #f43f5e; }
+.sdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+.sdot-inbound { background: #22c55e; }
+.sdot-outbound { background: #3b82f6; }
 </style>

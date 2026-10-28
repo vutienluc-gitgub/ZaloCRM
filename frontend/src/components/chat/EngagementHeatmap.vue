@@ -4,7 +4,7 @@
   <section class="engagement-heatmap" :class="{ 'is-loading': loading }">
     <header class="eh-header">
       <h3 class="eh-title">
-        <span class="eh-icon">📊</span>
+        <span class="eh-icon"><BarChart2 :size="13" /></span>
         Engagement 4 tuần
       </h3>
       <span v-if="pattern" class="eh-pattern" :class="`pattern-${pattern}`">
@@ -54,15 +54,15 @@
       <!-- Breakdown — 6 signal groups anh chốt 2026-05-21 -->
       <div class="eh-breakdown" v-if="breakdown">
         <div class="bd-item">
-          <span class="bd-label">❤️ Thả tim</span>
+          <span class="bd-label"><Heart :size="11" class="inline-icon text-rose-500" /> Thả tim</span>
           <span class="bd-val">{{ breakdown.totalReactions }} lần</span>
         </div>
         <div class="bd-item">
-          <span class="bd-label">💬 Trả lời</span>
+          <span class="bd-label"><MessageSquare :size="11" class="inline-icon" /> Trả lời</span>
           <span class="bd-val">{{ breakdown.replyRate }}%</span>
         </div>
         <div class="bd-item">
-          <span class="bd-label">📞 Cuộc gọi</span>
+          <span class="bd-label"><Phone :size="11" class="inline-icon" /> Cuộc gọi</span>
           <span class="bd-val">
             {{ breakdown.totalCalls ?? 0 }} lần<span
               v-if="(breakdown.totalMissedCalls ?? 0) > 0"
@@ -71,15 +71,15 @@
           </span>
         </div>
         <div class="bd-item">
-          <span class="bd-label">📎 Ảnh/file/video</span>
+          <span class="bd-label"><Paperclip :size="11" class="inline-icon" /> Ảnh/file/video</span>
           <span class="bd-val">{{ breakdown.totalMedia }} lần</span>
         </div>
         <div class="bd-item">
-          <span class="bd-label">⚡ KH chủ động</span>
+          <span class="bd-label"><Zap :size="11" class="inline-icon text-amber-500" /> KH chủ động</span>
           <span class="bd-val">{{ breakdown.daysInitiated }} ngày</span>
         </div>
         <div class="bd-item">
-          <span class="bd-label">↩️ Reply</span>
+          <span class="bd-label"><Reply :size="11" class="inline-icon" /> Reply</span>
           <span class="bd-val">{{ breakdown.totalQuoteReplies ?? 0 }} lần</span>
         </div>
       </div>
@@ -89,6 +89,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
+import { BarChart2, Heart, MessageSquare, Phone, Paperclip, Zap, Reply } from 'lucide-vue-next';
 import { api } from '@/api/index';
 import { getOrgParts } from '@/composables/use-org-timezone';
 
@@ -134,12 +135,12 @@ const score = ref<number | null>(null);
 const breakdown = ref<Breakdown | null>(null);
 
 const PATTERN_LABELS: Record<string, string> = {
-  hot: '🔥 Đang nóng lên',
-  champion: '💎 Champion',
-  stable: '📈 Ổn định',
-  cooling: '⚠ Đang nguội',
-  cold: '😴 Lạnh',
-  noise: '🌫 Chưa đủ dữ liệu',
+  hot: 'Đang nóng lên',
+  champion: 'Champion',
+  stable: 'Ổn định',
+  cooling: 'Đang nguội',
+  cold: 'Lạnh',
+  noise: 'Chưa đủ dữ liệu',
 };
 
 const patternLabel = computed(() => (pattern.value ? PATTERN_LABELS[pattern.value] || pattern.value : ''));
@@ -193,15 +194,15 @@ function cellTooltip(cell: TimelineCell): string {
   const dateStr = p ? `${String(p.day).padStart(2, '0')}/${String(p.month).padStart(2, '0')}` : '';
   if (cell.dailyIntensity === 0) return `${dateStr} · Không có tương tác`;
   const parts: string[] = [`${dateStr} · Điểm ${cell.dailyIntensity}/100`];
-  if (cell.reactionCount > 0) parts.push(`❤️ ${cell.reactionCount}`);
-  if (cell.inboundMsgCount > 0) parts.push(`💬 KH ${cell.inboundMsgCount}`);
-  if (cell.outboundMsgCount > 0) parts.push(`📤 Sale ${cell.outboundMsgCount}`);
-  if (cell.callCount > 0) parts.push(`📞 ${cell.callCount}`);
-  if (cell.missedCallCount > 0) parts.push(`📵 nhỡ ${cell.missedCallCount}`);
-  if (cell.quoteReplyCount > 0) parts.push(`↩️ ${cell.quoteReplyCount}`);
-  if (cell.voiceMsgCount > 0) parts.push(`🎤 ${cell.voiceMsgCount}`);
-  if (cell.mediaShareCount > 0) parts.push(`📎 ${cell.mediaShareCount}`);
-  if (cell.customerInitiated) parts.push('⚡ KH nhắn trước');
+  if (cell.reactionCount > 0) parts.push(`Tim: ${cell.reactionCount}`);
+  if (cell.inboundMsgCount > 0) parts.push(`KH: ${cell.inboundMsgCount}`);
+  if (cell.outboundMsgCount > 0) parts.push(`Sale: ${cell.outboundMsgCount}`);
+  if (cell.callCount > 0) parts.push(`Gọi: ${cell.callCount}`);
+  if (cell.missedCallCount > 0) parts.push(`Nhỡ: ${cell.missedCallCount}`);
+  if (cell.quoteReplyCount > 0) parts.push(`Reply: ${cell.quoteReplyCount}`);
+  if (cell.voiceMsgCount > 0) parts.push(`Thoại: ${cell.voiceMsgCount}`);
+  if (cell.mediaShareCount > 0) parts.push(`Media: ${cell.mediaShareCount}`);
+  if (cell.customerInitiated) parts.push('KH nhắn trước');
   return parts.join(' · ');
 }
 
@@ -381,4 +382,7 @@ defineExpose({ refresh: fetchTimeline });
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-rose-500 { color: #f43f5e; }
+.text-amber-500 { color: #f59e0b; }
 </style>

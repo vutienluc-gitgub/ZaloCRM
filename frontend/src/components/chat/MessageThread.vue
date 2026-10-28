@@ -128,7 +128,7 @@
               v-if="cungChamCount >= 2"
               class="ch-cung-cham-chip"
               :title="cungChamTooltip"
-            >🤝 {{ cungChamCount }} sale</span>
+            ><UsersIcon :size="12" class="inline-icon" /> {{ cungChamCount }} sale</span>
             <!-- Tag Zalo Real ĐÃ CHUYỂN lên dòng 1 (sau trạng thái) — Anh chốt 2026-06-06. -->
             <span class="ch-sep" v-if="cungChamCount >= 2">|</span>
             <!-- Gom 2 dòng 2026-06-06: nick + số tin + online dồn chung dòng 2 (cùng ch-row-chips).
@@ -407,7 +407,7 @@
                       v-if="albumSelectKey === item.key"
                       class="album-check"
                       :class="{ on: albumPicked.has(m.id) }"
-                    >{{ albumPicked.has(m.id) ? '✓' : '' }}</span>
+                    ><CheckIcon v-if="albumPicked.has(m.id)" :size="12" /></span>
                   </div>
                 </div>
                 <div v-if="item.totalExpected && item.totalExpected > item.messages.length" class="album-progress">
@@ -423,7 +423,7 @@
                   <button class="ab-btn ghost" @click="exitAlbumSelect()">Hủy</button>
                 </div>
                 <div v-else class="bubble-time">
-                  {{ formatMessageTime(item.sentAt) }} · 🖼️ {{ item.messages.length }} ảnh
+                  {{ formatMessageTime(item.sentAt) }} · <ImagesIcon :size="12" class="inline-icon" /> {{ item.messages.length }} ảnh
                 </div>
               </div>
             </div>
@@ -649,7 +649,7 @@
               class="editor-lock-overlay"
               @click.stop="onComposerLockClick"
             >
-              <span class="editor-lock-pill">🔒 Riêng tư — chỉ chính chủ nick gửi được tin</span>
+              <span class="editor-lock-pill"><LockIcon :size="12" class="inline-icon text-amber-500" /> Riêng tư — chỉ chính chủ nick gửi được tin</span>
             </div>
             <!-- T11 2026-06-20: nick đã xóa → overlay khóa ô soạn (khóa mềm UX, KHÔNG thay guard server) -->
             <div
@@ -657,7 +657,7 @@
               class="editor-lock-overlay"
               @click.stop
             >
-              <span class="editor-lock-pill">🗑 Nick đã xóa — không gửi được. Kết nối lại để gửi tin.</span>
+              <span class="editor-lock-pill"><Trash2Icon :size="12" class="inline-icon text-muted" /> Nick đã xóa — không gửi được. Kết nối lại để gửi tin.</span>
             </div>
           </div>
 
@@ -767,13 +767,13 @@
       <div v-if="albumMenu.open" class="ctx-menu-overlay" @click.self="albumMenu.open = false" @contextmenu.prevent="albumMenu.open = false">
         <div class="ctx-menu album-ctx" :style="{ top: albumMenu.y + 'px', left: albumMenu.x + 'px' }" @click.stop>
           <button class="ctx-item" @click="saveAlbumOne()">
-            <span class="ctx-ic">🖼️</span><span>Lưu ảnh này vào Media</span>
+            <span class="ctx-ic"><ImageIcon :size="14" /></span><span>Lưu ảnh này vào Media</span>
           </button>
           <button class="ctx-item" @click="saveAlbumAll()">
-            <span class="ctx-ic">🗂️</span><span>Lưu cả album ({{ albumMenu.item?.messages.length }} ảnh)</span>
+            <span class="ctx-ic"><FolderArchiveIcon :size="14" /></span><span>Lưu cả album ({{ albumMenu.item?.messages.length }} ảnh)</span>
           </button>
           <button class="ctx-item" @click="startAlbumSelect()">
-            <span class="ctx-ic">☑️</span><span>Chọn nhiều ảnh để lưu…</span>
+            <span class="ctx-ic"><CheckSquareIcon :size="14" /></span><span>Chọn nhiều ảnh để lưu…</span>
           </button>
         </div>
       </div>
@@ -978,6 +978,11 @@ import {
   ArrowDownLeft as ArrowDownLeftIcon,
   ArrowUpRight as ArrowUpRightIcon,
   Info as InfoIcon,
+  Users as UsersIcon,
+  CheckSquare as CheckSquareIcon,
+  FolderArchive as FolderArchiveIcon,
+  Trash2 as Trash2Icon,
+  Lock as LockIcon,
   Check as CheckIcon,
   Flag as FlagIcon,
   Send as SendIcon,
@@ -1488,7 +1493,7 @@ async function onPickLabel(label: AccountLabelView) {
   const convId = props.conversation?.id;
   if (convId) registerPendingTags(convId, newTags);
 
-  toast.success(labelId ? `✓ Đã gắn "${label.text}"` : `✓ Đã bỏ tag`);
+  toast.success(labelId ? `Đã gắn "${label.text}"` : `Đã bỏ tag`);
 
   // API call background — UI đã update sẵn
   try {
@@ -1521,7 +1526,7 @@ async function onSyncLabels() {
   try {
     const { api: apiClient } = await import('@/api/index');
     const { data } = await apiClient.post(`/zalo-accounts/${accId}/labels/sync`);
-    toast.success(`✓ Sync ${data.labels.length} tag · ${data.friendsUpdated} KH`);
+    toast.success(`Sync ${data.labels.length} tag · ${data.friendsUpdated} KH`);
     await fetchAllLabels(accId, threadId);
     window.dispatchEvent(new CustomEvent('zalo-labels-synced', { detail: { accountId: accId } }));
   } catch (err: any) {
@@ -1639,7 +1644,7 @@ const cungChamTooltip = computed(() => {
   if (!list.length) return '';
   const lines = list.map((a) => {
     const n = a.user?.fullName || a.user?.email || 'Sale';
-    return a.role === 'primary' ? `⭐ ${n} (chính)` : `🤝 ${n}`;
+    return a.role === 'primary' ? `[Chính] ${n}` : `[Cùng chăm] ${n}`;
   });
   return `${list.length} sale đang/đã chăm KH này:\n${lines.join('\n')}`;
 });
@@ -1803,9 +1808,9 @@ async function onNickMenuToggle(open: boolean) {
 }
 
 function friendshipStatusLabel(s: string): string {
-  if (s === 'accepted') return '✓ Đã kết bạn';
-  if (s === 'pending') return '⏳ Đã gửi mời';
-  if (s === 'declined') return '✗ Đã từ chối';
+  if (s === 'accepted') return 'Đã kết bạn';
+  if (s === 'pending') return 'Đã gửi mời';
+  if (s === 'declined') return 'Đã từ chối';
   return 'Chưa kết bạn';
 }
 
@@ -2368,7 +2373,7 @@ async function onDropFiles(event: DragEvent) {
 async function handleImageFiles(files: File[]) {
   if (!props.conversation?.id) return;
   if (!files.length) return;
-  toast.push(`📷 Đang gửi ${files.length} ảnh…`);
+  toast.push(`Đang gửi ${files.length} ảnh…`);
   try {
     const fd = new FormData();
     for (const f of files) fd.append('files', f, f.name);
@@ -2386,7 +2391,7 @@ async function handleImageFiles(files: File[]) {
 async function handleFiles(files: File[]) {
   if (!props.conversation?.id) return;
   if (!files.length) return;
-  toast.push(`📎 Đang gửi ${files.length} file…`);
+  toast.push(`Đang gửi ${files.length} file…`);
   try {
     const fd = new FormData();
     for (const f of files) fd.append('files', f, f.name);
@@ -2554,7 +2559,7 @@ async function onFavoriteFromChat() {
   try {
     const res = await saveFromChat(msg.id, 'private');
     await toggleFavorite(res.asset.id);
-    toast.success(`Đã lưu "${res.asset.name}" và thêm vào ⭐ Yêu thích`);
+    toast.success(`Đã lưu "${res.asset.name}" và thêm vào Yêu thích`);
   } catch (e: any) {
     const code = e?.response?.data?.code;
     if (code === 'PRIVACY_LOCKED') {
@@ -3066,7 +3071,7 @@ watch(() => props.editingMessage?.id, async (id) => {
    .msg-row non-self direction row normal → ::after nằm sau bubble = BÊN PHẢI bubble.
    Anh chốt 2026-05-22 v5: self tag TRÁI, other tag PHẢI. */
 .msg-privacy-blurred :deep(.msg-row)::after {
-  content: '🔒 Riêng tư';
+  content: '[Riêng tư]';
   display: inline-flex;
   align-items: center;
   align-self: center;
@@ -3493,7 +3498,7 @@ watch(() => props.editingMessage?.id, async (id) => {
   color: #1f2937 !important;
 }
 .chat-messages-area.is-virtual-mode :deep(.bubble.self::after) {
-  content: '📝 nội bộ';
+  content: '[Nội bộ]';
   display: block;
   margin-top: 4px;
   font-size: 9px;
@@ -4162,4 +4167,7 @@ watch(() => props.editingMessage?.id, async (id) => {
 }
 .zlbl-manage:hover { background: var(--smax-grey-50); color: var(--smax-primary); }
 .manage-icon { font-size: 14px; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-amber-500 { color: #f59e0b; }
+.text-muted { color: #64748b; }
 </style>

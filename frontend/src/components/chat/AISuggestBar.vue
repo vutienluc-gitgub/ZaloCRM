@@ -2,7 +2,7 @@
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
   <div v-if="visible" class="ai-suggest-bar">
-    <div class="ai-suggest-icon">✨</div>
+    <div class="ai-suggest-icon"><Sparkles :size="16" /></div>
     <span class="ai-suggest-label">AI gợi ý:</span>
     <div class="ai-suggest-pills">
       <div
@@ -20,15 +20,16 @@
         Đang sinh gợi ý…
       </div>
       <div v-if="!pills.length && !loading && error" class="ai-suggest-pill error">
-        ⚠ {{ error }}
+        <AlertTriangle :size="13" class="inline-icon" /> {{ error }}
       </div>
     </div>
-    <button class="ai-refresh" :disabled="loading" title="Làm mới gợi ý" @click="$emit('refresh')">↻</button>
+    <button class="ai-refresh" :disabled="loading" title="Làm mới gợi ý" @click="$emit('refresh')"><RotateCw :size="14" /></button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Sparkles, AlertTriangle, RotateCw } from 'lucide-vue-next';
 
 const props = defineProps<{
   suggestion: string;
@@ -107,4 +108,5 @@ function truncated(text: string) {
 }
 .ai-refresh:hover:not(:disabled) { background: var(--smax-grey-50); color: var(--smax-primary); }
 .ai-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; }
 </style>

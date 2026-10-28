@@ -9,7 +9,7 @@
         @mouseenter="hovered = 'lead'"
         @mouseleave="hovered = null"
       >
-        <div class="sb-icon">💰</div>
+        <div class="sb-icon"><Award :size="16" /></div>
         <div class="sb-num">{{ leadDisplay }}</div>
         <div class="sb-lbl">Lead</div>
         <div class="sb-trend" :class="leadTrendClass">{{ leadTrendText }}</div>
@@ -20,7 +20,7 @@
         @mouseenter="hovered = 'priority'"
         @mouseleave="hovered = null"
       >
-        <div class="sb-icon">🎯</div>
+        <div class="sb-icon"><Target :size="16" /></div>
         <div class="sb-num">{{ priorityDisplay }}</div>
         <div class="sb-lbl">Priority</div>
         <div class="sb-trend" :class="priorityTagClass">{{ priorityTagText }}</div>
@@ -31,7 +31,7 @@
         @mouseenter="hovered = 'eng'"
         @mouseleave="hovered = null"
       >
-        <div class="sb-icon">💬</div>
+        <div class="sb-icon"><MessageSquare :size="16" /></div>
         <div class="sb-num">{{ engagementDisplay }}</div>
         <div class="sb-lbl">Engagement</div>
         <div class="sb-trend" :class="engagementTrendClass">{{ engagementTrendText }}</div>
@@ -44,7 +44,7 @@
 
       <!-- 💰 Lead -->
       <template v-if="hovered === 'lead'">
-        <div class="tt-title"><span class="tt-icon">💰</span> Lead Score</div>
+        <div class="tt-title"><span class="tt-icon"><Award :size="14" class="inline-icon" /></span> Lead Score</div>
         <div class="tt-def">
           <strong>Khả năng KH có ý mua (0-100).</strong> Hệ thống ĐỌC nội dung tin nhắn + hành vi để chấm.
         </div>
@@ -55,7 +55,7 @@
           <li>KH phản hồi nhanh &lt; 5 phút → <strong>+5</strong></li>
           <li>KH gửi tin dài &gt; 50 ký tự → <strong>+2</strong> (cap 10/ngày)</li>
           <li>KH gửi tin bất kỳ → <strong>+3</strong> (cap 15/ngày)</li>
-          <li>KH thả ❤️ 👍 trên tin sale → <strong>+N</strong></li>
+          <li>KH tương tác trên tin sale → <strong>+N</strong></li>
           <li>Sale đặt lịch hẹn cho KH → <strong>stage transition</strong></li>
           <li>Sale gắn tag VIP / Hot lead → <strong>Fit tăng</strong></li>
           <li>Sale chuyển stage cao hơn (Mới → Tiếp cận → Hẹn → Báo giá → Chốt) → <strong>+N</strong></li>
@@ -64,7 +64,7 @@
 
       <!-- 🎯 Priority -->
       <template v-else-if="hovered === 'priority'">
-        <div class="tt-title"><span class="tt-icon">🎯</span> Priority Score</div>
+        <div class="tt-title"><span class="tt-icon"><Target :size="14" class="inline-icon" /></span> Priority Score</div>
         <div class="tt-def">
           <strong>Điểm ưu tiên gọi hôm nay (0-100).</strong> KHÔNG tự đo — là tổng hợp 3 yếu tố:
         </div>
@@ -85,7 +85,7 @@
 
       <!-- 💬 Engagement -->
       <template v-else-if="hovered === 'eng'">
-        <div class="tt-title"><span class="tt-icon">💬</span> Engagement Score</div>
+        <div class="tt-title"><span class="tt-icon"><MessageSquare :size="14" class="inline-icon" /></span> Engagement Score</div>
         <div class="tt-def">
           <strong>Mức tương tác 4 tuần qua (0-100).</strong> KHÔNG đọc nội dung — chỉ đếm hành vi của KH.
         </div>
@@ -93,7 +93,7 @@
         <ul class="tt-list">
           <li>Hỏi xin ảnh / giấy tờ / CMND → KH gửi → <strong>+15</strong> mỗi tin</li>
           <li>Khuyến khích KH gọi voice → <strong>+30</strong> mỗi voice</li>
-          <li>Gửi content kích thích phản ứng (meme, ảnh sản phẩm đẹp) → KH thả ❤️ → <strong>+30</strong></li>
+          <li>Gửi content kích thích phản ứng (ảnh sản phẩm đẹp) → KH tương tác → <strong>+30</strong></li>
           <li>Im lặng có chiến lược 1-2 ngày → KH chủ động nhắn trước → <strong>+20/ngày</strong></li>
           <li>Gửi tin nhắn để KH reply lại → <strong>+5</strong> mỗi tin (cả 2 chiều)</li>
           <li>Gửi sticker thân thiện → KH thả sticker lại → engagement signal</li>
@@ -134,11 +134,11 @@ const props = defineProps<{
 }>();
 
 const PATTERN_LABELS: Record<string, string> = {
-  hot: '🔥 Nóng lên',
-  champion: '💎 Champion',
-  stable: '📈 Ổn định',
-  cooling: '⚠ Đang nguội',
-  cold: '😴 Lạnh',
+  hot: 'Nóng lên',
+  champion: 'Champion',
+  stable: 'Ổn định',
+  cooling: 'Đang nguội',
+  cold: 'Lạnh',
   noise: 'Chưa đủ data',
 };
 
@@ -152,10 +152,10 @@ const engagementDisplay = computed(() => props.scores.engagement ?? 0);
 const leadTrendText = computed(() => {
   const score = props.scores.lead;
   if (score === null || score === undefined) return EMPTY_TAG;
-  if (score >= 80) return '🔥 Hot';
-  if (score >= 50) return '🌡 Warm';
+  if (score >= 80) return 'Hot';
+  if (score >= 50) return 'Warm';
   if (score >= 25) return '○ Mild';
-  return '❄️ Cold';
+  return 'Cold';
 });
 const leadTrendClass = computed(() => {
   const score = props.scores.lead;
@@ -168,7 +168,7 @@ const leadTrendClass = computed(() => {
 const priorityTagText = computed(() => {
   const score = props.scores.priority;
   if (score === null || score === undefined) return EMPTY_TAG;
-  if (score >= 80) return '⚡ Top';
+  if (score >= 80) return 'Top';
   if (score >= 60) return '↑ Cao';
   if (score >= 30) return 'TB';
   return '↓ Thấp';
@@ -471,4 +471,5 @@ const engagementTrendClass = computed(() => {
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.85);
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

@@ -90,14 +90,14 @@
           class="other-sale-tag"
           :title="`Tin do ${otherSaleSenderName} gửi`"
         >
-          👤 {{ otherSaleSenderName }}
+          <UserIcon :size="10" class="inline-icon" /> {{ otherSaleSenderName }}
         </div>
 
         <!-- E04 Tin thu hồi — anh chốt 2026-05-21: icon 🔂 + italic xám + gạch ngang.
              Nội dung gốc giữ lại (gạch ngang) để sale biết KH/sale đã thu hồi cái gì. -->
         <div v-if="message.isDeleted" class="recall-card">
           <div class="recall-header">
-            <span class="recall-icon">🔂</span>
+            <span class="recall-icon"><RotateCcwIcon :size="12" /></span>
             <span class="recall-label">Tin nhắn đã thu hồi</span>
           </div>
           <div v-if="message.content" class="recall-body">{{ message.content }}</div>
@@ -196,7 +196,7 @@
                 alt="sticker"
                 class="sticker-img"
               />
-              <span v-else>🎴 Sticker</span>
+              <span v-else>[Sticker]</span>
             </div>
             <div v-if="formattedCaption" class="media-caption" v-html="formattedCaption" />
           </div>
@@ -243,7 +243,7 @@
                 preload="metadata"
                 class="voice-audio"
               />
-              <span v-else class="voice-fallback">🎤 Tin thoại (không tải được)</span>
+              <span v-else class="voice-fallback">Tin thoại (không tải được)</span>
             </div>
             <div v-if="formattedCaption" class="media-caption" v-html="formattedCaption" />
           </div>
@@ -252,7 +252,7 @@
           <div v-else-if="message.contentType === 'gif'">
             <div class="gif-msg">
               <img v-if="gifUrl" :src="gifUrl" alt="gif" class="gif-img" />
-              <span v-else>🎞 GIF</span>
+              <span v-else>[GIF]</span>
             </div>
             <div v-if="formattedCaption" class="media-caption" v-html="formattedCaption" />
           </div>
@@ -352,6 +352,7 @@
 <script setup lang="ts">
 import type { Message } from '@/composables/use-chat';
 import { computed, ref, watch } from 'vue';
+import { User as UserIcon, RotateCcw as RotateCcwIcon } from 'lucide-vue-next';
 import { formatInOrgTz, weekdayInOrgTz } from '@/composables/use-org-timezone';
 import { linkifyHtml } from '@/composables/use-rich-format';
 import SpecialMessageRenderer from '@/components/chat/special-message-renderer.vue';
@@ -520,11 +521,11 @@ function parseDisplayContent(content: string | null): string {
   if (!content.startsWith('{')) return content;
   try {
     const p = JSON.parse(content);
-    if (p.title && p.href) return `${p.title}\n🔗 ${p.href}`;
+    if (p.title && p.href) return `${p.title}\n${p.href}`;
     if (p.title) return p.title;
     if (p.text) return p.text;
     if (p.description) return p.description;
-    if (p.href) return `🔗 ${p.href}`;
+    if (p.href) return p.href;
     return content;
   } catch { return content; }
 }
@@ -825,7 +826,7 @@ function isReminderMessage(msg: Message): boolean {
       const hasReminderAction = actions.some((a: { data?: string }) => typeof a.data === 'string' && a.data.includes('create_reminder'));
       if (hasReminderAction) return true;
       // Fallback: title bắt đầu bằng ⏰
-      if (typeof p.title === 'string' && p.title.trim().startsWith('⏰')) return true;
+      if (typeof p.title === 'string' && (p.title.trim().startsWith('⏰') || p.title.trim().startsWith('[Nhắc hẹn]'))) return true;
     }
     return false;
   } catch { return false; }
@@ -867,14 +868,14 @@ const replyPreviewText = computed(() => {
   if (text) return text.length > 80 ? text.slice(0, 80) + '…' : text;
   // Fallback theo msgType (zalo msgType khi text rỗng — image/sticker/voice...)
   const t = (r.msgType || '').toLowerCase();
-  if (t.includes('image') || t.includes('photo')) return '📷 Hình ảnh';
-  if (t.includes('voice') || t.includes('audio')) return '🎤 Tin nhắn thoại';
-  if (t.includes('video'))   return '🎥 Video';
-  if (t.includes('sticker')) return '🎴 Sticker';
-  if (t.includes('gif'))     return '🎞 GIF';
-  if (t.includes('file'))    return '📎 Tệp đính kèm';
-  if (t.includes('link') || t.includes('url')) return '🔗 Liên kết';
-  if (t.includes('location')) return '📍 Vị trí';
+  if (t.includes('image') || t.includes('photo')) return '[Hình ảnh]';
+  if (t.includes('voice') || t.includes('audio')) return '[Tin nhắn thoại]';
+  if (t.includes('video'))   return '[Video]';
+  if (t.includes('sticker')) return '[Sticker]';
+  if (t.includes('gif'))     return '[GIF]';
+  if (t.includes('file'))    return '[Tệp đính kèm]';
+  if (t.includes('link') || t.includes('url')) return '[Liên kết]';
+  if (t.includes('location')) return '[Vị trí]';
   return '(tin nhắn)';
 });
 
@@ -1446,4 +1447,5 @@ async function openFile(href: string, name?: string) {
   left: 8px;
   right: auto;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

@@ -14,7 +14,7 @@
             role="tab"
             :aria-selected="activeTab === 'view'"
             @click="activeTab = 'view'"
-          >📂 Chọn xem</button>
+          ><Folder :size="13" class="inline-icon" /> Chọn xem</button>
           <button
             type="button"
             class="tab"
@@ -22,9 +22,9 @@
             role="tab"
             :aria-selected="activeTab === 'manage'"
             @click="activeTab = 'manage'"
-          >⚙ Quản lý</button>
+          ><Settings :size="13" class="inline-icon" /> Quản lý</button>
         </div>
-        <button class="modal-close" type="button" @click="onClose" aria-label="Đóng">✕</button>
+        <button class="modal-close" type="button" @click="onClose" aria-label="Đóng"><X :size="16" /></button>
       </div>
 
       <!-- ═════════ TAB 1: CHỌN XEM (auto-apply on click) ═════════ -->
@@ -32,7 +32,7 @@
 
         <!-- Folder gridcards -->
         <div class="view-section">
-          <div class="view-section-label">📁 Theo thư mục</div>
+          <div class="view-section-label"><Folder :size="13" class="inline-icon" /> Theo thư mục</div>
           <div class="folder-grid">
             <!-- ALL card -->
             <button
@@ -41,7 +41,7 @@
               :class="{ selected: viewFolderId === null && viewAccountId === null }"
               @click="onApplyFolder(null)"
             >
-              <div class="fc-thumb-all">🌐</div>
+              <div class="fc-thumb-all"><Globe :size="18" /></div>
               <div class="fc-body">
                 <div class="fc-name">ALL — Toàn bộ</div>
                 <div class="fc-meta">
@@ -86,11 +86,11 @@
 
         <!-- Nick scroll list -->
         <div class="view-section">
-          <div class="view-section-label">👤 Hoặc chọn 1 nick</div>
+          <div class="view-section-label"><User :size="13" class="inline-icon" /> Hoặc chọn 1 nick</div>
           <div class="nick-search">
-            <span class="ic">🔍</span>
+            <span class="ic"><Search :size="13" /></span>
             <input v-model="viewNickSearch" type="text" placeholder="Tìm nick..." />
-            <button v-if="viewNickSearch" type="button" class="ns-clear" @click="viewNickSearch = ''" aria-label="Xoá tìm kiếm">✕</button>
+            <button v-if="viewNickSearch" type="button" class="ns-clear" @click="viewNickSearch = ''" aria-label="Xoá tìm kiếm"><X :size="12" /></button>
           </div>
           <div class="nick-pickbox">
             <div v-if="loadingAccounts" class="nick-empty">Đang tải nick...</div>
@@ -117,7 +117,7 @@
                     {{ (acc.liveStatus || acc.status) === 'connected' ? 'Active' : 'Offline' }}<span v-if="acc.phone"> · {{ acc.phone }}</span>
                   </div>
                 </div>
-                <div v-if="viewAccountId === acc.id && viewFolderId === null" class="np-check">✓</div>
+                <div v-if="viewAccountId === acc.id && viewFolderId === null" class="np-check"><Check :size="12" /></div>
               </button>
               <!-- 2026-06-11: nút nhanh per-nick (port main): Sync danh bạ / Sync lịch sử /
                    Kết nối lại / Đăng nhập QR. Mờ theo liveStatus cho nhất quán. -->
@@ -203,7 +203,7 @@
         <!-- RIGHT: nick grid + edit -->
         <div class="ml-edit">
           <div v-if="!editingFolder && !creating" class="ml-empty">
-            <div class="ml-empty-icon">📂</div>
+            <div class="ml-empty-icon"><Folder :size="28" /></div>
             <div class="ml-empty-title">Chọn 1 thư mục bên trái</div>
             <div class="ml-empty-sub">hoặc tạo mới để bắt đầu</div>
           </div>
@@ -220,7 +220,7 @@
                   maxlength="64"
                 />
               </div>
-              <button v-if="editingFolder" type="button" class="ml-delete-btn" @click="onDeleteFolder">🗑 Xoá</button>
+              <button v-if="editingFolder" type="button" class="ml-delete-btn" @click="onDeleteFolder"><Trash2 :size="13" class="inline-icon" /> Xoá</button>
             </div>
 
             <div class="ml-nick-section-head">
@@ -235,7 +235,7 @@
                   <option v-for="o in ownerOptions" :key="o.id" :value="o.id">{{ o.name }}</option>
                 </select>
                 <div class="ml-nick-search">
-                  <span class="ic">🔍</span>
+                  <span class="ic"><Search :size="13" /></span>
                   <input v-model="nickSearch" type="text" placeholder="Tìm nick..." />
                 </div>
               </div>
@@ -254,7 +254,7 @@
                 :class="[nickStateClass(acc), { selected: formAccountIds.has(acc.id) }]"
                 @click="toggleAccount(acc.id)"
               >
-                <div class="nick-check"><span v-if="formAccountIds.has(acc.id)">✓</span></div>
+                <div class="nick-check"><Check v-if="formAccountIds.has(acc.id)" :size="12" /></div>
                 <div class="nick-head">
                   <img v-if="acc.avatarUrl" :src="acc.avatarUrl" class="nick-avatar-img" :alt="acc.displayName || ''" />
                   <div v-else class="nick-avatar" :style="{ background: accountGradient(acc.id) }">{{ initials(acc.displayName) }}</div>
@@ -298,8 +298,8 @@
             @click="onSave"
           >
             <span v-if="saving">Đang lưu...</span>
-            <span v-else-if="creating">💾 Tạo thư mục</span>
-            <span v-else>💾 Lưu thay đổi</span>
+            <span v-else-if="creating"><Save :size="13" class="inline-icon" /> Tạo thư mục</span>
+            <span v-else><Save :size="13" class="inline-icon" /> Lưu thay đổi</span>
           </button>
         </div>
       </div>
@@ -310,6 +310,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
+import { Folder, Settings, X, Globe, User, Search, Check, Trash2, Save } from 'lucide-vue-next';
 import type { AccountFolder } from '@/composables/use-inbox-filters';
 import { useZaloAccounts, type ZaloAccount } from '@/composables/use-zalo-accounts';
 import { api } from '@/api/index';
@@ -1473,4 +1474,5 @@ onMounted(() => {
 }
 .btn.primary:hover { background: #4E5AB8; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

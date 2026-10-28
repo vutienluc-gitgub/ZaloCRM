@@ -209,7 +209,13 @@
                 :class="{ selected: filters.state.autoTags.includes(at.key) }"
                 :title="at.tip"
                 @click="toggleAutoTag(at.key)"
-              >{{ at.icon }} {{ at.label }}</button>
+              >
+                <FlameIcon v-if="at.key === 'active'" :size="12" class="inline-icon text-error" />
+                <CheckCircle2 v-else-if="at.key === 'ready'" :size="12" class="inline-icon text-success" />
+                <Clock v-else-if="at.key === 'stuck'" :size="12" class="inline-icon text-warning" />
+                <Snowflake v-else-if="at.key === 'cold'" :size="12" class="inline-icon text-slate-400" />
+                {{ at.label }}
+              </button>
             </div>
           </template>
 
@@ -238,7 +244,7 @@
               :class="{ active: filters.activePresetId.value === preset.id }"
               @click="filters.applyPreset(preset); openPopover = null"
             >
-              <span class="po-preset-emoji">{{ preset.emoji || '⭐' }}</span>
+              <span class="po-preset-emoji">{{ preset.emoji || '' }}</span>
               <span class="po-preset-name">{{ preset.name }}</span>
             </button>
             <button class="po-create-btn" type="button" @click="onCreatePresetFromPopover">+ Lưu bộ lọc hiện tại</button>
@@ -433,7 +439,7 @@
           :class="{ active: filters.activePresetId.value === preset.id }"
           @click="filters.applyPreset(preset)"
           :title="preset.name"
-        >{{ preset.emoji || '⭐' }} {{ preset.name }}</button>
+        >{{ preset.emoji || '' }} {{ preset.name }}</button>
         <button class="saved-chip add" type="button" @click="onCreatePreset">+ Lưu</button>
       </div>
 
@@ -513,7 +519,13 @@
                 :class="{ selected: filters.state.autoTags.includes(at.key) }"
                 :title="at.tip"
                 @click="toggleAutoTag(at.key)"
-              >{{ at.icon }} {{ at.label }}</button>
+              >
+                <FlameIcon v-if="at.key === 'active'" :size="12" class="inline-icon text-error" />
+                <CheckCircle2 v-else-if="at.key === 'ready'" :size="12" class="inline-icon text-success" />
+                <Clock v-else-if="at.key === 'stuck'" :size="12" class="inline-icon text-warning" />
+                <Snowflake v-else-if="at.key === 'cold'" :size="12" class="inline-icon text-slate-400" />
+                {{ at.label }}
+              </button>
             </div>
           </div>
         </section>
@@ -735,7 +747,13 @@
             <div class="subsection-label">Kiểu tương tác</div>
             <div class="event-row" v-for="p in ENGAGEMENT_PATTERNS" :key="p.key" :class="{ checked: filters.state.engagementPatterns.includes(p.key) }" :title="p.tip" @click="toggleEngagementPattern(p.key)">
               <div class="left">
-                <span class="icon">{{ p.icon }}</span>
+                <span class="icon">
+                  <FlameIcon v-if="p.key === 'hot'" :size="12" class="inline-icon text-error" />
+                  <Award v-else-if="p.key === 'champion'" :size="12" class="inline-icon text-brand" />
+                  <TrendingUp v-else-if="p.key === 'stable'" :size="12" class="inline-icon text-success" />
+                  <AlertTriangleIcon v-else-if="p.key === 'cooling'" :size="12" class="inline-icon text-warning" />
+                  <Snowflake v-else-if="p.key === 'cold'" :size="12" class="inline-icon text-slate-400" />
+                </span>
                 <span class="lbl">{{ p.label }}</span>
               </div>
             </div>
@@ -764,23 +782,21 @@
           </header>
         </section>
 
-        <!-- TIER 3: BUSINESS (defer) -->
-        <section class="section collapsed disabled">
-          <header class="section-header" title="Lọc theo giá trị đơn hàng — chờ tích hợp hoá đơn">
+        <!-- TIER 3: BUSINESS -->
+        <section class="section">
+          <header class="section-header" tabindex="0" role="button" aria-expanded="true">
             <div class="left"><span class="emoji"><BriefcaseIcon :size="14" :stroke-width="2" /></span>Giá trị kinh doanh</div>
             <div class="right">
-              <span class="defer-tag">sắp ra</span>
               <span class="chevron"><ChevronDownIcon :size="14" :stroke-width="2" /></span>
             </div>
           </header>
         </section>
 
-        <!-- TIER 3: AI SIGNAL (defer) -->
-        <section class="section collapsed disabled">
-          <header class="section-header" title="Lọc theo tín hiệu do AI phân tích — sắp ra mắt">
+        <!-- TIER 3: AI SIGNAL -->
+        <section class="section">
+          <header class="section-header" tabindex="0" role="button" aria-expanded="true">
             <div class="left"><span class="emoji"><BotIcon :size="14" :stroke-width="2" /></span>Tín hiệu AI</div>
             <div class="right">
-              <span class="defer-tag">sắp ra</span>
               <span class="chevron"><ChevronDownIcon :size="14" :stroke-width="2" /></span>
             </div>
           </header>
@@ -826,6 +842,7 @@ import { api } from '@/api/index';
 // 2026-06-08 (anh chốt): mở rộng cho chrome panel — chevron section, close, search, collapse.
 import {
   Tag, Gauge, Clock, CalendarClock, UserRoundCog,
+  Flame as FlameIcon, CheckCircle2, Snowflake, Award, TrendingUp, Bookmark as BookmarkIcon,
   ChevronDown as ChevronDownIcon,
   ChevronsRight as ChevronsRightIcon,
   ChevronsLeft as ChevronsLeftIcon,
@@ -1164,10 +1181,10 @@ const filteredZaloTags = computed<SidebarTag[]>(() => {
 // 2026-06-08 — Key khớp DB (Friend.autoTags từ scoring engine). 'hot' cũ KHÔNG tồn
 // tại nên bỏ. Icon/label đồng bộ constants/auto-tags.ts (source of truth).
 const AUTO_TAGS: Array<{ key: AutoTagKey; icon: string; label: string; tip: string }> = [
-  { key: 'active', icon: '🔥', label: 'Hoạt động', tip: 'KH vừa nhắn tin trong 24h qua — đang tương tác tích cực.' },
-  { key: 'ready', icon: '💯', label: 'Sẵn sàng chốt', tip: 'Điểm tiềm năng ≥ 80 — nên đẩy báo giá/booking ngay.' },
-  { key: 'stuck', icon: '⏰', label: 'Đình trệ', tip: 'KH kẹt một trạng thái quá lâu — cần rà soát lý do.' },
-  { key: 'cold', icon: '🧊', label: 'Nguội', tip: 'KH im lặng 15–60 ngày — cần hâm nóng lại.' },
+  { key: 'active', icon: '', label: 'Hoạt động', tip: 'KH vừa nhắn tin trong 24h qua — đang tương tác tích cực.' },
+  { key: 'ready', icon: '', label: 'Sẵn sàng chốt', tip: 'Điểm tiềm năng ≥ 80 — nên đẩy báo giá/booking ngay.' },
+  { key: 'stuck', icon: '', label: 'Đình trệ', tip: 'KH kẹt một trạng thái quá lâu — cần rà soát lý do.' },
+  { key: 'cold', icon: '', label: 'Nguội', tip: 'KH im lặng 15–60 ngày — cần hâm nóng lại.' },
 ];
 
 const SCORE_TIERS: Array<{ key: NonNullable<ScoreTier>; label: string; min: number; max: number; tip: string }> = [
@@ -1205,11 +1222,11 @@ const LAST_MESSAGE_OPTIONS: Array<{ key: NonNullable<LastMessageWithin>; label: 
 
 // Phase 8 — Engagement pattern filter buttons
 const ENGAGEMENT_PATTERNS: Array<{ key: EngagementPatternKey; icon: string; label: string; tip: string }> = [
-  { key: 'hot', icon: '🔥', label: 'Đang nóng lên', tip: 'KH nhắn tin nhiều dần lên gần đây — cơ hội tốt để chốt.' },
-  { key: 'champion', icon: '💎', label: 'Xuất sắc (đều cao)', tip: 'KH tương tác đều và cao suốt nhiều tuần — khách trung thành.' },
-  { key: 'stable', icon: '📈', label: 'Ổn định', tip: 'KH giữ mức tương tác đều, không tăng không giảm.' },
-  { key: 'cooling', icon: '⚠', label: 'Đang nguội', tip: 'KH nhắn ít dần đi — cần follow-up trước khi mất hẳn.' },
-  { key: 'cold', icon: '😴', label: 'Lạnh', tip: 'KH gần như im lặng — cần chiến dịch hâm nóng lại.' },
+  { key: 'hot', icon: '', label: 'Đang nóng lên', tip: 'KH nhắn tin nhiều dần lên gần đây — cơ hội tốt để chốt.' },
+  { key: 'champion', icon: '', label: 'Xuất sắc (đều cao)', tip: 'KH tương tác đều và cao suốt nhiều tuần — khách trung thành.' },
+  { key: 'stable', icon: '', label: 'Ổn định', tip: 'KH giữ mức tương tác đều, không tăng không giảm.' },
+  { key: 'cooling', icon: '', label: 'Đang nguội', tip: 'KH nhắn ít dần đi — cần follow-up trước khi mất hẳn.' },
+  { key: 'cold', icon: '', label: 'Lạnh', tip: 'KH gần như im lặng — cần chiến dịch hâm nóng lại.' },
 ];
 
 // 2026-06-09 (anh chốt) — Nhóm lọc "Tin nhắn" (user vs bot), radio 1-of-3.
@@ -1415,7 +1432,7 @@ function avatarStyle(member: AccountFolder['members'][number], idx: number) {
 async function onCreatePreset() {
   const name = window.prompt('Tên bộ lọc:');
   if (!name?.trim()) return;
-  const emoji = window.prompt('Emoji (tuỳ chọn, vd ⭐ 🔥 🥶):') || '⭐';
+  const emoji = window.prompt('Icon hoặc ghi chú (tuỳ chọn):') || '';
   await props.filters.createPreset({ name: name.trim(), emoji });
 }
 
@@ -2462,4 +2479,8 @@ watch(
 .section .left .emoji { margin-right: 2px; }
 .section .left .emoji svg, .fp-label svg, .saved-label svg, .po-title-text svg,
 .left .icon svg { display: block; flex-shrink: 0; }
+</style>
+
+<style scoped>
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; flex-shrink: 0; }
 </style>

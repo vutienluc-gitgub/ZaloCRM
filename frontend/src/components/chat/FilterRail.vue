@@ -131,7 +131,7 @@
         :title="collapsed ? `Tin nhắn nhóm${counts?.groups != null ? ' (' + counts.groups + ')' : ''}` : ''"
         @click="setThreadType('group')"
       >
-        <span class="icon">👥</span>
+        <span class="icon"><Users :size="14" /></span>
         <span class="label">Tin nhắn nhóm</span>
         <span class="count" v-if="!collapsed && counts?.groups != null">{{ counts.groups }}</span>
       </div>
@@ -141,7 +141,7 @@
         :title="collapsed ? `Tin nhắn user 1-1${counts?.users != null ? ' (' + counts.users + ')' : ''}` : ''"
         @click="setThreadType('user')"
       >
-        <span class="icon">👤</span>
+        <span class="icon"><User :size="14" /></span>
         <span class="label">Tin nhắn user (1-1)</span>
         <span class="count" v-if="!collapsed && counts?.users != null">{{ counts.users }}</span>
       </div>
@@ -167,7 +167,7 @@
         :title="collapsed ? 'Chưa trả lời' : ''"
         @click="toggleFilter('unreplied')"
       >
-        <span class="icon">↩</span>
+        <span class="icon"><RotateCcw :size="14" /></span>
         <span class="label">Chưa trả lời</span>
         <div v-if="!collapsed" class="smax-toggle-pill" :class="{ on: filters.unreplied }"></div>
         <span v-else-if="filters.unreplied" class="badge-dot" />
@@ -191,7 +191,7 @@
 
       <!-- Trạng thái KH -->
       <div class="filter-row filter-row-select" :title="collapsed ? 'Trạng thái KH' : ''">
-        <span class="icon">🏷</span>
+        <span class="icon"><Tag :size="14" /></span>
         <template v-if="!collapsed">
           <select v-model="advFilters.statusId" @change="emitFilters" class="rail-select">
             <option value="">Trạng thái KH: tất cả</option>
@@ -203,7 +203,7 @@
 
       <!-- Sale phụ trách -->
       <div class="filter-row filter-row-select" :title="collapsed ? 'Sale phụ trách' : ''">
-        <span class="icon">👤</span>
+        <span class="icon"><User :size="14" /></span>
         <template v-if="!collapsed">
           <select v-model="advFilters.assignedUserId" @change="emitFilters" class="rail-select">
             <option value="">Sale: tất cả</option>
@@ -215,12 +215,12 @@
 
       <!-- Có Zalo? -->
       <div class="filter-row filter-row-select" :title="collapsed ? 'Trạng thái Zalo' : ''">
-        <span class="icon">💬</span>
+        <span class="icon"><MessageSquare :size="14" /></span>
         <template v-if="!collapsed">
           <select v-model="advFilters.hasZalo" @change="emitFilters" class="rail-select">
             <option value="">Zalo: tất cả</option>
-            <option value="true">✓ Có Zalo</option>
-            <option value="false">✗ Không có</option>
+            <option value="true">Có Zalo</option>
+            <option value="false">Không có</option>
             <option value="unknown">? Chưa tra</option>
           </select>
         </template>
@@ -229,14 +229,14 @@
 
       <!-- KB Zalo per-pair -->
       <div class="filter-row filter-row-select" :title="collapsed ? 'Trạng thái KB Zalo' : ''">
-        <span class="icon">🤝</span>
+        <span class="icon"><UserPlus :size="14" /></span>
         <template v-if="!collapsed">
           <select v-model="advFilters.relationshipKindAny" @change="emitFilters" class="rail-select">
             <option value="">KB Zalo: tất cả</option>
-            <option value="friend">✓ Đã KB</option>
+            <option value="friend">Đã kết bạn</option>
             <option value="pending_friend">… Đang mời</option>
-            <option value="chatting_stranger">💬 Chat lạ</option>
-            <option value="ghost">🚫 Ngắt</option>
+            <option value="chatting_stranger">Chat lạ</option>
+            <option value="ghost">Ngắt kết nối</option>
           </select>
         </template>
         <span v-else-if="advFilters.relationshipKindAny" class="badge-dot" />
@@ -244,7 +244,7 @@
 
       <!-- Lead score range -->
       <div class="filter-row filter-row-range" :title="collapsed ? 'Lead score range' : ''">
-        <span class="icon">⭐</span>
+        <span class="icon"><Star :size="14" /></span>
         <template v-if="!collapsed">
           <input type="number" v-model.number="advFilters.scoreMin" placeholder="Min" min="0" max="100" class="rail-score" @change="emitFilters" />
           <span class="dash">—</span>
@@ -267,7 +267,7 @@
 
       <!-- Date range -->
       <div class="filter-row filter-row-range" :title="collapsed ? 'Tin nhắn cuối: khoảng thời gian' : ''">
-        <span class="icon">📅</span>
+        <span class="icon"><Calendar :size="14" /></span>
         <template v-if="!collapsed">
           <input type="date" v-model="advFilters.dateFrom" class="rail-date" @change="emitFilters" />
           <input type="date" v-model="advFilters.dateTo" class="rail-date" @change="emitFilters" />
@@ -277,7 +277,7 @@
 
       <div v-if="!collapsed && hasAnyFilter" class="filter-divider"></div>
       <button v-if="!collapsed && hasAnyFilter" class="clear-all-btn" @click="clearAllFilters">
-        × Xoá tất cả bộ lọc
+        Xoá tất cả bộ lọc
       </button>
     </div>
   </aside>
@@ -286,6 +286,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import Avatar from '@/components/ui/Avatar.vue';
+import { Users, User, RotateCcw, Tag, MessageSquare, UserPlus, Star, Calendar } from 'lucide-vue-next';
 import { api } from '@/api';
 
 interface ZaloAccountLite {

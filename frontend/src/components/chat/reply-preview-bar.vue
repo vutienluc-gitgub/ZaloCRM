@@ -74,11 +74,11 @@ function extractPreview(content: string, msgType?: string | null): string {
       if (p.description && typeof p.description === 'string' && p.description.trim()) {
         return p.description;
       }
-      if (p.href && typeof p.href === 'string') return '🔗 ' + p.href.slice(0, 60);
+      if (p.href && typeof p.href === 'string') return p.href.slice(0, 60);
       // Action-based detection
       if (typeof p.action === 'string') {
         if (p.action.includes('calltime') || p.action.includes('misscall')) return mediaFallback('call');
-        if (p.action === 'msginfo.actionlist') return '📅 Nhắc hẹn';
+        if (p.action === 'msginfo.actionlist') return '[Nhắc hẹn]';
       }
       return mediaFallback(msgType);
     } catch {
@@ -92,15 +92,15 @@ function extractPreview(content: string, msgType?: string | null): string {
 function mediaFallback(msgType?: string | null): string {
   const t = (msgType || '').toLowerCase();
   if (!t) return '(tin nhắn)';
-  if (t.includes('image') || t.includes('photo')) return '📷 Hình ảnh';
-  if (t.includes('voice') || t.includes('audio')) return '🎤 Tin nhắn thoại';
-  if (t.includes('video')) return '🎥 Video';
-  if (t.includes('sticker')) return '🎴 Sticker';
-  if (t.includes('gif')) return '🎞 GIF';
-  if (t.includes('file') || t.includes('doc')) return '📎 Tệp đính kèm';
-  if (t.includes('link')) return '🔗 Liên kết';
-  if (t.includes('location')) return '📍 Vị trí';
-  if (t.includes('call')) return '📞 Cuộc gọi';
+  if (t.includes('image') || t.includes('photo')) return '[Hình ảnh]';
+  if (t.includes('voice') || t.includes('audio')) return '[Tin nhắn thoại]';
+  if (t.includes('video')) return '[Video]';
+  if (t.includes('sticker')) return '[Sticker]';
+  if (t.includes('gif')) return '[GIF]';
+  if (t.includes('file') || t.includes('doc')) return '[Tệp đính kèm]';
+  if (t.includes('link')) return '[Liên kết]';
+  if (t.includes('location')) return '[Vị trí]';
+  if (t.includes('call')) return '[Cuộc gọi]';
   return '(tin nhắn)';
 }
 </script>
