@@ -1876,7 +1876,12 @@ watch(
   border-bottom: 1px solid var(--smax-grey-100);
   cursor: pointer; /* click anywhere toggle expand */
 }
-.smax-table tbody tr.master-row:hover { background: var(--smax-grey-50); }
+.smax-table tbody tr.master-row:hover { background: #f1f5f9; }
+.empty {
+  color: var(--smax-grey-600, #475569);
+  font-size: 12px;
+  user-select: none;
+}
 .smax-table tbody tr.master-row.open {
   background: var(--smax-primary-soft);
 }

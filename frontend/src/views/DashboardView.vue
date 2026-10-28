@@ -166,7 +166,13 @@
                   </div>
                   <span class="at-rowpill at-rowpill--unread">{{ u.unreadCount }}</span>
                 </div>
-                <div v-if="!me?.urgent.length" class="at-empty"><div class="at-empty__title">Không có tin nào chưa rep</div></div>
+                <div v-if="!me?.urgent.length" class="at-empty">
+                  <div class="at-empty__icon at-empty__icon--success">
+                    <CircleCheck :size="26" :stroke-width="2" />
+                  </div>
+                  <div class="at-empty__title">Không có tin nào chưa rep</div>
+                  <div class="at-empty__desc">Tuyệt vời! Bạn đã phản hồi hết tất cả tin nhắn khách hàng.</div>
+                </div>
               </div>
             </div>
 
@@ -226,7 +232,13 @@
                   </div>
                   <span class="at-list-row__rt"><Gift :size="13" :stroke-width="2" /></span>
                 </div>
-                <div v-if="reminderCount === 0" class="at-empty"><div class="at-empty__title">Không có nhắc nhở</div></div>
+                <div v-if="reminderCount === 0" class="at-empty">
+                  <div class="at-empty__icon at-empty__icon--muted">
+                    <CalendarClock :size="26" :stroke-width="2" />
+                  </div>
+                  <div class="at-empty__title">Không có nhắc nhở nào</div>
+                  <div class="at-empty__desc">Hôm nay không có lịch hẹn hoặc sinh nhật cần nhắc.</div>
+                </div>
               </div>
             </div>
 
