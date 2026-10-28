@@ -842,7 +842,7 @@ import { api } from '@/api/index';
 // 2026-06-08 (anh chốt): mở rộng cho chrome panel — chevron section, close, search, collapse.
 import {
   Tag, Gauge, Clock, CalendarClock, UserRoundCog,
-  Flame as FlameIcon, CheckCircle2, Snowflake, Award, TrendingUp, Bookmark as BookmarkIcon,
+  Flame as FlameIcon, CheckCircle2, Snowflake, Award, TrendingUp, 
   ChevronDown as ChevronDownIcon,
   ChevronsRight as ChevronsRightIcon,
   ChevronsLeft as ChevronsLeftIcon,

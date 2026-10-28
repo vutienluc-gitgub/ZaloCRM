@@ -1091,9 +1091,7 @@ function ccDateLabel(iso: string): string {
   } catch { return ''; }
 }
 
-const patternIcon = computed(() => {
-  return '';
-});
+
 
 const patternLabel = computed(() => {
   const p = cockpit.value?.engagementPattern;

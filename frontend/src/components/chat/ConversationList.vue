@@ -938,7 +938,7 @@ function computeLastMessagePreview(conv: Conversation): PreviewResult {
     const isMissed = action.includes('misscall');
     // isCaller=1 nghĩa là bên SDK đang dùng là CALLER. Map sang sender ZaloCRM:
     // senderType='self' (sale gửi) đồng nghĩa sale là caller.
-    const icon = '';
+//     const icon = '';
     const kind = isVideo ? 'video' : 'gọi';
 
     if (isMissed) {
@@ -1073,9 +1073,9 @@ function parseSentiment(conv: Conversation): AiSentiment | null {
 // qua component con ConvTime (2026-06-11 perf). Không còn định nghĩa ở đây.
 
 // ─── Phase 8 — Engagement pattern badge ──────────────────
-function patternIcon(_pattern: string | null | undefined): string {
-  return '';
-}
+// function patternIcon(_pattern: string | null | undefined): string {
+//   return '';
+// }
 
 function patternLabel(pattern: string | null | undefined): string {
   const labels: Record<string, string> = {
