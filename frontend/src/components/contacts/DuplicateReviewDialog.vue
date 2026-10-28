@@ -27,7 +27,6 @@
           :class="{ active: matchTypeFilter === opt.value }"
           @click="setMatchTypeFilter(opt.value)"
         >
-          <span class="chip-icon">{{ opt.icon }}</span>
           {{ opt.label }}
           <span v-if="(typeCounts[opt.value] ?? 0) > 0" class="chip-count">{{ typeCounts[opt.value] }}</span>
         </button>
@@ -56,11 +55,11 @@
           >
             <header class="group-head">
               <span class="match-badge" :class="badgeClass(group.matchType)">
-                {{ matchTypeIcon(group.matchType) }} {{ matchTypeLabel(group.matchType) }}
+                {{ matchTypeLabel(group.matchType) }}
               </span>
               <span class="group-count">{{ group.contacts.length }} KH</span>
               <span v-if="isConflict(group.matchType)" class="conflict-warn" :title="conflictTooltip(group.matchType)">
-                ⚠ Cần xem kỹ
+                <AlertTriangle :size="12" class="inline-icon" /> Cần xem kỹ
               </span>
               <span class="group-spacer"></span>
               <span class="group-similarity" v-if="group.confidence">
@@ -86,7 +85,7 @@
                   <div class="arrow-label">Gộp vào</div>
                 </div>
                 <div class="action-summary">
-                  <div class="summary-title">{{ matchTypeIcon(group.matchType) }} Trùng theo</div>
+                  <div class="summary-title">Trùng theo</div>
                   <div class="summary-type">{{ matchTypeLabel(group.matchType) }}</div>
                   <div v-if="differentFields(group).length > 0" class="summary-diff">
                     <div class="diff-label">Khác nhau:</div>
@@ -138,8 +137,8 @@
                   v-model="selectedPrimary[group.id]"
                   class="card-radio"
                 />
-                <div v-if="idx === 0" class="role-badge primary">🏆 KH gốc đề xuất</div>
-                <div v-else class="role-badge secondary">↘ KH dup #{{ idx }}</div>
+                <div v-if="idx === 0" class="role-badge primary"><Trophy :size="11" class="inline-icon text-amber-500" /> KH gốc đề xuất</div>
+                <div v-else class="role-badge secondary">KH dup #{{ idx }}</div>
                 <ContactCardInner :contact="contact" :group-contacts="group.contacts" />
               </label>
               <div class="multi-actions">
@@ -163,9 +162,13 @@
 
       <!-- Pagination -->
       <footer v-if="totalPages > 1" class="dup-pagination">
-        <button class="page-btn" :disabled="page <= 1" @click="changePage(page - 1)">← Trước</button>
+        <button class="page-btn" :disabled="page <= 1" @click="changePage(page - 1)">
+          <ChevronLeft :size="13" class="inline-icon" /> Trước
+        </button>
         <span class="page-info">Trang {{ page }} / {{ totalPages }} ({{ duplicateTotal }} nhóm)</span>
-        <button class="page-btn" :disabled="page >= totalPages" @click="changePage(page + 1)">Sau →</button>
+        <button class="page-btn" :disabled="page >= totalPages" @click="changePage(page + 1)">
+          Sau <ChevronRight :size="13" class="inline-icon" />
+        </button>
       </footer>
     </v-card>
   </v-dialog>
@@ -177,6 +180,7 @@ import Avatar from '@/components/ui/Avatar.vue';
 import { useContactIntelligence } from '@/composables/use-contacts';
 import { useToast } from '@/composables/use-toast';
 import { formatInOrgTz } from '@/composables/use-org-timezone';
+import { AlertTriangle, Trophy, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 
 interface ContactInGroup {
   id: string;
@@ -223,13 +227,13 @@ const dismissing = ref<string | null>(null);
 const totalPages = computed(() => Math.max(1, Math.ceil(duplicateTotal.value / limit)));
 
 const matchTypeOptions = [
-  { value: '',                                  label: 'Tất cả',          icon: '◉' },
-  { value: 'zalo_global_id',                    label: 'GlobalId trùng',  icon: '🌐' },
-  { value: 'zalo_username_conflict_globalId',   label: 'Username xung đột', icon: '⚠' },
-  { value: 'phone',                             label: 'SĐT trùng',       icon: '📞' },
-  { value: 'phone_conflict_username',           label: 'SĐT xung đột',    icon: '⚠' },
-  { value: 'zalo_uid',                          label: 'UID trùng',       icon: '🆔' },
-  { value: 'name_with_soft_match',              label: 'Tên gần giống',   icon: '👤' },
+  { value: '',                                  label: 'Tất cả' },
+  { value: 'zalo_global_id',                    label: 'GlobalId trùng' },
+  { value: 'zalo_username_conflict_globalId',   label: 'Username xung đột' },
+  { value: 'phone',                             label: 'SĐT trùng' },
+  { value: 'phone_conflict_username',           label: 'SĐT xung đột' },
+  { value: 'zalo_uid',                          label: 'UID trùng' },
+  { value: 'name_with_soft_match',              label: 'Tên gần giống' },
 ];
 
 const typeCounts = computed(() => {
@@ -250,8 +254,8 @@ const filteredGroups = computed<(DupGroup & { matchType: string; confidence?: nu
 function matchTypeLabel(t: string) {
   return matchTypeOptions.find(o => o.value === t)?.label || t;
 }
-function matchTypeIcon(t: string) {
-  return matchTypeOptions.find(o => o.value === t)?.icon || '◉';
+function matchTypeIcon(_t: string) {
+  return '';
 }
 function badgeClass(t: string) {
   if (t === 'zalo_global_id') return 'badge-strong';
@@ -420,37 +424,30 @@ const ContactCardInner = defineComponent({
         ]),
         h('div', { class: 'card-fields' }, [
           h('div', { class: ['field', differs('phone') && 'highlight'].filter(Boolean) }, [
-            h('span', { class: 'field-icon' }, '📞'),
             h('span', { class: 'field-label' }, 'SĐT:'),
             h('span', { class: 'field-value' }, c.phone || '—'),
           ]),
           h('div', { class: ['field', 'mono', differs('zaloUid') && 'highlight'].filter(Boolean) }, [
-            h('span', { class: 'field-icon' }, '🌐'),
             h('span', { class: 'field-label' }, 'Zalo UID:'),
             h('span', { class: 'field-value' }, shortId(c.zaloUid)),
           ]),
           h('div', { class: ['field', 'mono', differs('zaloGlobalId') && 'highlight'].filter(Boolean) }, [
-            h('span', { class: 'field-icon' }, '🆔'),
             h('span', { class: 'field-label' }, 'Global ID:'),
             h('span', { class: 'field-value' }, shortId(c.zaloGlobalId) || '—'),
           ]),
           h('div', { class: ['field', 'mono', differs('zaloUsername') && 'highlight'].filter(Boolean) }, [
-            h('span', { class: 'field-icon' }, '@'),
             h('span', { class: 'field-label' }, 'Username:'),
             h('span', { class: 'field-value' }, c.zaloUsername || '—'),
           ]),
           c.assignedUser ? h('div', { class: 'field' }, [
-            h('span', { class: 'field-icon' }, '👤'),
             h('span', { class: 'field-label' }, 'Sale:'),
             h('span', { class: 'field-value' }, c.assignedUser.fullName || '—'),
           ]) : null,
           h('div', { class: 'field' }, [
-            h('span', { class: 'field-icon' }, '📅'),
             h('span', { class: 'field-label' }, 'Tạo lúc:'),
             h('span', { class: 'field-value' }, formatDate(c.createdAt)),
           ]),
           c.source ? h('div', { class: 'field' }, [
-            h('span', { class: 'field-icon' }, '🔖'),
             h('span', { class: 'field-label' }, 'Nguồn:'),
             h('span', { class: 'field-value' }, c.source),
           ]) : null,
@@ -479,7 +476,7 @@ const ContactCard = defineComponent({
       onClick: () => emit('click'),
     }, [
       h('div', { class: ['col-role-badge', props.role] }, [
-        props.role === 'primary' ? '🏆 KH GỐC (sẽ giữ lại)' : '↘ KH DUP (sẽ gộp vào)',
+        props.role === 'primary' ? 'KH GỐC (sẽ giữ lại)' : 'KH DUP (sẽ gộp vào)',
       ]),
       h(ContactCardInner, { contact: props.contact, groupContacts: props.groupContacts }),
     ]);
@@ -843,6 +840,13 @@ const ContactCard = defineComponent({
   font-size: 12.5px;
   cursor: pointer; font-family: inherit;
   border: 1px solid;
+}
+
+.inline-icon {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 4px;
+  flex-shrink: 0;
 }
 
 /* Pagination */

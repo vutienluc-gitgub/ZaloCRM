@@ -93,16 +93,16 @@
         />
       </div>
       <select v-model="filters.threadType" @change="fetchContacts" title="Loại khách: cá nhân (người có SĐT) hay nhóm Zalo">
-        <option value="">Tất cả</option>
-        <option value="user">👤 Cá nhân</option>
-        <option value="group">👥 Nhóm</option>
+        <option value="">Tất cả loại khách</option>
+        <option value="user">Cá nhân</option>
+        <option value="group">Nhóm</option>
       </select>
       <!-- Filter Zalo (2026-06-05 Anh chốt: label "Zalo", options Có/Không/Tất cả/Chưa tìm) -->
       <select v-model="filters.hasZalo" @change="fetchContacts" title="Zalo">
         <option value="">Zalo: Tất cả</option>
-        <option value="true">🟢 Có</option>
-        <option value="false">🔴 Không</option>
-        <option value="unknown">⚪ Chưa tìm</option>
+        <option value="true">Có Zalo</option>
+        <option value="false">Không có Zalo</option>
+        <option value="unknown">Chưa tìm</option>
       </select>
       <select v-model="filters.statusId" @change="fetchContacts" title="Trạng thái KH">
         <option value="">Trạng thái KH</option>
@@ -124,7 +124,7 @@
 
     <!-- Advanced filter panel (collapsible) — 2026-06-03 fix UI gọn -->
     <div v-if="showAdvanced" class="advanced-panel">
-      <div class="adv-panel-title">🔎 Bộ lọc nâng cao</div>
+      <div class="adv-panel-title"><Filter :size="14" class="inline-icon" /> Bộ lọc nâng cao</div>
       <!-- 2026-06-03: Nguồn khách ẩn vào đây (đổi chỗ với Trạng thái Zalo) -->
       <div class="adv-group">
         <label>Nguồn khách</label>
@@ -137,10 +137,10 @@
         <label>Trạng thái kết bạn (per-nick)</label>
         <select v-model="filters.relationshipKindAny" @change="fetchContacts">
           <option value="">Tất cả</option>
-          <option value="friend">🟢 Đã kết bạn</option>
-          <option value="pending_friend">🟡 Đang mời</option>
-          <option value="chatting_stranger">🔵 Chat lạ</option>
-          <option value="ghost">⚪ Đã ngắt</option>
+          <option value="friend">Đã kết bạn</option>
+          <option value="pending_friend">Đang mời</option>
+          <option value="chatting_stranger">Chat lạ</option>
+          <option value="ghost">Đã ngắt</option>
         </select>
       </div>
       <div class="adv-group">
@@ -159,19 +159,19 @@
         </div>
       </div>
       <div class="adv-group adv-inline">
-        <label title="Lọc khách đã được gắn từ N sequence trở lên (tính cả tự động lẫn thủ công) — để lọc bớt KH gắn quá nhiều">🔁 Gắn sequence ≥</label>
+        <label title="Lọc khách đã được gắn từ N sequence trở lên (tính cả tự động lẫn thủ công) — để lọc bớt KH gắn quá nhiều"><Repeat :size="12" class="inline-icon" /> Gắn sequence ≥</label>
         <div class="adv-row">
           <input type="number" v-model.number="filters.sequenceAttachMin" min="1" placeholder="N" class="score-input-mini" @change="fetchContacts" />
         </div>
       </div>
       <div class="adv-group adv-inline">
-        <label title="Lọc khách đã được gửi lời mời kết bạn từ N lần trở lên — để loại bớt SĐT bị nhiều chiến dịch gửi kết bạn">📨 Gửi kết bạn ≥</label>
+        <label title="Lọc khách đã được gửi lời mời kết bạn từ N lần trở lên — để loại bớt SĐT bị nhiều chiến dịch gửi kết bạn"><UserPlus :size="12" class="inline-icon" /> Gửi kết bạn ≥</label>
         <div class="adv-row">
           <input type="number" v-model.number="filters.friendInviteMin" min="1" placeholder="N" class="score-input-mini" @change="fetchContacts" />
         </div>
       </div>
       <div class="adv-group adv-inline adv-wide">
-        <label>📅 Khoảng tương tác</label>
+        <label><Calendar :size="12" class="inline-icon" /> Khoảng tương tác</label>
         <div class="adv-row">
           <input type="date" v-model="filters.dateFrom" class="date-input" @change="fetchContacts" />
           <span class="dash">→</span>
@@ -264,8 +264,9 @@
             >
               <!-- col1: caret -->
               <td class="cl-caret-cell">
-                <button class="cl-caret" @click.stop="toggleExpand(contact.id)">
-                  {{ expandedId === contact.id ? '▾' : '▸' }}
+                <button class="cl-caret" @click.stop="toggleExpand(contact.id)" :title="expandedId === contact.id ? 'Thu gọn' : 'Mở rộng'">
+                  <ChevronDown v-if="expandedId === contact.id" :size="14" class="inline-icon" />
+                  <ChevronRight v-else :size="14" class="inline-icon" />
                 </button>
               </td>
               <!-- col2 Tên (gộp avatar + tên trong 1 ô flex — avatar luôn thẳng dòng tên đầu,
@@ -360,7 +361,7 @@
                 </div>
                 <div v-else class="nick-count-grid">
                   <span v-for="b in nickCountChips(contact)" :key="b.kind" :class="['chip', 'nick-mini', b.cls]" :title="b.title">
-                    {{ b.icon }} {{ b.count }}
+                    <span class="sdot" :class="b.dotCls"></span> {{ b.count }}
                   </span>
                 </div>
               </td>
@@ -372,12 +373,12 @@
                     v-if="contact.viewerRole === 'primary'"
                     class="role-badge role-primary"
                     title="Bạn là người chịu trách nhiệm chính chăm khách hàng này"
-                  >👤 Phụ trách</span>
+                  ><UserCheck :size="11" class="inline-icon" /> Phụ trách</span>
                   <span
                     v-else-if="contact.viewerRole === 'collaborator'"
                     class="role-badge role-collab"
                     title="Bạn cùng chăm KH này qua nick của bạn (đồng đội với sale khác)"
-                  >🤝 Cùng chăm</span>
+                  ><Users :size="11" class="inline-icon" /> Cùng chăm</span>
                   <!-- 2026-06-03: Sale hỗ trợ — avatar stack từ contactAccess role=collaborator -->
                   <div v-if="assistSalesOf(contact).length" class="assist-row" :title="assistTooltip(contact)">
                     <span class="assist-avatars">
@@ -424,9 +425,9 @@
               </td>
               <td class="cl-zalo">
                 <!-- cl-zalo overflow hidden → pill KHÔNG tràn sang Action. 3 trạng thái mutex. -->
-                <span v-if="zaloDisplay(contact) === 'yes'" class="zpill zpill-yes" title="Có Zalo">🟢 Có</span>
-                <span v-else-if="zaloDisplay(contact) === 'no'" class="zpill zpill-no" title="Không tìm thấy Zalo">🔴 Ko</span>
-                <span v-else class="zpill zpill-wait" title="Chưa tìm Zalo">⚪ Chờ</span>
+                <span v-if="zaloDisplay(contact) === 'yes'" class="zpill zpill-yes" title="Có Zalo"><span class="sdot sdot-success mr-1"></span>Có</span>
+                <span v-else-if="zaloDisplay(contact) === 'no'" class="zpill zpill-no" title="Không tìm thấy Zalo"><span class="sdot sdot-error mr-1"></span>Ko</span>
+                <span v-else class="zpill zpill-wait" title="Chưa tìm Zalo"><span class="sdot sdot-grey mr-1"></span>Chờ</span>
               </td>
               <td v-if="visibleChildCols.zaloUid" class="c-extra" :title="'UID là per-nick — Cha không có UID. Mở ▸ xem UID từng nick.'">
                 <span v-if="(contact.childrenCount ?? 0) >= 1" class="chip chip-multi" title="UID riêng theo từng nick — mở ▸ xem">▸ {{ contact.childrenCount ?? 0 }} nick</span>
@@ -451,7 +452,7 @@
               </td>
               <td class="c-extra">
                 <div class="cl-action">
-                  <button class="cl-btn cl-btn-profile" @click.stop="openProfile(contact)" title="Xem & sửa hồ sơ khách hàng">👤 Hồ sơ</button>
+                  <button class="cl-btn cl-btn-profile" @click.stop="openProfile(contact)" title="Xem & sửa hồ sơ khách hàng"><User :size="12" class="inline-icon" /> Hồ sơ</button>
                   <!-- 💬 bỏ khỏi dòng KH Cha (chốt 2026-06-04): chat mở từ friend row,
                        vì 1 KH Cha có thể nhiều nick → chọn nick cụ thể ở row con. -->
                 </div>
@@ -489,7 +490,7 @@
                       <input
                         class="fr-alias"
                         :value="row.aliasInNick || ''"
-                        placeholder="✎ tên nhớ"
+                        placeholder="Tên nhớ..."
                         title="Tên nhớ (đồng bộ 2 chiều với Zalo)."
                         @click.stop
                         @change="onFriendAliasChange(row, ($event.target as HTMLInputElement).value)"
@@ -608,9 +609,13 @@
 
     <!-- Pagination -->
     <div class="pagination">
-      <button class="btn" :disabled="pagination.page <= 1" @click="changePage(pagination.page - 1)">← Trước</button>
+      <button class="btn" :disabled="pagination.page <= 1" @click="changePage(pagination.page - 1)">
+        <ChevronLeft :size="14" class="inline-icon" /> Trước
+      </button>
       <span class="page-info">Trang {{ pagination.page }} / {{ totalPages }}</span>
-      <button class="btn" :disabled="pagination.page >= totalPages" @click="changePage(pagination.page + 1)">Sau →</button>
+      <button class="btn" :disabled="pagination.page >= totalPages" @click="changePage(pagination.page + 1)">
+        Sau <ChevronRight :size="14" class="inline-icon" />
+      </button>
     </div>
 
     <!-- Dialogs -->
@@ -689,6 +694,7 @@ import {
   Check, Plus, Filter, SlidersHorizontal, Table, PanelRight,
   Search, Zap, CopyCheck, Lightbulb, RefreshCw, Download,
   Users, Repeat, UserPlus, Trophy, MessageSquare, ArrowUp,
+  User, UserCheck, ChevronDown, ChevronRight, ChevronLeft, Calendar,
 } from 'lucide-vue-next';
 
 const { isMobile } = useMobile();
@@ -940,15 +946,15 @@ const STAT_DOT: Record<string, string> = {
   newToday: 'var(--brand, #1786be)', highScore: '#f5a524', multiClaim: 'var(--purple, #8b5cf6)', noZalo: 'var(--error, #f04438)',
 };
 const statBoxes = computed<StatBox[]>(() => [
-  { key: 'total', icon: '📋', label: 'Tổng KH', value: stats.value.total ?? total.value },
-  { key: 'withNick', icon: '🟢', label: 'Có nick chăm', value: stats.value.withNick },
-  { key: 'active7d', icon: '🔥', label: 'Tương tác 7d', value: stats.value.activeRecently },
-  { key: 'newToday', icon: '🆕', label: 'Mới hôm nay', value: stats.value.newToday },
-  { key: 'highScore', icon: '⭐', label: 'Score ≥50', value: stats.value.highScore,
+  { key: 'total', icon: '', label: 'Tổng KH', value: stats.value.total ?? total.value },
+  { key: 'withNick', icon: '', label: 'Có nick chăm', value: stats.value.withNick },
+  { key: 'active7d', icon: '', label: 'Tương tác 7d', value: stats.value.activeRecently },
+  { key: 'newToday', icon: '', label: 'Mới hôm nay', value: stats.value.newToday },
+  { key: 'highScore', icon: '', label: 'Score ≥50', value: stats.value.highScore,
     filter: () => { filters.scoreMin = 50; filters.scoreMax = null; } },
-  { key: 'multiClaim', icon: '⚠', label: 'Đa nick (≥3)', value: stats.value.multiClaim,
+  { key: 'multiClaim', icon: '', label: 'Đa nick (≥3)', value: stats.value.multiClaim,
     filter: () => { filters.multiNick = 'true'; } },
-  { key: 'noZalo', icon: '📵', label: 'No Zalo', value: stats.value.noZalo,
+  { key: 'noZalo', icon: '', label: 'No Zalo', value: stats.value.noZalo,
     filter: () => { filters.hasZalo = 'false'; } },
 ]);
 function toggleStatFilter(s: StatBox) {
@@ -1457,15 +1463,15 @@ async function onChildAction(action: string, row: ChildRow) {
 }
 
 // ════════ Master row "Nick chăm" — 4 chip count ════════
-interface NickCountChip { kind: string; icon: string; count: number; cls: string; title: string }
+interface NickCountChip { kind: string; dotCls: string; count: number; cls: string; title: string }
 function nickCountChips(contact: Contact): NickCountChip[] {
   // Backend aggregate Friend.relationshipKind per contact (set trong GET /contacts).
   const m = contact.nicksByKind || {};
   return [
-    { kind: 'friend', icon: '🟢', count: m.friend || 0, cls: 'chip-success', title: 'Đã KB' },
-    { kind: 'pending', icon: '🟡', count: m.pending_friend || 0, cls: 'chip-warning', title: 'Đã gửi mời' },
-    { kind: 'stranger', icon: '🔵', count: m.chatting_stranger || 0, cls: 'chip-info', title: 'Đang nhắn lạ' },
-    { kind: 'ghost', icon: '⚪', count: m.ghost || 0, cls: 'chip-grey', title: 'Đã ngắt' },
+    { kind: 'friend', dotCls: 'sdot-success', count: m.friend || 0, cls: 'chip-success', title: 'Đã KB' },
+    { kind: 'pending', dotCls: 'sdot-warning', count: m.pending_friend || 0, cls: 'chip-warning', title: 'Đã gửi mời' },
+    { kind: 'stranger', dotCls: 'sdot-info', count: m.chatting_stranger || 0, cls: 'chip-info', title: 'Đang nhắn lạ' },
+    { kind: 'ghost', dotCls: 'sdot-grey', count: m.ghost || 0, cls: 'chip-grey', title: 'Đã ngắt' },
   ];
 }
 
@@ -1503,7 +1509,7 @@ function formatCungChamTooltip(contact: Contact): string {
   if (!list.length) return '';
   const lines = list.map((a) => {
     const name = a.user?.fullName || a.user?.email || 'Sale';
-    const roleLabel = a.role === 'primary' ? '⭐ Phụ trách chính' : '🤝 Cùng chăm';
+    const roleLabel = a.role === 'primary' ? 'Phụ trách chính' : 'Cùng chăm';
     return `${roleLabel}: ${name}`;
   });
   return `${list.length} sale đang/đã chăm KH này:\n${lines.join('\n')}`;
@@ -2798,11 +2804,16 @@ watch(
   background: var(--surface); color: var(--ink-2); font-weight: 600; font-size: 12.5px; padding: 0 14px; cursor: pointer; }
 .toolbar.toolbar-primary select:hover { border-color: var(--brand); color: var(--ink); }
 
-/* KPI stats — colored dot instead of emoji */
-.sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+/* KPI stats & status indicators — colored dot instead of emoji */
+.sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; vertical-align: middle; }
+.sdot-success { background: var(--success, #12b76a); }
+.sdot-warning { background: var(--warning, #f5a524); }
+.sdot-info { background: var(--brand, #1786be); }
+.sdot-error { background: var(--error, #f04438); }
+.sdot-grey { background: var(--ink-4, #9aa2b1); }
 .stat-box .sdot { margin-right: 1px; }
 
-.inline-icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; flex-shrink: 0; }
 .spin-icon { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 </style>

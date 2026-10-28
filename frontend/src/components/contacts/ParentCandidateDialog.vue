@@ -4,8 +4,8 @@
   <div v-if="modelValue" class="pc-overlay" @click.self="close">
     <div class="pc-dialog">
       <div class="pc-header">
-        <h3>💡 Gợi ý gắn KH Cha</h3>
-        <button class="pc-close" @click="close">×</button>
+        <h3><Lightbulb :size="18" class="inline-icon" /> Gợi ý gắn KH Cha</h3>
+        <button class="pc-close" @click="close"><X :size="16" /></button>
       </div>
       <div class="pc-body">
         <div v-if="loading" class="pc-empty">Đang tải…</div>
@@ -25,7 +25,7 @@
                 <div class="pc-info">
                   <div class="pc-name">{{ ct.fullName || '— chưa đặt —' }}</div>
                   <div class="pc-meta">
-                    <span v-if="ct.phone">📞 {{ ct.phone }}</span>
+                    <span v-if="ct.phone"><Phone :size="12" class="inline-icon" /> {{ ct.phone }}</span>
                     <span v-if="ct.zaloUid">UID: {{ ct.zaloUid }}</span>
                   </div>
                 </div>
@@ -49,6 +49,7 @@ import { ref, watch } from 'vue';
 import { api } from '@/api';
 import Avatar from '@/components/ui/Avatar.vue';
 import { useToast } from '@/composables/use-toast';
+import { Lightbulb, X, Phone } from 'lucide-vue-next';
 
 interface CandidateContact {
   id: string;
@@ -125,9 +126,9 @@ async function dismiss(candidateId: string) {
 }
 
 function matchLabel(t: string): string {
-  if (t === 'name_phone') return '🔗 Cùng tên + cùng SĐT';
-  if (t === 'name_birthDate') return '🎂 Cùng tên + cùng ngày sinh';
-  if (t === 'name_email') return '✉️ Cùng tên + cùng email';
+  if (t === 'name_phone') return 'Cùng tên + cùng SĐT';
+  if (t === 'name_birthDate') return 'Cùng tên + cùng ngày sinh';
+  if (t === 'name_email') return 'Cùng tên + cùng email';
   return t;
 }
 
@@ -153,4 +154,5 @@ function close() { emit('update:modelValue', false); }
 .pc-name { font-weight: 500; font-size: 13px; }
 .pc-meta { font-size: 11px; color: var(--smax-grey-600); display: flex; gap: 10px; }
 .pc-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; flex-shrink: 0; }
 </style>

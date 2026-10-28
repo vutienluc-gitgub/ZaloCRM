@@ -21,18 +21,18 @@
   <teleport to="body">
     <div v-if="modelValue" class="cpd-overlay" @click.self="close">
       <div class="cpd-modal" role="dialog" aria-modal="true">
-        <div v-if="loading" class="cpd-loading">⏳ Đang tải hồ sơ khách hàng…</div>
-        <div v-else-if="error" class="cpd-error">⚠️ {{ error }}</div>
+        <div v-if="loading" class="cpd-loading"><RefreshCw :size="14" class="inline-icon spin-icon" /> Đang tải hồ sơ khách hàng…</div>
+        <div v-else-if="error" class="cpd-error"><AlertTriangle :size="14" class="inline-icon" /> {{ error }}</div>
 
         <template v-else-if="c || isCreate">
           <!-- ════════ Header — chế độ TẠO MỚI (gọn, cùng style Smax) ════════ -->
           <header v-if="isCreate" class="cpd-head cpd-head-create">
-            <div class="cpd-av cpd-av-create"><span>＋</span></div>
+            <div class="cpd-av cpd-av-create"><Plus :size="16" /></div>
             <div class="cpd-head-main">
               <div class="cpd-name">Thêm khách hàng mới</div>
               <div class="cpd-sub"><span>Nhập thông tin khách. Tên + Số điện thoại là bắt buộc.</span></div>
             </div>
-            <button class="cpd-x" @click="close" title="Đóng">✕</button>
+            <button class="cpd-x" @click="close" title="Đóng"><X :size="16" /></button>
           </header>
 
           <!-- ════════ Header — chế độ XEM hồ sơ ════════ -->
@@ -49,23 +49,23 @@
                 <span v-if="ageOf" class="age">{{ ageOf }} tuổi</span>
               </div>
               <div class="cpd-sub">
-                <span v-if="primaryPhone">📱 {{ formatVnPhone(primaryPhone) }}</span>
-                <span v-if="c.email">✉ {{ c.email }}</span>
-                <span v-if="locationLine">📍 {{ locationLine }}</span>
-                <span v-if="c.createdAt">📅 KH từ {{ formatDate(c.createdAt) }}</span>
+                <span v-if="primaryPhone"><Phone :size="12" class="inline-icon" /> {{ formatVnPhone(primaryPhone) }}</span>
+                <span v-if="c.email"><Mail :size="12" class="inline-icon" /> {{ c.email }}</span>
+                <span v-if="locationLine"><MapPin :size="12" class="inline-icon" /> {{ locationLine }}</span>
+                <span v-if="c.createdAt"><Calendar :size="12" class="inline-icon" /> KH từ {{ formatDate(c.createdAt) }}</span>
               </div>
               <div class="cpd-pills">
                 <span class="zpill" :class="zaloPillClass">{{ zaloPillText }}</span>
                 <span v-if="c.displayStatus" class="chip" :style="statusPillStyle">{{ c.displayStatus.name }}</span>
                 <span v-else-if="c.status" class="chip chip-grey">{{ c.status }}</span>
-                <span v-for="t in (c.tags || []).slice(0, 5)" :key="t" class="crmtag">🏷 {{ t }}</span>
+                <span v-for="t in (c.tags || []).slice(0, 5)" :key="t" class="crmtag"><Tag :size="11" class="inline-icon" /> {{ t }}</span>
               </div>
             </div>
             <div class="cpd-scorebig">
               <div class="n" :class="scoreClass">{{ Math.round(c.displayLeadScore ?? c.leadScore ?? 0) }}</div>
               <div class="l">Score</div>
             </div>
-            <button class="cpd-x" @click="close" title="Đóng">✕</button>
+            <button class="cpd-x" @click="close" title="Đóng"><X :size="16" /></button>
           </header>
 
           <!-- ════════ Tabs (ẩn khi tạo mới — chỉ form Tổng quan) ════════ -->
@@ -87,7 +87,7 @@
               <div class="cpd-grid2">
                 <!-- Thông tin cá nhân (sửa được) -->
                 <div class="cpd-card">
-                  <h4>👤 Thông tin cá nhân</h4>
+                  <h4><User :size="14" class="inline-icon" /> Thông tin cá nhân</h4>
                   <div class="kv">
                     <span class="k">Tên khách</span>
                     <span class="v"><input v-model="form.fullName" class="cpd-in" /></span>
@@ -117,7 +117,7 @@
                         <div v-for="(p, i) in form.extraPhones" :key="i" class="phone-row">
                           <input v-model="p.label" class="cpd-in cpd-in-mini" placeholder="Nhãn" />
                           <input v-model="p.phone" class="cpd-in" placeholder="Số phụ" />
-                          <span class="phone-rm" @click="form.extraPhones.splice(i, 1)" title="Xoá số">✕</span>
+                          <span class="phone-rm" @click="form.extraPhones.splice(i, 1)" title="Xoá số"><X :size="12" /></span>
                         </div>
                         <span class="add-phone" @click="form.extraPhones.push({ phone: '', label: '' })">+ Thêm số</span>
                       </div>
@@ -139,7 +139,7 @@
 
                 <!-- Chăm sóc & phân loại -->
                 <div class="cpd-card">
-                  <h4>🎯 Chăm sóc &amp; phân loại</h4>
+                  <h4><Target :size="14" class="inline-icon" /> Chăm sóc &amp; phân loại</h4>
                   <div class="kv">
                     <span class="k">Sale chính</span>
                     <span class="v">
@@ -183,7 +183,7 @@
                       <div v-else class="tag-edit">
                         <span v-if="!form.tags.length" class="tag-empty-hint">Chưa gắn nhãn —</span>
                         <span v-for="(t, i) in form.tags" :key="i" class="crmtag editable">
-                          {{ t }}<span class="rm" @click="form.tags.splice(i, 1)">✕</span>
+                          {{ t }}<span class="rm" @click="form.tags.splice(i, 1)"><X :size="11" /></span>
                         </span>
                         <input
                           v-model="newTag" class="tag-add-in" placeholder="+ thêm nhãn"
@@ -207,7 +207,7 @@
               <div v-if="!isCreate" class="cpd-attr">
                 <!-- Lead score breakdown 4 chiều -->
                 <div v-if="hasScoreBd" class="attr-card full">
-                  <h4 class="attr-h"><span class="ic">📊</span> Lead Score — {{ Math.round((c?.displayLeadScore ?? c?.leadScore) || 0) }}/100 (4 chiều)</h4>
+                  <h4 class="attr-h"><BarChart2 :size="14" class="inline-icon" /> Lead Score — {{ Math.round((c?.displayLeadScore ?? c?.leadScore) || 0) }}/100 (4 chiều)</h4>
                   <div class="bd-row">
                     <div v-for="b in scoreBd" :key="b.key" class="bd-it">
                       <div class="bd-l">{{ b.label }} <b>{{ Math.round(b.val) }}</b></div>
@@ -219,7 +219,7 @@
                 <!-- Bảng biến cá nhân hóa: Nhãn | hàm {code} (bấm copy) | giá trị thật của khách -->
                 <div class="attr-tablewrap">
                   <div class="attr-tbhead">
-                    <h4 class="attr-h"><span class="ic">🧬</span> Biến cá nhân hóa — bấm <code class="hh">{mã}</code> để copy chèn tin</h4>
+                    <h4 class="attr-h"><Dna :size="14" class="inline-icon" /> Biến cá nhân hóa — bấm <code class="hh">{mã}</code> để copy chèn tin</h4>
                     <label v-if="friends.length" class="attr-nicksel" title="Biến ● đổi giá trị theo nick này">
                       Nick:
                       <select v-model="attrNickId" class="cpd-in sm">
@@ -252,7 +252,7 @@
                       </template>
 
                       <!-- Ngoài 36 biến (không chèn được vào tin) — cùng style bảng -->
-                      <tr class="attr-grp"><td colspan="3">🪪 Định danh Cha (ngoài biến)</td></tr>
+                      <tr class="attr-grp"><td colspan="3"><CreditCard :size="13" class="inline-icon" /> Định danh Cha (ngoài biến)</td></tr>
                       <tr class="attr-itrow">
                         <td class="attr-lbl">Global ID</td>
                         <td class="attr-code"><span class="nocode">—</span></td>
@@ -279,7 +279,7 @@
                         <td class="attr-val"><span v-if="cc.zaloLookupAt">{{ formatDate(cc.zaloLookupAt) }}<span v-if="cc.zaloLookupAttempts" class="dim"> · {{ cc.zaloLookupAttempts }} lần</span></span><span v-else class="dim">—</span></td>
                       </tr>
 
-                      <tr class="attr-grp"><td colspan="3">⚙ Hệ thống & nguồn (ngoài biến)</td></tr>
+                      <tr class="attr-grp"><td colspan="3"><Settings :size="13" class="inline-icon" /> Hệ thống & nguồn (ngoài biến)</td></tr>
                       <tr class="attr-itrow">
                         <td class="attr-lbl">Consent</td>
                         <td class="attr-code"><span class="nocode">—</span></td>
@@ -317,12 +317,12 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="attr-foot">💡 36 biến dùng chung cho ô chat · mẫu tin · Khối · Sequence. Cột giá trị lấy thật từ hồ sơ khách + nick đang chọn (khớp lúc render tin). Nhóm "ngoài biến" là thông tin hệ thống, không chèn vào tin.</div>
+                  <div class="attr-foot"><Lightbulb :size="13" class="inline-icon" /> 36 biến dùng chung cho ô chat · mẫu tin · Khối · Sequence. Cột giá trị lấy thật từ hồ sơ khách + nick đang chọn (khớp lúc render tin). Nhóm "ngoài biến" là thông tin hệ thống, không chèn vào tin.</div>
                 </div>
               </div>
 
               <div v-if="!isCreate" class="cpd-aggnote">
-                💡 Field gắn nhãn <span class="agg">tổng hợp</span> tự cập nhật từ các nick chăm (tab "Nick chăm").
+                <Lightbulb :size="13" class="inline-icon" /> Field gắn nhãn <span class="agg">tổng hợp</span> tự cập nhật từ các nick chăm (tab "Nick chăm").
                 Thông tin cá nhân sửa trực tiếp tại đây, lưu vào hồ sơ tổng.
               </div>
             </section>
@@ -339,10 +339,10 @@
                   <div class="s-r">
                     <span class="s-av" :style="{ background: friendBg(f) }">{{ friendInitials(f) }}</span>
                     <span class="nm">{{ friendName(f) }}</span>
-                    <span v-if="f.isWinner" class="winb">🏆 Nick chính</span>
+                    <span v-if="f.isWinner" class="winb"><Trophy :size="11" class="inline-icon text-amber-500" /> Nick chính</span>
                     <span class="kb" :class="kbChipClass(f.relationshipKind)">{{ kbLabel(f.relationshipKind) }}</span>
                     <span class="chatdot" :class="{ off: !f.hasConversation }">
-                      {{ f.hasConversation ? '💬 đang chat' : 'ø chưa chat' }}
+                      <MessageSquare :size="11" class="inline-icon" /> {{ f.hasConversation ? 'đang chat' : 'chưa chat' }}
                     </span>
                     <span class="s-right">
                       <span class="s-score" :class="friendScoreClass(f.leadScore)">{{ f.leadScore || 0 }}</span>
@@ -350,12 +350,12 @@
                   </div>
                   <div class="s-r s-r2">
                     <span class="s-sale">Sale <b>{{ ownerName(f) }}</b></span>
-                    <span v-if="(f as any).zaloUidInNick" class="s-uid" :title="'UID Zalo của KH nhìn từ nick này'">🆔 {{ (f as any).zaloUidInNick }}</span>
+                    <span v-if="(f as any).zaloUidInNick" class="s-uid" :title="'UID Zalo của KH nhìn từ nick này'">UID: {{ (f as any).zaloUidInNick }}</span>
                     <span v-if="f.statusRef" class="chip" :style="{ background: (f.statusRef.color || '#5a6478') + '22', color: f.statusRef.color || '#5a6478' }">{{ f.statusRef.name }}</span>
                     <span v-for="tag in friendTags(f)" :key="tag" class="ftag ft-manual">{{ tag }}</span>
                     <span class="s-meta">
-                      <span>📥 <b>{{ f.totalInbound ?? 0 }}</b></span>
-                      <span>📤 <b>{{ f.totalOutbound ?? 0 }}</b></span>
+                      <span><Download :size="11" class="inline-icon" /> <b>{{ f.totalInbound ?? 0 }}</b></span>
+                      <span><Upload :size="11" class="inline-icon" /> <b>{{ f.totalOutbound ?? 0 }}</b></span>
                     </span>
                   </div>
                   <div v-if="f.lastInboundPreview || f.lastOutboundPreview" class="s-r s-msg">
@@ -382,7 +382,20 @@
               <template v-else>
                 <div v-for="t in timeline" :key="t.id" class="tl-item">
                   <span class="dot"></span>
-                  <div class="tx">{{ t.icon }} {{ t.text }}<div class="tt">{{ formatRelative(t.at) }}</div></div>
+                  <div class="tx">
+                    <MessageSquare v-if="t.iconType === 'message'" :size="13" class="inline-icon" />
+                    <Phone v-else-if="t.iconType === 'call'" :size="13" class="inline-icon" />
+                    <FileText v-else-if="t.iconType === 'note'" :size="13" class="inline-icon" />
+                    <Calendar v-else-if="t.iconType === 'appointment'" :size="13" class="inline-icon" />
+                    <Tag v-else-if="t.iconType === 'tag'" :size="13" class="inline-icon" />
+                    <Target v-else-if="t.iconType === 'status'" :size="13" class="inline-icon" />
+                    <UserCheck v-else-if="t.iconType === 'friend_added'" :size="13" class="inline-icon" />
+                    <UserPlus v-else-if="t.iconType === 'friend_request'" :size="13" class="inline-icon" />
+                    <Trophy v-else-if="t.iconType === 'score'" :size="13" class="inline-icon" />
+                    <Activity v-else :size="13" class="inline-icon" />
+                    {{ t.text }}
+                    <div class="tt">{{ formatRelative(t.at) }}</div>
+                  </div>
                 </div>
                 <div v-if="timeline.length === 0" class="cpd-empty">Chưa có hoạt động.</div>
               </template>
@@ -404,17 +417,17 @@
           <!-- ════════ Footer ════════ -->
           <footer class="cpd-foot">
             <template v-if="isCreate">
-              <button class="btn primary" :disabled="saving" @click="save">{{ saving ? '⏳ Đang tạo…' : '＋ Tạo khách hàng' }}</button>
+              <button class="btn primary" :disabled="saving" @click="save">{{ saving ? 'Đang tạo…' : 'Tạo khách hàng' }}</button>
               <span class="spacer"></span>
-              <button class="btn" @click="close">✕ Hủy</button>
+              <button class="btn" @click="close"><X :size="13" class="inline-icon" /> Hủy</button>
             </template>
             <template v-else-if="c">
-              <button v-if="c.hasZalo" class="btn primary" @click="goChat">💬 Mở chat Zalo</button>
-              <button v-else class="btn virtual" @click="goChat">🔒 Mở chat nội bộ</button>
-              <button class="btn" @click="$emit('automation', c)">⚡ Marketing</button>
+              <button v-if="c.hasZalo" class="btn primary" @click="goChat"><MessageSquare :size="13" class="inline-icon" /> Mở chat Zalo</button>
+              <button v-else class="btn virtual" @click="goChat"><Lock :size="13" class="inline-icon" /> Mở chat nội bộ</button>
+              <button class="btn" @click="$emit('automation', c)"><Zap :size="13" class="inline-icon" /> Marketing</button>
               <span class="spacer"></span>
-              <button class="btn" :disabled="saving" @click="save">{{ saving ? '⏳ Đang lưu…' : '💾 Lưu thay đổi' }}</button>
-              <button class="btn" @click="close">✕ Đóng</button>
+              <button class="btn" :disabled="saving" @click="save"><Save :size="13" class="inline-icon" /> {{ saving ? 'Đang lưu…' : 'Lưu thay đổi' }}</button>
+              <button class="btn" @click="close"><X :size="13" class="inline-icon" /> Đóng</button>
             </template>
           </footer>
         </template>
@@ -433,6 +446,12 @@ import PrivateBlur from '@/components/privacy/PrivateBlur.vue';
 import TagCrmBar from '@/components/chat/TagCrmBar.vue';
 import { TEMPLATE_VARIABLES } from '@/constants/template-variables';
 import type { Contact } from '@/composables/use-contacts';
+import {
+  RefreshCw, AlertTriangle, Plus, X, Phone, Mail, MapPin,
+  Calendar, Tag, User, Target, BarChart2, Dna, CreditCard,
+  Settings, Lightbulb, Trophy, MessageSquare, Download,
+  Upload, Lock, Zap, Save, FileText, UserCheck, UserPlus, Activity,
+} from 'lucide-vue-next';
 
 const props = withDefaults(defineProps<{
   modelValue: boolean;
@@ -611,45 +630,45 @@ function statusLabel(s: string | null | undefined): string {
 // Timeline item từ /customers/:id/timeline. Có 2 dạng:
 //  - type='message'/'call': data có preview/content
 //  - type='activity': activity-log (data.action + data.details) — map sang câu tiếng Việt.
-function describeTimelineItem(x: any, idx: number): { id: string; icon: string; text: string; at: string } {
+function describeTimelineItem(x: any, idx: number): { id: string; iconType: string; text: string; at: string } {
   const d = x.data || {};
   const at = x.createdAt || d.createdAt;
   const id = d.id || `${x.type}-${idx}`;
   // message/call có nội dung trực tiếp
   if (x.type === 'message') {
-    return { id, icon: '💬', text: cleanPreview(d.preview || d.content || d.body, d.contentType), at };
+    return { id, iconType: 'message', text: cleanPreview(d.preview || d.content || d.body, d.contentType), at };
   }
-  if (x.type === 'call') return { id, icon: '📞', text: d.summary || 'Cuộc gọi', at };
-  if (x.type === 'note') return { id, icon: '📝', text: d.body || d.content || 'Ghi chú', at };
-  if (x.type === 'appointment') return { id, icon: '📅', text: d.title || 'Lịch hẹn', at };
+  if (x.type === 'call') return { id, iconType: 'call', text: d.summary || 'Cuộc gọi', at };
+  if (x.type === 'note') return { id, iconType: 'note', text: d.body || d.content || 'Ghi chú', at };
+  if (x.type === 'appointment') return { id, iconType: 'appointment', text: d.title || 'Lịch hẹn', at };
   // activity-log: dịch action + details sang câu người đọc
   const actor = d.user?.fullName || (d.actorType === 'system' ? 'Hệ thống' : 'Sale');
   const det = d.details || {};
   const tagName = det.to || det.tag || det.name || det.value;
-  const map: Record<string, () => { icon: string; text: string }> = {
-    tag_change_zalo: () => ({ icon: '🏷', text: `${actor} đổi nhãn Zalo${det.from ? ` từ "${det.from}"` : ''} → "${det.to}"` }),
-    tag_change:      () => ({ icon: '🏷', text: `${actor} đổi nhãn${det.from ? ` từ "${det.from}"` : ''} → "${det.to}"` }),
-    tag_add_crm:     () => ({ icon: '🏷', text: `${actor} gắn nhãn "${tagName}"` }),
-    tag_remove_crm:  () => ({ icon: '🏷', text: `${actor} gỡ nhãn "${tagName}"` }),
-    tag_add_zalo:    () => ({ icon: '🏷', text: `Gắn nhãn Zalo "${tagName}"` }),
-    tag_remove_zalo: () => ({ icon: '🏷', text: `Gỡ nhãn Zalo "${tagName}"` }),
-    auto_tag_change: () => ({ icon: '🤖', text: `Tự động cập nhật nhãn${det.to ? ` → "${det.to}"` : ''}` }),
-    status_change:   () => ({ icon: '🎯', text: `${actor} đổi trạng thái → "${statusLabel(det.new ?? det.to ?? det.status)}"` }),
-    contact_status_changed: () => ({ icon: '🎯', text: `${actor} đổi trạng thái KH → "${statusLabel(det.new ?? det.to ?? det.status)}"` }),
-    friend_added:    () => ({ icon: '🤝', text: `Kết bạn Zalo thành công` }),
-    friend_request:  () => ({ icon: '📨', text: `Đã gửi lời mời kết bạn` }),
-    alias_change:    () => ({ icon: '✏️', text: `${actor} đổi tên gợi nhớ → "${det.to}"` }),
-    score_change:    () => ({ icon: '⭐', text: `Score thay đổi → ${det.to ?? det.score}` }),
+  const map: Record<string, () => { iconType: string; text: string }> = {
+    tag_change_zalo: () => ({ iconType: 'tag', text: `${actor} đổi nhãn Zalo${det.from ? ` từ "${det.from}"` : ''} → "${det.to}"` }),
+    tag_change:      () => ({ iconType: 'tag', text: `${actor} đổi nhãn${det.from ? ` từ "${det.from}"` : ''} → "${det.to}"` }),
+    tag_add_crm:     () => ({ iconType: 'tag', text: `${actor} gắn nhãn "${tagName}"` }),
+    tag_remove_crm:  () => ({ iconType: 'tag', text: `${actor} gỡ nhãn "${tagName}"` }),
+    tag_add_zalo:    () => ({ iconType: 'tag', text: `Gắn nhãn Zalo "${tagName}"` }),
+    tag_remove_zalo: () => ({ iconType: 'tag', text: `Gỡ nhãn Zalo "${tagName}"` }),
+    auto_tag_change: () => ({ iconType: 'auto', text: `Tự động cập nhật nhãn${det.to ? ` → "${det.to}"` : ''}` }),
+    status_change:   () => ({ iconType: 'status', text: `${actor} đổi trạng thái → "${statusLabel(det.new ?? det.to ?? det.status)}"` }),
+    contact_status_changed: () => ({ iconType: 'status', text: `${actor} đổi trạng thái KH → "${statusLabel(det.new ?? det.to ?? det.status)}"` }),
+    friend_added:    () => ({ iconType: 'friend_added', text: `Kết bạn Zalo thành công` }),
+    friend_request:  () => ({ iconType: 'friend_request', text: `Đã gửi lời mời kết bạn` }),
+    alias_change:    () => ({ iconType: 'alias', text: `${actor} đổi tên gợi nhớ → "${det.to}"` }),
+    score_change:    () => ({ iconType: 'score', text: `Score thay đổi → ${det.to ?? det.score}` }),
   };
   const built = map[d.action]?.();
-  if (built) return { id, icon: built.icon, text: built.text, at };
+  if (built) return { id, iconType: built.iconType, text: built.text, at };
   // fallback: category có nghĩa hơn action; dịch nhóm category phổ biến
   if (d.category === 'tags_crm' || d.category === 'tags_zalo') {
-    return { id, icon: '🏷', text: `Cập nhật nhãn${tagName ? ` "${tagName}"` : ''}`, at };
+    return { id, iconType: 'tag', text: `Cập nhật nhãn${tagName ? ` "${tagName}"` : ''}`, at };
   }
   // cuối cùng: hiện action thô (vẫn hơn để trống) — dev thấy để bổ sung map sau
   const label = d.action || d.category || x.type;
-  return { id, icon: '•', text: label ? `Hoạt động: ${label}` : '', at };
+  return { id, iconType: 'default', text: label ? `Hoạt động: ${label}` : '', at };
 }
 async function loadNotes() {
   const id = c.value?.id;
@@ -774,7 +793,7 @@ const zaloDisplay = computed<'yes' | 'no' | 'unknown'>(() => {
   return 'unknown';
 });
 const zaloPillClass = computed(() => zaloDisplay.value === 'yes' ? 'z-yes' : zaloDisplay.value === 'no' ? 'z-no' : 'z-unk');
-const zaloPillText = computed(() => zaloDisplay.value === 'yes' ? '🟢 Có Zalo' : zaloDisplay.value === 'no' ? '🔴 Không tìm thấy' : '⚪ Chưa tìm');
+const zaloPillText = computed(() => zaloDisplay.value === 'yes' ? 'Có Zalo' : zaloDisplay.value === 'no' ? 'Không tìm thấy' : 'Chưa tìm');
 
 const statusPillStyle = computed(() => {
   const s: any = c.value?.displayStatus;
@@ -815,7 +834,7 @@ function friendTags(f: any): string[] {
   return labels.slice(0, 3);
 }
 function kbLabel(k: string) {
-  return { friend: '🟢 Đã kết bạn', pending_friend: '🟡 Đã gửi mời', chatting_stranger: '🔵 Chat lạ', ghost: '⚪ Đã ngắt' }[k] || k;
+  return { friend: 'Đã kết bạn', pending_friend: 'Đang mời', chatting_stranger: 'Chat lạ', ghost: 'Đã ngắt' }[k] || k;
 }
 function kbChipClass(k: string) {
   return { friend: 'kbY', pending_friend: 'kbP', chatting_stranger: 'kbI', ghost: 'kbO' }[k] || 'kbO';
@@ -1109,4 +1128,8 @@ async function copyAttr(code: string) {
 .btn.primary:hover { background: var(--smax-primary-hover); color: #fff; }
 .btn.virtual { background: #fff3e0; color: #ef6c00; border-color: #ffcc80; }
 .btn:disabled { opacity: 0.6; cursor: default; }
+
+.inline-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; flex-shrink: 0; }
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
