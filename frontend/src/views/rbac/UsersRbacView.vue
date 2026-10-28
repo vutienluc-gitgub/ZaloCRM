@@ -323,7 +323,7 @@ import {
 } from '@/stores/rbac';
 import { useAuthStore } from '@/stores/auth';
 import { api } from '@/api/index';
-import { Crown, Building2, User, Award, Shield, UserCheck } from 'lucide-vue-next';
+import { Crown, Building2, Award, Shield, UserCheck } from 'lucide-vue-next';
 import UserEditPanel from '@/components/rbac/UserEditPanel.vue';
 import CreateUserWithZaloModal from '@/components/users/CreateUserWithZaloModal.vue';
 
