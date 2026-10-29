@@ -335,6 +335,7 @@ import {
   type AppointmentEx as Appointment,
   type AiPrefill,
 } from '@/composables/appointment-helpers';
+import { orgDayKey } from '@/composables/use-org-timezone';
 
 /** SĐT chuẩn VN để hiển thị: 84xxx / +84xxx → 0xxx (bỏ khoảng trắng, dấu). */
 function formatPhoneVN(p?: string | null): string {
@@ -638,7 +639,9 @@ watch(() => props.modelValue, (open) => {
     // Edit mode
     const a = props.appointment;
     form.title = (a as any).title || (a.contact?.fullName ? `Nhắc hẹn KH ${a.contact.fullName}` : '');
-    form.date = a.appointmentDate;
+    // appointmentDate là timestamp (00:00 UTC) — form.date cần "YYYY-MM-DD" để
+    // picker highlight đúng ngày và payload PUT nhất quán với create.
+    form.date = orgDayKey(a.appointmentDate) || '';
     form.time = a.appointmentTime;
     form.durationMin = (a as any).durationMin || 15;
     form.type = a.type || 'call';
@@ -1610,8 +1613,10 @@ if (typeof window !== 'undefined') {
 @media (max-width: 600px) {
   .editor-backdrop { padding: 0; }
   .editor {
-    width: 100%; max-width: 100%; max-height: 100vh;
-    height: 100vh; border-radius: 0;
+    width: 100%; max-width: 100%;
+    height: 100vh; height: 100dvh;
+    max-height: 100vh; max-height: 100dvh;
+    border-radius: 0;
   }
   .editor-body { padding: var(--at-s-sm) var(--at-s-md); }
   .editor-foot { padding: var(--at-s-sm) var(--at-s-md); flex-direction: column-reverse; gap: var(--at-s-xs); }
@@ -1621,6 +1626,17 @@ if (typeof window !== 'undefined') {
   .row-2 { grid-template-columns: 1fr 1fr; gap: 8px; }
   .type-row { display: grid; grid-template-columns: repeat(2, 1fr); }
   .type-chip { min-width: 0; }
+  /* 9 duration chips: wrap 3 dòng thay vì scroll-x (chip cuối bị cắt ở 360px). */
+  .duration-row { flex-wrap: wrap; overflow-x: visible; padding-bottom: 0; }
+  /* 6 địa điểm preset: 3 cột × 2 dòng, đủ chữ thay vì ellipsis 1 dòng. */
+  .location-tip-row { grid-template-columns: repeat(3, 1fr); }
+  .loc-chip { height: 30px; font-size: 11.5px; }
+  /* 16px: tránh iOS Safari auto-zoom khi focus input. */
+  .title-input,
+  .location-input,
+  .notes-area,
+  .sale-select,
+  .cust-suggest-search { font-size: 16px; }
   .duration-grid { grid-template-columns: repeat(3, 1fr); }
   .picker-popup { width: 100%; }
 }

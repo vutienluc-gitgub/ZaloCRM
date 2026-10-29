@@ -1,7 +1,8 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
-  <div class="airtable-scope apt-page">
+  <MobileAppointmentView v-if="isMobile" />
+  <div v-else class="airtable-scope apt-page">
     <!-- Hero band: white canvas, h1 weight 400 size 32, 2-row layout (title+CTA / controls) -->
     <header class="apt-hero">
       <div class="apt-hero-row1">
@@ -194,6 +195,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useMobile } from '@/composables/use-mobile';
 import { useAppointments } from '@/composables/use-appointments';
 import { useUsers } from '@/composables/use-users';
 import {
@@ -209,9 +211,11 @@ import AppointmentsWeekView from '@/components/appointments/AppointmentsWeekView
 import AppointmentsListView from '@/components/appointments/AppointmentsListView.vue';
 import AppointmentDetailPanel from '@/components/appointments/AppointmentDetailPanel.vue';
 import AppointmentEditor from '@/components/appointments/AppointmentEditor.vue';
+import MobileAppointmentView from '@/views/mobile/MobileAppointmentView.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { isMobile } = useMobile();
 const currentUserId = computed<string | null>(() => authStore.user?.id ?? null);
 
 const {
@@ -448,8 +452,9 @@ function onOpenContact(a: Appointment) {
   if (a.contact?.id) router.push(`/contacts/${a.contact.id}`);
 }
 
-// Keyboard shortcuts
+// Keyboard shortcuts (desktop only — mobile dùng thao tác chạm)
 function onKey(e: KeyboardEvent) {
+  if (isMobile.value) return;
   const tgt = e.target as HTMLElement | null;
   if (tgt && (tgt.tagName === 'INPUT' || tgt.tagName === 'TEXTAREA' || tgt.tagName === 'SELECT' || tgt.isContentEditable)) return;
   if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openQuickCreate(null); }
@@ -459,12 +464,22 @@ function onKey(e: KeyboardEvent) {
   else if (e.key === 'Escape') { selectedAppointment.value = null; }
 }
 
+// Mobile render MobileAppointmentView tự fetch — bỏ toàn bộ fetch/listener desktop.
+// Nếu viewport vượt breakpoint khi đang mở trang → nạp lại dữ liệu cho layout desktop.
+watch(isMobile, (mobile) => {
+  if (!mobile) {
+    fetchUsers();
+    reloadAppointments();
+  }
+});
+
 onMounted(() => {
-  fetchUsers();
-  reloadAppointments();
   window.addEventListener('keydown', onKey);
   window.addEventListener('resize', onResize, { passive: true });
   onResize();
+  if (isMobile.value) return;
+  fetchUsers();
+  reloadAppointments();
 });
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey);

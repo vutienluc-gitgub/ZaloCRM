@@ -160,7 +160,9 @@ function onCancel(): void {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100;
+  /* 4000: phải nổi trên MobileSheet (3000) + editor/modal nội bộ để confirm
+     mở từ bottom sheet mobile vẫn bấm được. */
+  z-index: 4000;
   animation: cam-fade 0.15s ease;
 }
 @keyframes cam-fade { from { opacity: 0; } to { opacity: 1; } }
