@@ -2,8 +2,8 @@
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
   <v-app class="smax-app">
-    <!-- ════════ TOP NAV — HS Holding teal-navy shell (redesign 2026-06-05, đảo lock Variant A) ════════ -->
-    <!-- Gradient teal-navy + monogram HS + wordmark · 7 tab + Báo cáo + Cài đặt · MDI line icon · active HS -->
+    <!-- ════════ TOP NAV — Vĩnh Phát teal-navy shell (redesign 2026-06-05, đảo lock Variant A) ════════ -->
+    <!-- Gradient teal-navy + monogram VP + wordmark · 7 tab + Báo cáo + Cài đặt · MDI line icon · active HS -->
     <header class="smax-topnav">
       <!-- Brand — logo + tên lấy theo hồ sơ tổ chức (đồng bộ /login, /setup-password) -->
       <RouterLink to="/" class="hs-brand" :title="`${brandName} CRM`">
@@ -86,7 +86,7 @@
 
       <!--
         ATTRIBUTION BANNER — moved into DashboardView per copyright holder
-        (locnt@locnguyendata.com). Rendering still required by Apache 2.0 §4(d);
+        (locnt@locnguyendata.com). Rendering still required by AGPL-3.0 §7(b);
         see src/views/DashboardView.vue and src/composables/use-attribution.ts.
       -->
 
@@ -245,9 +245,9 @@ function dismissInternalContactBanner() {
 }
 
 // Brand lockup trên menu — logo + tên tổ chức (đồng bộ /login, /setup-password).
-const DEFAULT_LOGO = '/brand/hs-monogram.png';
+const DEFAULT_LOGO = '/brand/vp-monogram.svg';
 const brandLogo = ref(DEFAULT_LOGO);
-const brandName = ref('HS Holding');
+const brandName = ref('Vĩnh Phát');
 function onLogoError() {
   if (brandLogo.value !== DEFAULT_LOGO) brandLogo.value = DEFAULT_LOGO;
 }
@@ -264,7 +264,7 @@ onMounted(() => {
     .then((b) => {
       if (!b) return;
       brandLogo.value = b.logoUrl || DEFAULT_LOGO;
-      brandName.value = b.name || 'HS Holding';
+      brandName.value = b.name || 'Vĩnh Phát';
     })
     .catch(() => {});
 });
@@ -388,9 +388,9 @@ function logout() {
 }
 .ic-banner-dismiss:hover { color: #78350F; }
 
-/* HS Holding shell — teal-navy gradient nav (redesign 2026-06-05, đảo lock Variant A sáng) */
+/* Vĩnh Phát shell — teal-navy gradient nav (redesign 2026-06-05, đảo lock Variant A sáng) */
 .smax-topnav {
-  background: linear-gradient(180deg, var(--nav-grad-a, #0e445a) 0%, var(--nav-grad-b, #06222f) 100%);
+  background: linear-gradient(180deg, var(--nav-grad-a, #163870) 0%, var(--nav-grad-b, #101e34) 100%);
   color: rgba(255, 255, 255, 0.85);
   height: 48px;
   display: flex; align-items: center;
@@ -400,7 +400,7 @@ function logout() {
   box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 2px 8px rgba(0,0,0,.18);
 }
 
-/* Brand lockup — monogram HS + wordmark "HS Holding / CRM" */
+/* Brand lockup — monogram VP + wordmark "Vĩnh Phát / CRM" */
 .hs-brand {
   display: flex; align-items: center; gap: 10px;
   margin-right: 14px; flex: none; text-decoration: none;
@@ -408,7 +408,7 @@ function logout() {
 .hs-bbox {
   width: 34px; height: 34px; border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #1786be 0%, #0b5880 100%);
+  background: linear-gradient(135deg, #ee0033 0%, #c00028 100%);
   box-shadow: inset 0 1px 1px rgba(255,255,255,.18), 0 1px 2px rgba(0,0,0,.25);
   flex: none;
 }

@@ -7,7 +7,7 @@
  *
  * Returns hideAttribution=true ONLY when env var FRIENDS contains the secret
  * commercial license key issued by the maintainer. Otherwise the front-end
- * MUST render the attribution banner per Apache 2.0 §4(d).
+ * MUST render the attribution banner per AGPL-3.0 §7(b).
  *
  * The actual license key is not stored in source; only its SHA-256 hash is
  * embedded. To obtain a license key, contact: locnt@locnguyendata.com

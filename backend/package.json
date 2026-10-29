@@ -1,7 +1,7 @@
 {
-  "name": "zalo-sales-crm-backend",
+  "name": "vinhphat-crm-backend",
   "version": "3.4.0",
-  "description": "Zalo Sales CRM Backend API",
+  "description": "Vĩnh Phát CRM Backend API",
   "main": "dist/app.js",
   "type": "module",
   "scripts": {
@@ -20,8 +20,11 @@
     "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Nguyễn Tiến Lộc <locnt@locnguyendata.com>",
+  "contributors": [
+    "Vĩnh Phát (fork maintainer)"
+  ],
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1073.0",
     "@bull-board/api": "^6.21.3",

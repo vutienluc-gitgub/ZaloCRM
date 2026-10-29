@@ -1,14 +1,14 @@
 {
-  "name": "ZaloCRM",
-  "short_name": "ZaloCRM",
-  "description": "Quản lý nhiều tài khoản Zalo cá nhân",
+  "name": "Vĩnh Phát CRM",
+  "short_name": "VPCRM",
+  "description": "Quản lý tập trung nhiều tài khoản Zalo cá nhân — Vĩnh Phát",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A192F",
-  "theme_color": "#0A192F",
+  "background_color": "#101E34",
+  "theme_color": "#101E34",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "/brand/zalocrm-logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/brand/zalocrm-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/brand/vp-monogram.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/brand/vp-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

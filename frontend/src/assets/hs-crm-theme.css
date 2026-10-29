@@ -1,6 +1,6 @@
 /* ════════════════════════════════════════════════════════════════════════
-   HS HOLDING CRM — THEME / DESIGN SYSTEM  (export 2026-06-04)
-   Bộ token + component dùng để code lại TOÀN BỘ giao diện HS Holding CRM.
+   VĨNH PHÁT CRM — THEME / DESIGN SYSTEM  (export 2026-06-04)
+   Bộ token + component dùng để code lại TOÀN BỘ giao diện Vĩnh Phát CRM.
    ────────────────────────────────────────────────────────────────────────
    CÁCH DÙNG (Vue 3 + Vuetify, nhánh private-hs):
    1. Import font brand ở index.html / main.ts:
@@ -19,43 +19,45 @@
 
 /* ╔══ PART 1–4 · TOKENS + RESET + TYPOGRAPHY + CORE COMPONENTS ══╗ */
 /* ════════════════════════════════════════════════════════════
-   ZaloCRM — Unified Design System
+   Vĩnh Phát CRM - Unified Design System
    One token set + component library applied across every screen.
    ════════════════════════════════════════════════════════════ */
 
 /* ---------- 1. Tokens ---------- */
 :root {
-  /* Brand — HS Holding (metallic sky-blue on teal-navy) */
-  --brand:        #1786be;   /* primary action */
-  --brand-600:    #0f6fa0;   /* hover */
-  --brand-700:    #0b5880;   /* active / deep */
-  --brand-soft:   #e4f1f8;
-  --brand-softer: #f2f8fc;
-  --brand-bright: #5bb8e5;   /* highlight from monogram */
+  /* Brand — Vĩnh Phát (metallic sky-blue on teal-navy) */
+  --brand:        #2151a1;   /* primary action */
+  --brand-600:    #1a4284;   /* hover */
+  --brand-700:    #163870;   /* active / deep */
+  --brand-soft:   #e8eef8;
+  --brand-softer: #f3f6fc;
+  --brand-bright: #3b76d6;
+  --brand-red:    #ee0033;
+  --accent:       #ee0033;   /* highlight from monogram */
 
   /* Cool neutrals */
-  --ink:          #141a24;   /* primary text */
+  --ink:          #101e34;   /* primary text */
   --ink-2:        #334155;   /* secondary text */
   --ink-3:        #475569;   /* tertiary / captions (WCAG AAA >= 7:1) */
   --ink-4:        #64748b;   /* placeholder / disabled (WCAG AA >= 4.5:1) */
-  --line:         #e7eaf0;   /* hairline border */
+  --line:         #e2e8f0;   /* hairline border */
   --line-2:       #eef1f6;   /* faint divider */
   --surface:      #ffffff;
-  --surface-2:    #f7f9fc;   /* page background */
-  --surface-3:    #f1f4f9;   /* inset / hover */
+  --surface-2:    #f8f9fa;   /* page background */
+  --surface-3:    #f4f6f8;   /* inset / hover */
 
   /* Brand teal-navy shell (HS signature background) */
-  --shell:        #0c3b4f;
-  --shell-2:      #114a61;
+  --shell:        #101e34;
+  --shell-2:      #163870;
   --shell-line:   rgba(255,255,255,.10);
-  --shell-ink:    #cfe2ec;
-  --shell-ink-2:  #9ec5d8;
+  --shell-ink:    #d4e0f2;
+  --shell-ink-2:  #9db5dc;
 
   /* Semantic */
-  --success:      #12b76a;   --success-soft: #e7f7ef;
-  --warning:      #f5a524;   --warning-soft: #fdf3e2;
-  --error:        #f04438;   --error-soft:   #fdeceb;
-  --info:         #1786be;   --info-soft:    #e4f1f8;
+  --success:      #0a805c;   --success-soft: #d1f2e6;
+  --warning:      #b45309;   --warning-soft: #fef3c7;
+  --error:        #c0392b;   --error-soft:   #fadbdb;
+  --info:         #2151a1;   --info-soft:    #e0e7ff;
   --female:       #ec4899;
   --male:         #2e88e5;
 
@@ -87,10 +89,10 @@
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --mono: "Roboto Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* HS Holding teal-navy nav gradient */
-  --nav-grad-a: #0e445a;
-  --nav-grad-b: #06222f;
-  --nav-accent: #5bb8e5;
+  /* Vĩnh Phát teal-navy nav gradient */
+  --nav-grad-a: #163870;
+  --nav-grad-b: #101e34;
+  --nav-accent: #ee0033;
 
   /* Layout */
   --nav-h: 48px;
@@ -216,7 +218,7 @@ input, select, textarea { font-family: inherit; }
   position: relative; border-radius: 50%; flex: none;
   display: inline-flex; align-items: center; justify-content: center;
   color: #fff; font-weight: 700; overflow: visible;
-  background: linear-gradient(135deg, #4fb0e0, #1786be);
+  background: linear-gradient(135deg, #3b76d6, #2151a1);
 }
 .av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .av.group { background: linear-gradient(135deg, #ff8a65, #f4511e); }
@@ -749,7 +751,7 @@ input, select, textarea { font-family: inherit; }
   /* ===== Đăng nhập ===== */
   #s-login { padding: 0; }
   .login-wrap { display: grid; grid-template-columns: 1.1fr 1fr; height: 100%; }
-  .login-brand { background: linear-gradient(150deg, #0e445a, #06222f 70%); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 56px 56px 44px; }
+  .login-brand { background: linear-gradient(150deg, #163870, #101e34 70%); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 56px 56px 44px; }
   .login-brand::before { content:""; position:absolute; width:520px; height:520px; border-radius:50%; background: radial-gradient(circle, rgba(91,184,229,.22), transparent 65%); top:-120px; right:-120px; }
   .login-brand::after { content:""; position:absolute; width:380px; height:380px; border-radius:50%; background: radial-gradient(circle, rgba(91,184,229,.12), transparent 60%); bottom:-100px; left:-60px; }
   .lb-logo { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }

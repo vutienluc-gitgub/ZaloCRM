@@ -28,7 +28,7 @@ const props = defineProps<{
   copyright?: string | null;
 }>();
 
-const DEFAULT_LOGO = '/brand/hs-monogram.png';
+const DEFAULT_LOGO = '/brand/vp-monogram.svg';
 const logo = ref(props.logoUrl || DEFAULT_LOGO);
 
 // Logo cấu hình hỏng (404/URL sai) → fallback ảnh mặc định.
@@ -52,7 +52,7 @@ watch(
   justify-content: center;
   align-items: center;
   padding: 40px 32px;
-  background: linear-gradient(160deg, #0e445a 0%, #06222f 100%);
+  background: linear-gradient(160deg, #163870 0%, #0a1324 100%);
   color: #fff;
   overflow: hidden;
   text-align: center;
@@ -61,7 +61,7 @@ watch(
   position: absolute;
   top: -80px; right: -80px;
   width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(23, 134, 190, 0.45) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(238, 0, 51, 0.25) 0%, transparent 70%);
   pointer-events: none;
 }
 .brand-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
@@ -82,11 +82,11 @@ watch(
 .brand-product {
   margin-top: 6px;
   font-size: 13px; font-weight: 600; letter-spacing: 3px;
-  color: #6fc5ea; text-transform: uppercase;
+  color: #ff3355; text-transform: uppercase;
 }
 .brand-divider {
   width: 44px; height: 3px; border-radius: 2px;
-  background: linear-gradient(90deg, #1786be, #6fc5ea);
+  background: linear-gradient(90deg, #ee0033, #2151a1);
   margin: 22px 0 16px;
 }
 .brand-slogan {

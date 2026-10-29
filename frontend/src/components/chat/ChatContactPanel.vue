@@ -496,7 +496,7 @@
         <div class="mtp-icon"><SparklesIcon :size="24" /></div>
         <h3>Trợ lý AI Bất động sản</h3>
         <p>Hỏi đáp về sản phẩm, dự án BĐS, giá, ưu đãi để tư vấn KH.</p>
-        <div class="mtp-coming">Đang phát triển — kết nối knowledge base BĐS HS Holding</div>
+        <div class="mtp-coming">Đang phát triển — kết nối knowledge base Vĩnh Phát</div>
       </div>
     </div>
 

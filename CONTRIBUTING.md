@@ -1,12 +1,12 @@
-# Đóng góp cho ZaloCRM
+# Đóng góp cho Vĩnh Phát CRM
 
 Cảm ơn bạn đã quan tâm đóng góp! Tài liệu này mô tả quy trình và các điều kiện pháp lý.
 
-Mã nguồn công khai: <https://github.com/locphamnguyen/ZaloCRM>
+Mã nguồn công khai: <https://github.com/vutienluc-gitgub/ZaloCRM>
 
 ## Giấy phép đóng góp
 
-ZaloCRM phát hành theo **GNU AGPL-3.0** (xem [LICENSE](LICENSE)). **Khi gửi đóng góp, bạn đồng ý
+Vĩnh Phát CRM phát hành theo **GNU AGPL-3.0** (xem [LICENSE](LICENSE)). **Khi gửi đóng góp, bạn đồng ý
 phát hành đóng góp đó theo AGPL-3.0** và chấp nhận **2 yêu cầu** dưới đây.
 
 ### 1. CLA (Contributor License Agreement) — bắt buộc
@@ -27,7 +27,7 @@ Cấu hình `git config user.name` / `user.email` đúng trước khi commit.
 
 ## Quy trình
 
-1. **Fork** `locphamnguyen/ZaloCRM` → tạo branch từ nhánh chính: `git checkout -b feat/ten-tinh-nang`.
+1. **Fork** `vutienluc-gitgub/ZaloCRM` → tạo branch từ nhánh chính: `git checkout -b feat/ten-tinh-nang`.
 2. Code + **chạy kiểm tra trước khi gửi**:
    ```bash
    (cd backend && npx tsc --noEmit)      # backend typecheck
@@ -36,7 +36,7 @@ Cấu hình `git config user.name` / `user.email` đúng trước khi commit.
    ```
 3. Commit theo **Conventional Commits** + `-s` (DCO):
    `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `test:` …
-4. Mở **Pull Request** về `locphamnguyen/ZaloCRM`, mô tả rõ thay đổi + cách kiểm thử. Ký CLA khi bot nhắc.
+4. Mở **Pull Request** về `vutienluc-gitgub/ZaloCRM`, mô tả rõ thay đổi + cách kiểm thử. Ký CLA khi bot nhắc.
 
 ## Quy ước code
 
@@ -52,10 +52,10 @@ Cấu hình `git config user.name` / `user.email` đúng trước khi commit.
 
 ## Báo lỗi / đề xuất
 
-Mở **Issue** trên `locphamnguyen/ZaloCRM` với: mô tả, bước tái hiện, log/ảnh, môi trường (OS, Docker, version).
+Mở **Issue** trên `vutienluc-gitgub/ZaloCRM` với: mô tả, bước tái hiện, log/ảnh, môi trường (OS, Docker, version).
 Lỗi bảo mật: gửi riêng email **locnt@locnguyendata.com** (đừng mở issue công khai).
 
 ## Giấy phép thương mại
 
-Muốn dùng ZaloCRM không chịu ràng buộc copyleft của AGPL (nhúng vào sản phẩm đóng, SaaS độc quyền…):
+Muốn dùng Vĩnh Phát CRM không chịu ràng buộc copyleft của AGPL (nhúng vào sản phẩm đóng, SaaS độc quyền…):
 liên hệ **locnt@locnguyendata.com**.

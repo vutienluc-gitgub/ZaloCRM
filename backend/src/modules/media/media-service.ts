@@ -421,7 +421,7 @@ export async function logMediaUsage(args: {
 let _logoCache: Buffer | null = null;
 async function loadLogo(): Promise<Buffer> {
   if (_logoCache) return _logoCache;
-  const logoPath = resolvePath(process.cwd(), 'static', 'brand', 'zalocrm-logo-ngang.png');
+  const logoPath = resolvePath(process.cwd(), 'static', 'brand', 'vp-logo-ngang.png');
   _logoCache = await readFile(logoPath);
   return _logoCache;
 }

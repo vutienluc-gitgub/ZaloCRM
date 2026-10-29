@@ -123,7 +123,7 @@ export async function zinstantProxyRoutes(app: FastifyInstance): Promise<void> {
 
     try {
       const res = await fetch(parsed.toString(), {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ZaloCRM/1.0)' },
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; VinhPhatCRM/1.0)' },
         signal: AbortSignal.timeout(8000),
       });
       if (!res.ok) return reply.status(res.status).send({ error: 'upstream error' });

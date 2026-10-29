@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
-  <!-- 2026-06-09 (anh chốt): login 2 cột — banner thương hiệu HS Holding + form.
-       Banner teal-navy: logo HS + ZaloCRM + slogan "Bền vững · Trường tồn".
+  <!-- Login 2 cột — banner thương hiệu Vĩnh Phát + form.
+       Banner teal-navy: logo VP + wordmark Vĩnh Phát CRM + slogan "Dệt may Vĩnh Phát".
        HD-first 1366×768; ≤900px xếp dọc (banner gọn trên, form dưới). -->
   <div class="login-card">
     <!-- ══ Cột trái: banner thương hiệu (component dùng chung với preview) ══ -->
@@ -61,15 +61,14 @@
 
         <!--
           AGPL-3.0 §13: cung cấp mã nguồn cho người dùng tương tác qua mạng.
-          TẠM ẨN 2026-06-23 (chưa chốt giấy phép sau khi tách khỏi repo locphamnguyen/ZaloCRM).
-          Bỏ comment khối <p> bên dưới để hiển thị lại; nhớ đổi link sang repo PUBLIC đúng trước khi bật.
-        <p class="agpl-source text-center text-caption mt-6">
-          ZaloCRM — phần mềm tự do
-          <a href="https://github.com/locphamnguyen/ZaloCRM" target="_blank" rel="noopener noreferrer">AGPL-3.0</a>
-          · <a href="https://github.com/locphamnguyen/ZaloCRM" target="_blank" rel="noopener noreferrer">Mã nguồn</a>
-        </p>
+          Link PHẢI trỏ tới repo công khai của bản triển khai hiện tại (Vĩnh Phát).
+          Không xoá/ẩn khối này khi chạy như dịch vụ mạng.
         -->
-        <!-- AGPL notice tạm ẩn — xem khối comment phía trên -->
+        <p class="agpl-source text-center text-caption mt-6">
+          Vĩnh Phát CRM — phần mềm tự do
+          <a href="https://github.com/vutienluc-gitgub/ZaloCRM" target="_blank" rel="noopener noreferrer">AGPL-3.0</a>
+          · <a href="https://github.com/vutienluc-gitgub/ZaloCRM" target="_blank" rel="noopener noreferrer">Mã nguồn</a>
+        </p>
       </div>
     </section>
   </div>
@@ -94,15 +93,15 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-// ── Branding hiển thị (mặc định = giá trị hardcode HS Holding) ────────────────
+// ── Branding hiển thị (mặc định = giá trị hardcode Vĩnh Phát) ────────────────
 // Login chạy pre-auth: render mặc định NGAY, fetch org-branding xong mới thay vào
 // (D4-A). Nếu endpoint lỗi/chậm/chưa có org → giữ mặc định, login không bị chặn.
-const DEFAULT_LOGO = '/brand/hs-monogram.png';
-const DEFAULT_PLACEHOLDER = `admin@hs.com hoặc ${SAMPLE_PHONE}`;
+const DEFAULT_LOGO = '/brand/vp-monogram.svg';
+const DEFAULT_PLACEHOLDER = `admin@vinhphat.vn hoặc ${SAMPLE_PHONE}`;
 const brandLogo = ref(DEFAULT_LOGO);
-const brandName = ref('HS Holding');
-const brandSlogan = ref('Bền vững · Trường tồn');
-const brandCopyright = ref(`© ${new Date().getFullYear()} HS Holding`);
+const brandName = ref('Vĩnh Phát');
+const brandSlogan = ref('Mỗi tấm vải - Một tấm lòng');
+const brandCopyright = ref(`© ${new Date().getFullYear()} Công ty TNHH SX TM Dệt May Vĩnh Phát`);
 const emailPlaceholder = ref(DEFAULT_PLACEHOLDER);
 
 // Phase Onboarding v1 — sau khi force change password thành công, redirect về /login?password-changed=1
@@ -121,9 +120,9 @@ onMounted(() => {
     .then((b) => {
       if (!b) return; // fetch lỗi → giữ mặc định hardcode (resilience)
       // Org tồn tại → hiển thị ĐÚNG cấu hình: trường trống thì ẩn (banner v-if),
-      // KHÔNG giữ chữ mặc định (fix slogan vẫn ra "Bền vững · Trường tồn").
+      // KHÔNG giữ chữ mặc định (fix slogan cũ vẫn hiện dù org đã đổi).
       brandLogo.value = b.logoUrl || DEFAULT_LOGO;
-      brandName.value = b.name || 'HS Holding';
+      brandName.value = b.name || 'Vĩnh Phát';
       brandSlogan.value = b.slogan || '';
       brandCopyright.value = b.copyright || '';
       emailPlaceholder.value = b.emailDomain

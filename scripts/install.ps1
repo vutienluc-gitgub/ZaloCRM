@@ -1,12 +1,12 @@
 <#
-  install.ps1 — Bootstrap 1 LỆNH cho ZCRM Community trên WINDOWS (PowerShell, không cần WSL thủ công).
+  install.ps1 — Bootstrap 1 LỆNH cho VPCRM Community trên WINDOWS (PowerShell, không cần WSL thủ công).
 
   Tự động: kiểm tra Docker Desktop + Git → cài qua winget nếu thiếu → TẢI mã nguồn (clone)
   nếu CÀI MỚI / git pull nếu ĐÃ CÓ → gọi lại scripts\zalocrm-deploy.sh qua Git Bash
   (tái dùng đúng logic deploy: sinh .env, backup DB, build, migrate, health).
 
   Chạy 1 lệnh trong PowerShell:
-    irm https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.ps1 | iex
+    irm https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.ps1 | iex
 
   Tuỳ biến (đặt biến môi trường trước khi chạy):
     $env:ZCRM_DIR    = "D:\zcrm"   # thư mục cài (mặc định: %USERPROFILE%\zcrm)
@@ -17,7 +17,7 @@
 #>
 $ErrorActionPreference = 'Stop'
 
-$RepoUrl = if ($env:ZCRM_REPO)   { $env:ZCRM_REPO }   else { 'https://github.com/locphamnguyen/ZaloCRM.git' }
+$RepoUrl = if ($env:ZCRM_REPO)   { $env:ZCRM_REPO }   else { 'https://github.com/vutienluc-gitgub/ZaloCRM.git' }
 $AppDir  = if ($env:ZCRM_DIR)    { $env:ZCRM_DIR }    else { Join-Path $env:USERPROFILE 'zcrm' }
 $Branch  = if ($env:ZCRM_BRANCH) { $env:ZCRM_BRANCH } else { 'main' }
 
@@ -97,7 +97,7 @@ function Fetch-Source {
 
 # ── Luồng chính ─────────────────────────────────────────────────────────────────
 Write-Host "═══════════════════════════════════════════════"
-Write-Host "  ZCRM — Cài đặt / Cập nhật TỰ ĐỘNG (Windows)"
+Write-Host "  VPCRM — Cài đặt / Cập nhật TỰ ĐỘNG (Windows)"
 Write-Host "═══════════════════════════════════════════════"
 Log "Thư mục cài: $AppDir   |   Nhánh: $Branch"
 

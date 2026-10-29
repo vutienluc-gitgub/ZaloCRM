@@ -1,4 +1,4 @@
-# Hướng dẫn cài đặt ZaloCRM
+# Hướng dẫn cài đặt Vĩnh Phát CRM
 
 ## Bước 1: Chuẩn bị VPS
 
@@ -30,8 +30,8 @@ docker compose version
 ## Bước 2: Tải mã nguồn
 
 ```bash
-# Tải ZaloCRM từ GitHub
-git clone https://github.com/locphamnguyen/ZaloCRM.git
+# Tải Vĩnh Phát CRM từ GitHub
+git clone https://github.com/vutienluc-gitgub/ZaloCRM.git
 
 # Vào thư mục dự án
 cd ZaloCRM

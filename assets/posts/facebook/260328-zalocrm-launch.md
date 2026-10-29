@@ -1,4 +1,4 @@
-# Facebook Post — Giới thiệu ZaloCRM
+# Facebook Post — Giới thiệu Vĩnh Phát CRM
 
 ## Bài đăng
 
@@ -10,7 +10,7 @@ Bạn đang dùng Zalo cá nhân để chăm sóc khách hàng?
 Nhân viên mỗi người 1 Zalo, bạn không biết ai đang chat gì?
 Tin nhắn bị bỏ lỡ, khách hàng rớt mất?
 
-👉 **ZaloCRM** giải quyết hết — 100% miễn phí, tự cài trên server của bạn.
+👉 **Vĩnh Phát CRM** giải quyết hết — 100% miễn phí, tự cài trên server của bạn.
 
 ---
 
@@ -30,7 +30,7 @@ Tin nhắn bị bỏ lỡ, khách hàng rớt mất?
 ### 🚀 Cài đặt chỉ 3 phút
 
 ```
-git clone https://github.com/locphamnguyen/ZaloCRM.git
+git clone https://github.com/vutienluc-gitgub/ZaloCRM.git
 cd ZaloCRM && cp .env.example .env
 docker compose up -d --build
 ```
@@ -72,7 +72,7 @@ Quét QR Zalo → Bắt đầu nhận tin nhắn.
 ### Hashtags
 
 ```
-#ZaloCRM #QuanLyZalo #CRM #SaleOnline #CSKH #ZaloMarketing #OpenSource #MienPhi #SaaS #VietnamTech #PhongKham #ShopOnline #QuanLyKhachHang #TuDongHoa #ChatBot
+#VinhPhatCRM #QuanLyZalo #CRM #SaleOnline #CSKH #ZaloMarketing #OpenSource #MienPhi #SaaS #VietnamTech #PhongKham #ShopOnline #QuanLyKhachHang #TuDongHoa #ChatBot
 ```
 
 ### Thời gian đăng tốt nhất
@@ -84,7 +84,7 @@ Quét QR Zalo → Bắt đầu nhận tin nhắn.
 
 ```
 💬 Comment "CRM" để nhận hướng dẫn cài đặt chi tiết
-🔗 Link GitHub: github.com/locphamnguyen/ZaloCRM
+🔗 Link GitHub: github.com/vutienluc-gitgub/ZaloCRM
 ⭐ Star repo nếu thấy hữu ích nhé!
 ```
 
@@ -97,7 +97,7 @@ Quét QR Zalo → Bắt đầu nhận tin nhắn.
 > 📊 Dashboard + Báo cáo
 > 🆓 100% miễn phí
 >
-> 👉 github.com/locphamnguyen/ZaloCRM
+> 👉 github.com/vutienluc-gitgub/ZaloCRM
 
 ---
 
@@ -107,11 +107,11 @@ Quét QR Zalo → Bắt đầu nhận tin nhắn.
 
 Xin chào mọi người,
 
-Mình vừa hoàn thành ZaloCRM — công cụ giúp quản lý nhiều tài khoản Zalo cá nhân trên 1 giao diện web.
+Mình vừa hoàn thành Vĩnh Phát CRM — công cụ giúp quản lý nhiều tài khoản Zalo cá nhân trên 1 giao diện web.
 
 **Vấn đề:** Đội sale 20 người, mỗi người 1 Zalo, không ai biết ai đang chat gì. Tin nhắn bỏ lỡ, khách hàng rớt.
 
-**Giải pháp:** ZaloCRM gom tất cả Zalo vào 1 dashboard:
+**Giải pháp:** Vĩnh Phát CRM gom tất cả Zalo vào 1 dashboard:
 - Đăng nhập QR — không cần mật khẩu Zalo
 - Chat real-time — tin nhắn đến tức thì
 - Quản lý khách hàng — thông tin, lịch hẹn, ghi chú
@@ -120,7 +120,7 @@ Mình vừa hoàn thành ZaloCRM — công cụ giúp quản lý nhiều tài kh
 - Chống block — tự động giới hạn tốc độ gửi
 
 **Cài đặt:** Docker — 3 phút.
-**Giá:** Miễn phí, open source, MIT license.
-**Link:** github.com/locphamnguyen/ZaloCRM
+**Giá:** Miễn phí, mã nguồn mở, giấy phép AGPL-3.0.
+**Link:** github.com/vutienluc-gitgub/ZaloCRM
 
 Mọi người thử xem rồi cho mình feedback nhé! ⭐

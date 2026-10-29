@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# install.sh — Bootstrap 1 LỆNH cho ZCRM Community.
+# install.sh — Bootstrap 1 LỆNH cho VPCRM Community.
 #
 # Tự động: kiểm tra môi trường (Docker, Docker Compose, git, openssl, curl) → cài phần
 # còn thiếu → TẢI mã nguồn (clone) nếu CÀI MỚI / git pull nếu ĐÃ CÓ → chạy deploy
 # (zalocrm-deploy.sh tự phát hiện cài mới vs nâng cấp, backup DB, migrate, health).
 #
 # Chạy 1 lệnh (cài mới hoặc cập nhật đều được):
-#   curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.sh | bash
 # Hoặc tải về rồi chạy:
 #   bash install.sh
 #
@@ -23,7 +23,7 @@
 #
 set -euo pipefail
 
-REPO_URL="${ZCRM_REPO:-https://github.com/locphamnguyen/ZaloCRM.git}"
+REPO_URL="${ZCRM_REPO:-https://github.com/vutienluc-gitgub/ZaloCRM.git}"
 APP_DIR="${ZCRM_DIR:-$HOME/zcrm}"
 BRANCH="${ZCRM_BRANCH:-main}"
 
@@ -116,7 +116,7 @@ fetch_source() {
 
 # ── Luồng chính ─────────────────────────────────────────────────────────────────
 echo "═══════════════════════════════════════════════"
-echo "  ZCRM — Cài đặt / Cập nhật TỰ ĐỘNG (1 lệnh)"
+echo "  VPCRM — Cài đặt / Cập nhật TỰ ĐỘNG (1 lệnh)"
 echo "═══════════════════════════════════════════════"
 log "Thư mục cài: $APP_DIR   |   Nhánh: $BRANCH"
 

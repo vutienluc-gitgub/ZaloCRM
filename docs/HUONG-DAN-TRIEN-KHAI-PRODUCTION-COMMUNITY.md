@@ -1,6 +1,6 @@
-# Hướng dẫn triển khai ZCRM lên Production (v3.4)
+# Hướng dẫn triển khai VPCRM lên Production (v3.4)
 
-> Runbook **tự chứa** cho ZCRM (mã nguồn mở, **AGPL-3.0**). Gồm 2 luồng: **cài mới từ đầu**
+> Runbook **tự chứa** cho VPCRM (mã nguồn mở, **AGPL-3.0**). Gồm 2 luồng: **cài mới từ đầu**
 > và **nâng cấp** bản đang chạy lên v3.4. Mọi thao tác **idempotent + giữ dữ liệu**.
 >
 > Thay `sub.domain.com` / `file.domain.com` bằng domain thật của bạn. Hướng dẫn sử dụng:
@@ -8,12 +8,12 @@
 
 ## 🚀 Quick Start — 1 lệnh (tự động)
 
-> **Mã nguồn (repo):** https://github.com/locphamnguyen/ZaloCRM
+> **Mã nguồn (repo):** https://github.com/vutienluc-gitgub/ZaloCRM
 
 Cài mới **hoặc** nâng cấp chỉ với **1 lệnh duy nhất** — script tự **kiểm tra & cài Docker/Compose/git nếu thiếu**, tải/cập nhật mã nguồn, backup & migrate:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.sh | bash
 ```
 
 > Lệnh trên tự: kiểm tra môi trường (Docker · Docker Compose v2 · git · openssl) và **cài phần thiếu** · **clone** mã nguồn (cài mới) hoặc **`git pull`** (cập nhật) vào `~/zcrm` · chạy deploy (tự phát hiện cài mới/nâng cấp, backup DB, migrate, health-check).
@@ -23,17 +23,17 @@ curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/
 
 | OS | Cách chạy |
 |---|---|
-| **Linux** (Ubuntu/Debian/CentOS/Fedora/Alpine/Arch) | Chạy **trực tiếp** — tự cài Docker qua `get.docker.com`. *(Môi trường khuyến nghị cho VPS/server.)*<br>`curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.sh \| bash` |
-| **Windows** *(đơn giản — không cần WSL thủ công)* | Mở **PowerShell** chạy:<br>`irm https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.ps1 \| iex`<br>Script tự cài **Docker Desktop + Git** (qua winget) → clone/pull → deploy. *(Docker Desktop tự dựng WSL2 backend ngầm.)* |
-| **Windows** *(cách thủ công qua WSL2)* | Cài [Docker Desktop](https://www.docker.com/products/docker-desktop/) (bật **WSL2 backend**) → mở **Ubuntu (WSL2)** → chạy như Linux:<br>`curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.sh \| bash` |
-| **macOS** | Cài **Docker Desktop** trước (`git`/`openssl` tự cài qua Homebrew nếu thiếu) → chạy:<br>`curl -fsSL https://raw.githubusercontent.com/locphamnguyen/ZaloCRM/main/scripts/install.sh \| bash` |
+| **Linux** (Ubuntu/Debian/CentOS/Fedora/Alpine/Arch) | Chạy **trực tiếp** — tự cài Docker qua `get.docker.com`. *(Môi trường khuyến nghị cho VPS/server.)*<br>`curl -fsSL https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.sh \| bash` |
+| **Windows** *(đơn giản — không cần WSL thủ công)* | Mở **PowerShell** chạy:<br>`irm https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.ps1 \| iex`<br>Script tự cài **Docker Desktop + Git** (qua winget) → clone/pull → deploy. *(Docker Desktop tự dựng WSL2 backend ngầm.)* |
+| **Windows** *(cách thủ công qua WSL2)* | Cài [Docker Desktop](https://www.docker.com/products/docker-desktop/) (bật **WSL2 backend**) → mở **Ubuntu (WSL2)** → chạy như Linux:<br>`curl -fsSL https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.sh \| bash` |
+| **macOS** | Cài **Docker Desktop** trước (`git`/`openssl` tự cài qua Homebrew nếu thiếu) → chạy:<br>`curl -fsSL https://raw.githubusercontent.com/vutienluc-gitgub/ZaloCRM/main/scripts/install.sh \| bash` |
 
 > Yêu cầu chung: **Docker + Docker Compose v2**. Trên Linux script tự cài; trên Windows/macOS cài **Docker Desktop** trước (PowerShell `install.ps1` tự cài Docker Desktop giúp bạn).
 
 **Đã có sẵn mã nguồn?** Dùng thẳng script deploy:
 
 ```bash
-git clone https://github.com/locphamnguyen/ZaloCRM.git zalocrm && cd zalocrm
+git clone https://github.com/vutienluc-gitgub/ZaloCRM.git zalocrm && cd zalocrm
 ./scripts/zalocrm-deploy.sh          # auto: cài mới nếu chưa có, nâng cấp nếu đã chạy
 ```
 
@@ -68,7 +68,7 @@ AI assistant (Anthropic/Gemini/OpenAI/Qwen/Kimi), analytics, PWA mobile + push.
 ## 2. Lấy source + tạo `.env`
 
 ```bash
-git clone https://github.com/locphamnguyen/ZaloCRM.git zalocrm && cd zalocrm
+git clone https://github.com/vutienluc-gitgub/ZaloCRM.git zalocrm && cd zalocrm
 cp .env.example .env
 ```
 
@@ -250,12 +250,13 @@ cat backup-truoc-nang-cap-*.sql | docker exec -i zalo-crm-db psql -U crmuser zal
 
 ---
 
-## 7. Giấy phép — GPL-3.0
+## 7. Giấy phép — AGPL-3.0
 
-ZCRM phát hành theo **GNU General Public License v3.0 (GPL-3.0)** — xem [LICENSE](../LICENSE).
-Copyleft: mọi bản **phân phối lại** (kể cả bản đã chỉnh sửa) **bắt buộc** phát hành dưới GPL-3.0 và
-kèm **mã nguồn đầy đủ**. Muốn dùng theo điều khoản thương mại (không chịu ràng buộc copyleft) —
-dual-license: liên hệ `locnt@locnguyendata.com`.
+Vĩnh Phát CRM phát hành theo **GNU Affero General Public License v3.0 (AGPL-3.0)** — xem [LICENSE](../LICENSE).
+Copyleft: mọi bản **phân phối lại hoặc cung cấp qua mạng** (kể cả bản đã chỉnh sửa) **bắt buộc** phát hành
+dưới AGPL-3.0, kèm **mã nguồn đầy đủ** cho người dùng (§13) và **giữ nguyên thông báo bản quyền**
+(`LICENSE`, `NOTICE`, `THIRD-PARTY-LICENSES.md`, banner attribution). Muốn dùng theo điều khoản thương mại
+(không chịu ràng buộc copyleft) — dual-license: liên hệ `locnt@locnguyendata.com`.
 
 ---
 

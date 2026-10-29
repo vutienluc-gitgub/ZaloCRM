@@ -22,22 +22,22 @@ export const vuetify = createVuetify({
       'hsLight': {
         dark: false,
         colors: {
-          primary: '#1786be',          // --brand
-          'primary-darken-1': '#0f6fa0',
-          secondary: '#5bb8e5',        // --brand-bright
-          accent: '#0b5880',           // --brand-700
-          background: '#f7f9fc',       // --surface-2
+          primary: '#2151a1',          // --brand
+          'primary-darken-1': '#163870',
+          secondary: '#3b76d6',        // --brand-bright
+          accent: '#ee0033',           // --brand-700
+          background: '#f8f9fa',       // --surface-2
           surface: '#ffffff',
-          'surface-variant': '#f1f4f9',
-          success: '#12b76a',
-          warning: '#f5a524',
-          error: '#f04438',
-          info: '#1786be',
-          'nav-a': '#0e445a',
-          'nav-b': '#06222f',
-          'nav-accent': '#5bb8e5',
-          'on-surface': '#141a24',
-          'on-background': '#141a24',
+          'surface-variant': '#f4f6f8',
+          success: '#0a805c',
+          warning: '#b45309',
+          error: '#c0392b',
+          info: '#2151a1',
+          'nav-a': '#163870',
+          'nav-b': '#101e34',
+          'nav-accent': '#ee0033',
+          'on-surface': '#101e34',
+          'on-background': '#101e34',
           'on-primary': '#ffffff',
         },
         variables: {
@@ -54,7 +54,7 @@ export const vuetify = createVuetify({
           background: '#f5f6fa',
           surface: '#ffffff',
           'surface-variant': '#fafbfc',
-          primary: '#1786be',
+          primary: '#2151a1',
           secondary: '#1f2330',
           accent: '#1786be',
           error: '#ff3d00',

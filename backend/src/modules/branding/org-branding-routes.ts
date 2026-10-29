@@ -29,9 +29,9 @@ import { prisma } from '../../shared/database/prisma-client.js';
 // trên LoginView để trải nghiệm nhất quán dù endpoint trả defaults.
 const DEFAULTS = {
   logoUrl: null as string | null,
-  name: 'HS Holding',
-  slogan: 'Bền vững · Trường tồn',
-  copyright: `© ${new Date().getFullYear()} HS Holding`,
+  name: 'Vĩnh Phát',
+  slogan: 'Mỗi tấm vải - Một tấm lòng',
+  copyright: `© ${new Date().getFullYear()} Công ty TNHH SX TM Dệt May Vĩnh Phát`,
   emailDomain: null as string | null,
 };
 

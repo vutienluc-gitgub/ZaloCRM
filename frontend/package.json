@@ -1,8 +1,10 @@
 {
-  "name": "frontend",
+  "name": "vinhphat-crm-frontend",
   "private": true,
   "version": "3.4.0",
   "type": "module",
+  "author": "Nguyễn Tiến Lộc <locnt@locnguyendata.com>",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
