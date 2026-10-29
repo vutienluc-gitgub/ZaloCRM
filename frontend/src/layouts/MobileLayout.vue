@@ -51,6 +51,7 @@
       </main>
 
       <BottomNav v-show="!isKeyboardOpen" />
+      <ToastContainer placement="bottom-mobile" />
     </div>
   </v-app>
 </template>
@@ -64,6 +65,7 @@ import { useConfirm } from '@/composables/use-confirm';
 import { fetchPublicBranding } from '@/api/public-branding';
 import NotificationBell from '@/components/NotificationBell.vue';
 import BottomNav from '@/components/BottomNav.vue';
+import ToastContainer from '@/components/ui/ToastContainer.vue';
 
 const route = useRoute();
 const router = useRouter();

@@ -2,7 +2,7 @@
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
   <Teleport to="body">
-    <div class="toast-container">
+    <div class="toast-container" :class="placement">
       <TransitionGroup name="toast">
         <div
           v-for="t in items"
@@ -35,6 +35,15 @@
 
 <script setup lang="ts">
 import { useToast, type ToastItem } from '@/composables/use-toast';
+
+/**
+ * placement:
+ *  - 'top-right' (mặc định, desktop)
+ *  - 'bottom-mobile': dưới cùng, chừa bottom nav + safe area (MobileLayout).
+ */
+withDefaults(defineProps<{ placement?: 'top-right' | 'bottom-mobile' }>(), {
+  placement: 'top-right',
+});
 
 const { items, dismiss } = useToast();
 
@@ -77,6 +86,20 @@ async function onAction(t: ToastItem) {
 .toast.success { border-color: #BBF7D0; border-left-color: #22C55E; color: #15803D; }
 .toast.warning { border-color: #FDE68A; border-left-color: #F59E0B; color: #92400E; }
 .toast.error   { border-color: #FECACA; border-left-color: #EF4444; color: #B91C1C; }
+
+/* ── Mobile: dưới cùng, chừa bottom nav + safe area ───────────────────── */
+.toast-container.bottom-mobile {
+  top: auto;
+  right: 12px;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
+}
+.toast-container.bottom-mobile .toast {
+  min-width: 0;
+  max-width: none;
+}
+.toast-container.bottom-mobile .toast-enter-from { transform: translateY(12px); }
+.toast-container.bottom-mobile .toast-leave-to { transform: translateX(-60%); }
 
 .toast-icon { font-size: 16px; flex-shrink: 0; line-height: 1; }
 .toast-msg {

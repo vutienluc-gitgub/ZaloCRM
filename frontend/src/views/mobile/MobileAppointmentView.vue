@@ -108,37 +108,42 @@
     </div>
 
     <div v-else class="ma-list">
-      <button
+      <MobileSwipeRow
         v-for="a in dayList"
         :key="a.id"
-        type="button"
-        class="ma-card"
-        @click="openDetail(a)"
+        :actions="rowActions(a)"
+        @action="(key) => onCardAction(key, a)"
       >
-        <span class="ma-card__time">
-          <span class="ma-card__hh">{{ timeLabel(a) }}</span>
-          <span class="ma-card__dur">{{ durationLabel(a) }}</span>
-        </span>
-        <span class="ma-card__bar" :style="{ background: typeBgColor(a.type) }" />
-        <span class="ma-card__main">
-          <span class="ma-card__top">
-            <span class="ma-card__name">{{ contactName(a) }}</span>
-            <span v-if="a.status !== 'scheduled'" class="ma-st" :class="`ma-st--${a.status}`">{{ statusLabel(a.status) }}</span>
+        <button
+          type="button"
+          class="ma-card"
+          @click="openDetail(a)"
+        >
+          <span class="ma-card__time">
+            <span class="ma-card__hh">{{ timeLabel(a) }}</span>
+            <span class="ma-card__dur">{{ durationLabel(a) }}</span>
           </span>
-          <span class="ma-card__title">{{ a.title || 'Nhắc hẹn' }}</span>
-          <span class="ma-card__meta">
-            <span class="ma-type" :style="typeStyle(a)">{{ typeIcon(a.type) }} {{ typeLabel(a.type) }}</span>
-            <span v-if="a.location" class="ma-loc">
-              <v-icon icon="mdi-map-marker-outline" size="12" />{{ a.location }}
+          <span class="ma-card__bar" :style="{ background: typeBgColor(a.type) }" />
+          <span class="ma-card__main">
+            <span class="ma-card__top">
+              <span class="ma-card__name">{{ contactName(a) }}</span>
+              <span v-if="a.status !== 'scheduled'" class="ma-st" :class="`ma-st--${a.status}`">{{ statusLabel(a.status) }}</span>
             </span>
-            <span
-              class="ma-owner"
-              :style="ownerStyle(a)"
-              :title="ownerName(a)"
-            >{{ initials(ownerName(a)) }}</span>
+            <span class="ma-card__title">{{ a.title || 'Nhắc hẹn' }}</span>
+            <span class="ma-card__meta">
+              <span class="ma-type" :style="typeStyle(a)">{{ typeIcon(a.type) }} {{ typeLabel(a.type) }}</span>
+              <span v-if="a.location" class="ma-loc">
+                <v-icon icon="mdi-map-marker-outline" size="12" />{{ a.location }}
+              </span>
+              <span
+                class="ma-owner"
+                :style="ownerStyle(a)"
+                :title="ownerName(a)"
+              >{{ initials(ownerName(a)) }}</span>
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
+      </MobileSwipeRow>
     </div>
 
     <!-- ── Bottom sheet: chi tiết lịch hẹn ────────────────────────────── -->
@@ -230,7 +235,7 @@
             type="button"
             class="ma-sbtn ma-sbtn--ok"
             :disabled="acting"
-            @click="setStatus('completed')"
+            @click="setStatus(selected, 'completed')"
           >
             <v-icon icon="mdi-check-circle-outline" size="18" />
             {{ acting ? 'Đang lưu…' : 'Hoàn thành' }}
@@ -239,7 +244,7 @@
             type="button"
             class="ma-sbtn ma-sbtn--warn"
             :disabled="acting"
-            @click="setStatus('no_show')"
+            @click="setStatus(selected, 'no_show')"
           >
             <v-icon icon="mdi-account-off-outline" size="18" />
             Vắng mặt
@@ -248,7 +253,7 @@
             type="button"
             class="ma-sbtn ma-sbtn--danger"
             :disabled="acting"
-            @click="setStatus('cancelled')"
+            @click="setStatus(selected, 'cancelled')"
           >
             <v-icon icon="mdi-close-circle-outline" size="18" />
             Huỷ lịch
@@ -260,7 +265,7 @@
             type="button"
             class="ma-sbtn ma-sbtn--reopen"
             :disabled="acting"
-            @click="setStatus('scheduled')"
+            @click="setStatus(selected, 'scheduled')"
           >
             <v-icon icon="mdi-restore" size="18" />
             {{ acting ? 'Đang lưu…' : 'Mở lại lịch hẹn' }}
@@ -301,6 +306,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useAppointments } from '@/composables/use-appointments';
 import { useUsers } from '@/composables/use-users';
 import { useConfirm } from '@/composables/use-confirm';
+import { useToast } from '@/composables/use-toast';
 import {
   appointmentEnd,
   appointmentOwnerId,
@@ -323,11 +329,14 @@ import {
 } from '@/composables/use-org-timezone';
 import Avatar from '@/components/ui/Avatar.vue';
 import MobileSheet from '@/components/mobile/MobileSheet.vue';
+import MobileSwipeRow from '@/components/mobile/MobileSwipeRow.vue';
+import type { SwipeAction } from '@/components/mobile/mobile-swipe-types';
 import AppointmentEditor from '@/components/appointments/AppointmentEditor.vue';
 
 const router = useRouter();
 const auth = useAuthStore();
 const { confirm } = useConfirm();
+const toast = useToast();
 
 const {
   appointments,
@@ -594,6 +603,34 @@ function openEdit(a: Appointment) {
   editorOpen.value = true;
 }
 
+/** Vuốt trái trên card → 2 thao tác nhanh theo trạng thái. */
+function rowActions(a: Appointment): SwipeAction[] {
+  if (a.status === 'scheduled' || a.status === 'overdue') {
+    return [
+      { key: 'complete', label: 'Xong', icon: 'mdi-check-circle', tone: 'success' },
+      { key: 'edit', label: 'Đổi giờ', icon: 'mdi-clock-edit-outline', tone: 'primary' },
+    ];
+  }
+  return [
+    { key: 'reopen', label: 'Mở lại', icon: 'mdi-restore', tone: 'primary' },
+    { key: 'edit', label: 'Đổi giờ', icon: 'mdi-clock-edit-outline', tone: 'primary' },
+  ];
+}
+
+function onCardAction(key: string, a: Appointment) {
+  if (key === 'edit') {
+    openEdit(a);
+    return;
+  }
+  if (key === 'complete') {
+    void setStatus(a, 'completed', true);
+    return;
+  }
+  if (key === 'reopen') {
+    void setStatus(a, 'scheduled', true);
+  }
+}
+
 function onCreated(a: Appointment) {
   const key = a?.appointmentDate ? orgDayKey(a.appointmentDate) : '';
   if (key) {
@@ -617,9 +654,12 @@ function openChat(a: Appointment) {
   }
 }
 
-async function setStatus(status: 'completed' | 'cancelled' | 'no_show' | 'scheduled') {
-  if (!selected.value || acting.value) return;
-  const target = selected.value;
+async function setStatus(
+  target: Appointment | null,
+  status: 'completed' | 'cancelled' | 'no_show' | 'scheduled',
+  quiet = false,
+) {
+  if (!target || acting.value) return;
 
   if (status === 'cancelled' || status === 'no_show') {
     const isCancel = status === 'cancelled';
@@ -640,8 +680,18 @@ async function setStatus(status: 'completed' | 'cancelled' | 'no_show' | 'schedu
   acting.value = false;
 
   if (!ok) {
-    actionError.value = 'Không cập nhật được trạng thái. Vui lòng thử lại.';
+    if (quiet) toast.error('Không cập nhật được trạng thái. Vui lòng thử lại.');
+    else actionError.value = 'Không cập nhật được trạng thái. Vui lòng thử lại.';
     return;
+  }
+  if (quiet) {
+    toast.success(
+      status === 'completed'
+        ? 'Đã hoàn thành lịch hẹn'
+        : status === 'scheduled'
+          ? 'Đã mở lại lịch hẹn'
+          : 'Đã cập nhật lịch hẹn',
+    );
   }
   sheetOpen.value = false;
 }
@@ -933,6 +983,10 @@ onMounted(async () => {
   flex-direction: column;
   gap: 8px;
   padding: 0 10px;
+}
+/* MobileSwipeRow: giữ bo góc khi lộ ngăn kéo thao tác. */
+.ma-list :deep(.msw) {
+  border-radius: 14px;
 }
 .ma-card {
   position: relative;

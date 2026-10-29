@@ -64,25 +64,30 @@
     </div>
 
     <div v-else class="mc-list">
-      <button
+      <MobileSwipeRow
         v-for="contact in contacts"
         :key="contact.id"
-        type="button"
-        class="mc-row"
-        @click="openContact(contact)"
+        :actions="rowActions(contact)"
+        @action="(key) => onRowAction(key, contact)"
       >
-        <Avatar :src="contact.avatarUrl || null" :name="displayName(contact)" :size="40" />
-        <span class="mc-row__main">
-          <span class="mc-row__name">{{ displayName(contact) }}</span>
-          <span class="mc-row__sub">{{ subline(contact) }}</span>
-        </span>
-        <span
-          v-if="contact.status"
-          class="mc-row__st"
-          :class="`mc-st--${contact.status}`"
-        >{{ statusLabel(contact.status) }}</span>
-        <v-icon icon="mdi-chevron-right" size="18" class="mc-row__ch" />
-      </button>
+        <button
+          type="button"
+          class="mc-row"
+          @click="openContact(contact)"
+        >
+          <Avatar :src="contact.avatarUrl || null" :name="displayName(contact)" :size="40" />
+          <span class="mc-row__main">
+            <span class="mc-row__name">{{ displayName(contact) }}</span>
+            <span class="mc-row__sub">{{ subline(contact) }}</span>
+          </span>
+          <span
+            v-if="contact.status"
+            class="mc-row__st"
+            :class="`mc-st--${contact.status}`"
+          >{{ statusLabel(contact.status) }}</span>
+          <v-icon icon="mdi-chevron-right" size="18" class="mc-row__ch" />
+        </button>
+      </MobileSwipeRow>
     </div>
 
     <button v-if="hasMore" type="button" class="mc-more" :disabled="loading" @click="loadMore">
@@ -183,6 +188,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Avatar from '@/components/ui/Avatar.vue';
 import MobileSheet from '@/components/mobile/MobileSheet.vue';
+import MobileSwipeRow from '@/components/mobile/MobileSwipeRow.vue';
+import type { SwipeAction } from '@/components/mobile/mobile-swipe-types';
 import ContactDetailDialog from '@/components/contacts/ContactDetailDialog.vue';
 import { useContacts, STATUS_OPTIONS, SOURCE_OPTIONS } from '@/composables/use-contacts';
 import type { Contact } from '@/composables/use-contacts';
@@ -255,6 +262,26 @@ async function loadMore() {
 function openContact(contact: Contact) {
   selectedContact.value = contact;
   sheetOpen.value = true;
+}
+
+/** Vuốt trái trên dòng KH → thao tác nhanh (chỉ hiện khi có SĐT / có Zalo). */
+function rowActions(c: Contact): SwipeAction[] {
+  const actions: SwipeAction[] = [];
+  if (c.phone) {
+    actions.push({ key: 'call', label: 'Gọi', icon: 'mdi-phone', tone: 'success' });
+  }
+  actions.push({ key: 'message', label: 'Nhắn', icon: 'mdi-message-text', tone: 'primary' });
+  return actions;
+}
+
+function onRowAction(key: string, c: Contact) {
+  if (key === 'call' && c.phone) {
+    window.location.href = `tel:${c.phone}`;
+    return;
+  }
+  if (key === 'message') {
+    router.push({ path: '/chat', query: { contactId: c.id } });
+  }
 }
 
 function openCreate() {
@@ -421,7 +448,7 @@ onUnmounted(() => clearTimeout(searchTimeout));
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.mc-list > .mc-row:last-child {
+.mc-list > .msw:last-child .mc-row {
   border-bottom: 0;
 }
 .mc-row:active {
