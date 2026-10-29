@@ -5,6 +5,7 @@
     <header class="page-hero">
       <div class="hero-left">
         <h1 class="hero-title">Nhân viên</h1>
+        <p v-if="isMobile && !loading && stats.total > 0" class="hero-count">{{ filteredUsers.length }} / {{ stats.total }} nhân viên</p>
         <p class="hero-sub">Quản lý người dùng tổ chức · Phân phòng ban · Gán nhóm quyền · Vô hiệu hóa khi nghỉ việc</p>
       </div>
       <div class="hero-right" v-if="canCreateUser">
@@ -75,7 +76,7 @@
       <button class="filter-select toggle-email-btn" @click="showEmailColumn = !showEmailColumn" :title="showEmailColumn ? 'Ẩn cột email' : 'Hiện cột email'">
         {{ showEmailColumn ? 'Ẩn email' : 'Hiện email' }}
       </button>
-      <span class="at-count">{{ filteredUsers.length }} / {{ stats.total }} nhân viên</span>
+      <span v-if="!isMobile" class="at-count">{{ filteredUsers.length }} / {{ stats.total }} nhân viên</span>
     </div>
 
     <!-- 2026-06-09 (anh chốt FN4): thanh thao tác hàng loạt — hiện khi chọn ≥1 nhân viên. -->
@@ -118,6 +119,60 @@
 
     <!-- AIRTABLE-STYLE TABLE -->
     <section v-else class="at-table-wrap">
+      <!-- Mobile: card list thay bảng rộng 1300px -->
+      <div class="ur-mobile-list">
+        <button
+          v-for="u in filteredUsers"
+          :key="`m-${u.id}`"
+          type="button"
+          class="ur-card"
+          :class="{ 'is-inactive': !u.isActive, 'is-selected': selectedUser?.id === u.id }"
+          @click="openPanel(u)"
+        >
+          <img
+            v-if="u.avatarUrl"
+            :src="u.avatarUrl"
+            :alt="u.fullName"
+            class="at-avatar at-avatar-img ur-card__avatar"
+            referrerpolicy="no-referrer"
+            @error="onAvatarError"
+          />
+          <span
+            v-else
+            class="at-avatar ur-card__avatar"
+            :style="{ background: avatarColor(u.fullName || u.email || u.phone || '?') }"
+          >
+            {{ initials(u.fullName || u.email || u.phone || '?') }}
+          </span>
+
+          <span class="ur-card__body">
+            <span class="ur-card__top">
+              <span class="ur-card__name">{{ u.fullName || '(chưa đặt tên)' }}</span>
+              <span :class="['at-chip', statusInfo(u).chipClass]" class="ur-card__status">
+                {{ statusInfo(u).icon }} {{ statusInfo(u).label }}
+              </span>
+            </span>
+            <span class="ur-card__meta">
+              {{ memberRoleLabel(u) }}<template v-if="u.phone"> · {{ formatPhoneDisplay(u.phone) }}</template>
+            </span>
+            <span v-if="u.departmentMember || u.permissionGroup" class="ur-card__chips">
+              <span v-if="u.departmentMember" class="at-chip chip-dept">
+                <Building2 :size="12" class="inline-icon" />{{ u.departmentMember.department.name }}
+              </span>
+              <span
+                v-if="u.permissionGroup"
+                class="at-chip"
+                :class="u.permissionGroup.isSystem ? 'chip-system' : 'chip-custom'"
+              >
+                <Shield :size="12" class="inline-icon" />{{ u.permissionGroup.name }}
+              </span>
+            </span>
+          </span>
+
+          <Edit2 :size="16" class="ur-card__chev" />
+        </button>
+      </div>
+
       <table class="at-table">
         <thead>
           <tr>
@@ -322,6 +377,7 @@ import {
   type OnboardingSummary,
 } from '@/stores/rbac';
 import { useAuthStore } from '@/stores/auth';
+import { useMobile } from '@/composables/use-mobile';
 import { api } from '@/api/index';
 import { Crown, Building2, Award, Shield, UserCheck } from 'lucide-vue-next';
 import UserEditPanel from '@/components/rbac/UserEditPanel.vue';
@@ -329,6 +385,7 @@ import CreateUserWithZaloModal from '@/components/users/CreateUserWithZaloModal.
 
 const store = useRbacStore();
 const authStore = useAuthStore();
+const { isMobile } = useMobile();
 
 const searchQ = ref('');
 // UI refactor 2026-05-27 — toggle hiện/ẩn cột email. Persist localStorage để admin
@@ -557,6 +614,16 @@ function statusInfo(u: RbacUser): { icon: string; label: string; chipClass: stri
     case 'disabled':
       return { icon: '⚪', label: 'Vô hiệu', chipClass: 'chip-status-disabled', tooltip: 'Tài khoản đã bị vô hiệu — không cho đăng nhập' };
   }
+}
+
+// Nhãn chức vụ gọn cho card mobile.
+function memberRoleLabel(u: RbacUser): string {
+  if (u.role === 'owner') return 'Chủ tổ chức';
+  if (u.role === 'admin') return 'Quản trị';
+  const deptRole = u.departmentMember?.deptRole;
+  if (deptRole === 'leader') return 'Trưởng phòng';
+  if (deptRole === 'deputy') return 'Phó phòng';
+  return 'Nhân viên';
 }
 
 // UI refactor 2026-05-27 — format SĐT 84xxx → 0xxx xxx xxx cho dễ đọc.
@@ -1088,4 +1155,189 @@ function onboardingTooltip(s: OnboardingSummary): string {
 .sdot-success { background: #22c55e; }
 .sdot-warning { background: #f59e0b; }
 .sdot-muted { background: #94a3b8; }
+
+/* ── Mobile card list ─────────────────────────────────────────────────── */
+.ur-mobile-list {
+  display: none;
+}
+.ur-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  color: #181d26;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ur-card:active {
+  background: #f8fafc;
+}
+.ur-card.is-inactive {
+  opacity: 0.65;
+}
+.ur-card.is-selected {
+  border-color: #d9a441;
+  background: #fdf3df;
+}
+.ur-card__avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+  flex: none;
+}
+.ur-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.ur-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ur-card__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  color: #181d26;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ur-card__status {
+  flex: none;
+  max-width: 52%;
+  overflow: hidden;
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ur-card__meta {
+  overflow: hidden;
+  color: #6b7280;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ur-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ur-card__chev {
+  flex: none;
+  margin-top: 12px;
+  color: #9ca3af;
+}
+
+@media (max-width: 767px) {
+  .at-table-wrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .at-table {
+    display: none;
+  }
+  .ur-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .page-hero {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .hero-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .hero-title {
+    margin-bottom: 0;
+    font-size: 22px;
+  }
+  .hero-count {
+    margin: 2px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+  }
+  /* Mô tả dài không cần trên mobile — ưu tiên danh sách. */
+  .hero-sub {
+    display: none;
+  }
+  /* Ưu tiên danh sách nhân viên: thống kê đã có trong chip đếm ở toolbar. */
+  .stats-row {
+    display: none;
+  }
+  .hero-right {
+    width: auto;
+    flex: none;
+  }
+  .hero-right .btn-primary {
+    width: auto;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 13px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .at-toolbar {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .at-search {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .at-toolbar .filter-select {
+    flex: 1 1 calc(50% - 4px);
+    width: auto;
+    min-width: 0;
+    min-height: 40px;
+  }
+  .status-chips {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .status-chip {
+    flex: none;
+    min-height: 36px;
+  }
+  .at-toolbar-spacer {
+    display: none;
+  }
+  .toggle-email-btn {
+    display: none;
+  }
+  .bulk-bar {
+    gap: 8px;
+    padding: 10px;
+  }
+  .bulk-select {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
 </style>

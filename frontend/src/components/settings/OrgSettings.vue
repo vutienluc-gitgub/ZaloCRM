@@ -422,6 +422,13 @@ onUnmounted(() => {
 }
 .org-preview-col :deep(.login-card) { flex-shrink: 0; }
 
+/* Mobile: form full width; preview 880px là bản xem trước desktop, ẩn để không bị cắt. */
+@media (max-width: 767px) {
+  .org-settings-layout { gap: 16px; }
+  .org-form-col { flex: 1 1 100%; max-width: 100%; }
+  .org-preview-col { display: none; }
+}
+
 .media-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));

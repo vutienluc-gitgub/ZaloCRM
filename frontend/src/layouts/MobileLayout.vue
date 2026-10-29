@@ -166,6 +166,12 @@ const pageTitle = computed(
 );
 
 function goBack() {
+  // Cài đặt con → quay về danh mục /settings (trang này là hub trên mobile),
+  // tránh việc back nhảy ra khỏi app khi mở bằng deep link.
+  if (route.path.startsWith('/settings/')) {
+    router.push('/settings');
+    return;
+  }
   if (window.history.state?.back) router.back();
   else router.push('/');
 }

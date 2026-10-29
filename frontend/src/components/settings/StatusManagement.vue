@@ -2,10 +2,10 @@
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
   <div>
-    <div class="d-flex align-center mb-4">
+    <div class="status-toolbar d-flex align-center mb-4">
       <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreate">Thêm Trạng thái</v-btn>
-      <v-spacer />
-      <span class="text-caption text-grey">Order ↑ = Cao hơn (Cha aggregate = MAX của Con)</span>
+      <v-spacer class="status-toolbar__spacer" />
+      <span class="text-caption text-grey status-toolbar__hint">Order ↑ = Cao hơn (Cha aggregate = MAX của Con)</span>
     </div>
 
     <v-card>
@@ -233,4 +233,11 @@ onMounted(fetchStatuses);
 .status-swatch { display: inline-block; width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
 .status-chip-preview { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; }
 .color-input { width: 40px; height: 28px; border: 1px solid var(--smax-grey-300); border-radius: 4px; cursor: pointer; padding: 0; }
+
+@media (max-width: 767px) {
+  .status-toolbar { flex-wrap: wrap; gap: 8px; }
+  .status-toolbar__spacer { display: none; }
+  .status-toolbar :deep(.v-btn) { flex: 1 1 100%; }
+  .status-toolbar__hint { flex: 1 1 100%; font-size: 11.5px; line-height: 1.45; }
+}
 </style>

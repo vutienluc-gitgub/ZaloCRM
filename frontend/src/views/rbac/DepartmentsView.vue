@@ -905,4 +905,14 @@ function avatarColor(name: string): string {
 
 .modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.15s; }
 .modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
+
+/* Mobile: hero gọn, thống kê 2×2 thay vì 4 cột chữ dọc. */
+@media (max-width: 767px) {
+  .page-hero { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 16px; }
+  .hero-title { font-size: 22px; }
+  .hero-sub { font-size: 12.5px; line-height: 1.5; }
+  .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .stat-card { padding: 12px 14px; }
+  .stat-value { font-size: 20px; }
+}
 </style>

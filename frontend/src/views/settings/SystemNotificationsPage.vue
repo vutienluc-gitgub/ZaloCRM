@@ -210,7 +210,7 @@
     </div>
     <div class="sn-sender-hint">
       <v-icon size="14" class="mr-1">mdi-information-outline</v-icon>
-      Đổi nick gửi thì bấm <strong>Check hàng loạt</strong> để dò lại UID theo góc nhìn nick mới (UID cũ của nick khác không dùng chung).
+      <span>Đổi nick gửi thì bấm <strong>Check hàng loạt</strong> để dò lại UID theo góc nhìn nick mới (UID cũ của nick khác không dùng chung).</span>
     </div>
     <v-alert v-if="senderError" type="error" density="compact" class="mb-3">{{ senderError }}</v-alert>
 
@@ -1642,4 +1642,19 @@ onMounted(async () => {
   overflow: auto;
 }
 .inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+
+/* ── Mobile ─────────────────────────────────────────────────────────── */
+.sn-sender-bar :deep(.v-btn) { white-space: nowrap; flex: 0 0 auto; }
+.sn-sender-chip { flex: 0 0 auto; }
+.sn-sender-hint span { flex: 1; min-width: 0; }
+
+@media (max-width: 767px) {
+  .system-notify-page { max-width: 100%; }
+  .sn-tabs :deep(.v-tab) { min-width: 0; padding: 0 8px; font-size: 12.5px; }
+  .sn-sender-bar { padding: 12px; gap: 10px; }
+  .sn-sender-bar .sn-nick-ava-lg { display: none; }
+  .sender-select { flex: 1 1 100%; width: 100%; min-width: 0; max-width: none; }
+  .sn-sender-hint { align-items: flex-start; line-height: 1.45; }
+  .sn-sender-hint :deep(.v-icon) { margin-top: 1px; }
+}
 </style>
