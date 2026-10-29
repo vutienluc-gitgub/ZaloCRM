@@ -48,3 +48,47 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// ── Web Push Notifications (PWA Background Push) ───────────────────────────
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+  try {
+    const payload = event.data.json();
+    const title = payload.title || 'Vĩnh Phát CRM';
+    const options = {
+      body: payload.body || '',
+      icon: payload.icon || '/brand/vp-monogram.png',
+      badge: payload.badge || '/brand/vp-monogram.png',
+      data: payload.data || { url: '/' },
+      vibrate: [100, 50, 100],
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch {
+    const text = event.data.text();
+    event.waitUntil(
+      self.registration.showNotification('Vĩnh Phát CRM', {
+        body: text,
+        icon: '/brand/vp-monogram.png',
+      })
+    );
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.navigate(targetUrl);
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
+});
+
+
