@@ -63,9 +63,10 @@
       <button type="button" class="mc-empty__btn" @click="openCreate">Thêm khách hàng</button>
     </div>
 
-    <div v-else class="mc-list">
+    <div v-else ref="listRef" class="mc-list">
+      <div v-if="padTop" class="mc-spacer" :style="{ height: `${padTop}px` }" aria-hidden="true" />
       <MobileSwipeRow
-        v-for="contact in contacts"
+        v-for="contact in visibleContacts"
         :key="contact.id"
         :actions="rowActions(contact)"
         @action="(key) => onRowAction(key, contact)"
@@ -88,6 +89,7 @@
           <v-icon icon="mdi-chevron-right" size="18" class="mc-row__ch" />
         </button>
       </MobileSwipeRow>
+      <div v-if="padBottom" class="mc-spacer" :style="{ height: `${padBottom}px` }" aria-hidden="true" />
     </div>
 
     <button v-if="hasMore" type="button" class="mc-more" :disabled="loading" @click="loadMore">
@@ -193,9 +195,24 @@ import type { SwipeAction } from '@/components/mobile/mobile-swipe-types';
 import ContactDetailDialog from '@/components/contacts/ContactDetailDialog.vue';
 import { useContacts, STATUS_OPTIONS, SOURCE_OPTIONS } from '@/composables/use-contacts';
 import type { Contact } from '@/composables/use-contacts';
+import { useVirtualWindow } from '@/composables/use-virtual-window';
 
 const router = useRouter();
 const { contacts, total, loading, filters, pagination, fetchContacts } = useContacts();
+
+// ── Windowed list (mục P1) ───────────────────────────────────────────────
+// KH có thể lên hàng nghìn (nút "Tải thêm" nối trang) → chỉ render dòng trong
+// viewport ± overscan. Dưới 60 dòng vẫn render toàn bộ để giữ DOM đơn giản.
+const listRef = ref<HTMLElement | null>(null);
+const contactCount = computed(() => contacts.value.length);
+const { start, end, padTop, padBottom } = useVirtualWindow({
+  root: listRef,
+  count: contactCount,
+  itemHeight: 65,
+  overscan: 6,
+  threshold: 60,
+});
+const visibleContacts = computed(() => contacts.value.slice(start.value, end.value));
 
 const showDialog = ref(false);
 const sheetOpen = ref(false);
@@ -450,6 +467,10 @@ onUnmounted(() => clearTimeout(searchTimeout));
 }
 .mc-list > .msw:last-child .mc-row {
   border-bottom: 0;
+}
+.mc-spacer {
+  width: 100%;
+  pointer-events: none;
 }
 .mc-row:active {
   background: var(--surface-3, #f4f6f8);

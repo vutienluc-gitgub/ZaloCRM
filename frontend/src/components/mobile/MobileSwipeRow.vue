@@ -6,7 +6,7 @@
        - Chỉ bắt đầu kéo khi |dx| > |dy| → không giành scroll dọc của trang.
        - Mỗi lúc chỉ 1 dòng mở (OPEN_UID dùng chung toàn module).
        - Dòng đang mở: chạm vào nội dung = đóng, không kích hoạt click của row. -->
-  <div ref="rootRef" class="msw" :class="{ 'is-open': isOpen }">
+  <div ref="rootRef" class="msw" :class="{ 'is-open': isOpen, 'is-dragging': dragging }">
     <div class="msw__actions" :style="{ width: `${actionsWidth}px` }">
       <button
         v-for="a in actions"
@@ -68,7 +68,7 @@ const actionsWidth = computed(() => props.actions.length * props.actionWidth);
 const isOpen = computed(() => offset.value > 0);
 
 const contentStyle = computed(() => ({
-  transform: `translate3d(${-offset.value}px, 0, 0)`,
+  transform: `translateX(${-offset.value}px)`,
   transition: dragging.value ? 'none' : 'transform 0.22s cubic-bezier(0.2, 0.8, 0.25, 1)',
 }));
 
@@ -187,6 +187,15 @@ defineExpose({ close });
   inset: 0 0 0 auto;
   display: flex;
   height: 100%;
+  /* Ẩn hẳn khi đóng: tránh lộ 1px màu nút ở mép dòng lúc cuộn (subpixel). */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s linear;
+}
+.msw.is-open .msw__actions,
+.msw.is-dragging .msw__actions {
+  opacity: 1;
+  pointer-events: auto;
 }
 .msw__act {
   flex: 1 1 0;
@@ -233,7 +242,6 @@ defineExpose({ close });
   /* pan-y: cho phép cuộn dọc, JS xử lý kéo ngang. */
   touch-action: pan-y;
   background: var(--surface, #fff);
-  will-change: transform;
 }
 .msw.is-open .msw__content {
   box-shadow: 4px 0 12px rgba(16, 30, 52, 0.08);
