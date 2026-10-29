@@ -1,7 +1,8 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
-  <div class="airtable-scope dh-v4">
+  <MobileDashboard v-if="isMobile" />
+  <div v-else class="airtable-scope dh-v4">
     <!-- Attribution marquee (Apache License) -->
     <div v-if="attribution.enabled.value" class="dh-attr">
       <a :href="attribution.href" target="_blank" rel="noopener">{{ attribution.text }}</a>
@@ -474,7 +475,9 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import { useDashboardActionHub, type PrivacySplit } from '@/composables/use-dashboard-action-hub';
 import { useAttribution } from '@/composables/use-attribution';
+import { useMobile } from '@/composables/use-mobile';
 import Avatar from '@/components/ui/Avatar.vue';
+import MobileDashboard from '@/views/mobile/MobileDashboard.vue';
 import {
   Sun, Target, Users, Shield, User, ChevronDown, Lock, Search,
   Inbox, CalendarClock, Eye, Moon, CircleCheck, Flame, Bell,
@@ -488,6 +491,7 @@ const attribution = useAttribution();
 const auth = useAuthStore();
 const router = useRouter();
 const hub = useDashboardActionHub();
+const { isMobile } = useMobile();
 
 const me = computed(() => hub.me.value);
 const team = computed(() => hub.team.value);
@@ -653,6 +657,8 @@ const PrivVal: Component = {
 
 // ── Mount ──
 onMounted(async () => {
+  // Mobile dùng MobileDashboard (endpoint /dashboard/kpi nhẹ) → không fetch hub.
+  if (isMobile.value) return;
   await hub.fetchAll();
   tempSelectedDepts.value = [...hub.selectedDeptIds.value];
   document.addEventListener('click', onOutsideClick);

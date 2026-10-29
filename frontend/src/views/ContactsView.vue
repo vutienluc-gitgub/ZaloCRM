@@ -1521,6 +1521,8 @@ function onDuplicateMerged() {
 }
 
 onMounted(() => {
+  // Mobile dùng MobileContactView (tự fetch) → không chạy 6 request của bảng desktop.
+  if (isMobile.value) return;
   fetchContacts();
   fetchDuplicateGroups();
   fetchCandidateCount();
@@ -1532,6 +1534,8 @@ onMounted(() => {
 // M55.2 2026-05-30 — Handle /contacts?focus={id} từ AddCustomerQuickDialog
 // "Mở chi tiết" khi duplicate. Auto-fetch contact, open detail panel + scroll + flash row.
 async function focusOnContact(id: string) {
+  // Mobile: deep-link ?focus= dùng panel desktop → bỏ qua (MobileContactView tự list).
+  if (isMobile.value) return;
   focusedContactId.value = id;
 
   // Switch sang viewMode m2 (chi tiết bên) để mở panel ngay

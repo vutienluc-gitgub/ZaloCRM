@@ -452,6 +452,13 @@ Lợi ích: bundle mobile nhỏ hơn, không kéo CSS desktop, dễ test riêng.
 
 ## 9. Lộ trình triển khai
 
+> **Trạng thái 2026-10-29 — P0 đã code xong (frontend build + vue-tsc pass):**
+> shell mobile, bottom nav 5 tab + badge, `/more`, chat full-height với
+> `100dvh`/`--kb`/`visualViewport`, contact list row + bottom sheet, dashboard
+> mobile, deep-link `?filter=unanswered`. Composer mobile **chưa tách file riêng** —
+> P0 dùng lại composer của `MessageThread` (đã có offline queue). PWA/service worker,
+> swipe actions, virtualization, lịch hẹn & báo cáo mobile → P1.
+
 ### P0 — Sửa lỗi chặn dùng (≈ 5–6 ngày)
 
 | Việc | File |
@@ -459,7 +466,7 @@ Lợi ích: bundle mobile nhỏ hơn, không kéo CSS desktop, dễ test riêng.
 | Shell mới: app bar 56px, safe-area, bỏ dark toggle, offline bar | `layouts/MobileLayout.vue` |
 | Bottom nav 5 tab + badge + route `/more` | `components/BottomNav.vue`, `router/index.ts`, `views/MoreView.vue` |
 | Fix `100dvh` + `visualViewport` cho chat | `views/MobileChatView.vue`, `composables/use-mobile.ts` |
-| Composer mobile (gửi text + ảnh + offline queue) | `components/mobile/MobileComposer.vue` |
+| Composer mobile (gửi text + ảnh + offline queue) | Dùng lại composer `components/chat/MessageThread.vue` (P0) |
 | Contact list row + bottom sheet chi tiết | `views/MobileContactView.vue`, `components/mobile/MobileSheet.vue` |
 | Dashboard mobile (việc hôm nay + 4 KPI) | `views/DashboardView.vue` hoặc `views/mobile/MobileDashboard.vue` |
 

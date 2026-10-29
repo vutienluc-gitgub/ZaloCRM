@@ -58,6 +58,13 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, resource: 'contact' },
   },
   {
+    // Mobile 2026-10-29 — tab "Thêm": Báo cáo / Media / Cài đặt / Hồ sơ / Đăng xuất.
+    path: '/more',
+    name: 'More',
+    component: () => import('@/views/MoreView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/media',
     name: 'Media',
     component: () => import('@/views/MediaView.vue'),
@@ -333,6 +340,7 @@ const ROUTE_TITLES: Record<string, string> = {
   Dashboard: 'Tổng quan',
   Chat: 'Hội thoại',
   Contacts: 'Khách hàng',
+  More: 'Thêm',
   Media: 'Kho phương tiện',
   Profile: 'Hồ sơ cá nhân',
   Appointments: 'Lịch hẹn',

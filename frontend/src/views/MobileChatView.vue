@@ -1,31 +1,38 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
-  <div class="mobile-chat" style="height: calc(100vh - 120px);">
-    <!-- Conversation list (shown when no conversation selected) -->
-    <div v-if="!selectedConvId" style="height: 100%;">
-      <ConversationList
-        :conversations="conversations"
-        :selected-id="selectedConvId"
-        :loading="loadingConvs"
-        v-model:search="searchQuery"
-        @select="selectConversation"
-        @filter-account="onFilterAccount"
-      />
-    </div>
-
-    <!-- Message thread (shown when conversation selected) -->
-    <div v-else style="height: 100%; display: flex; flex-direction: column;">
-      <!-- Back button bar -->
-      <div class="d-flex align-center pa-2" style="flex-shrink: 0;">
-        <v-btn icon variant="text" size="small" @click="goBack">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <span v-if="selectedConv" class="text-body-2 font-weight-medium ml-1">
-          {{ selectedConv.contact?.fullName || 'Chat' }}
-        </span>
+  <!-- Mobile chat 2026-10-29 (P0):
+       - Cao 100% khung .m-main (đã trừ bàn phím) — bỏ calc(100vh - 120px).
+       - List: header riêng + ConversationList. Thread: MessageThread tự làm header,
+         chỉ phủ thêm nút Back ở góc trái. -->
+  <div class="m-chat">
+    <!-- ── Danh sách hội thoại ─────────────────────────────────────── -->
+    <template v-if="!selectedConvId">
+      <header class="m-chat__bar">
+        <h1 class="m-chat__title">Hội thoại</h1>
+        <NotificationBell />
+      </header>
+      <div v-if="unansweredFilter" class="m-chat__filter">
+        <span>Đang lọc: Chưa trả lời</span>
+        <button type="button" @click="clearFilter">Bỏ lọc</button>
       </div>
+      <div class="m-chat__body">
+        <ConversationList
+          :conversations="conversations"
+          :selected-id="selectedConvId"
+          :loading="loadingConvs"
+          v-model:search="searchQuery"
+          @select="onSelectConversation"
+          @filter-account="onFilterAccount"
+        />
+      </div>
+    </template>
 
+    <!-- ── Hội thoại đang mở ───────────────────────────────────────── -->
+    <div v-else class="m-chat__thread">
+      <button type="button" class="m-chat__back" aria-label="Quay lại" @click="goBack">
+        <v-icon icon="mdi-chevron-left" size="26" />
+      </button>
       <MessageThread
         :conversation="selectedConv"
         :messages="allMessages"
@@ -37,27 +44,51 @@
         :ai-suggestion-error="(null as any)"
         @send="handleSend"
         @refresh-thread="selectedConvId && fetchMessages(selectedConvId)"
-        style="flex: 1; min-height: 0;"
+        class="m-chat__mt"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch, computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import ConversationList from '@/components/chat/ConversationList.vue';
 import MessageThread from '@/components/chat/MessageThread.vue';
+import NotificationBell from '@/components/NotificationBell.vue';
 import { useChat } from '@/composables/use-chat';
 import { useOfflineQueue } from '@/composables/use-offline-queue';
 
+const route = useRoute();
+const router = useRouter();
+
 const {
   conversations, selectedConvId, selectedConv, messages,
-  loadingConvs, loadingMsgs, sendingMsg, searchQuery, accountFilter,
+  loadingConvs, loadingMsgs, sendingMsg, searchQuery, accountFilter, extraFilters,
   fetchConversations, fetchMessages, selectConversation, sendMessage, sendMessageTo,
   initSocket, destroySocket,
 } = useChat();
 
 const { pendingMessages, enqueue, flush } = useOfflineQueue();
+
+// Deep-link từ Dashboard: /chat?filter=unanswered → chỉ hiện hội thoại chưa trả lời.
+const unansweredFilter = ref(false);
+
+function syncFilterFromQuery(): boolean {
+  const f = route.query.filter;
+  const want = f === 'unanswered' || f === 'unreplied';
+  if (want === unansweredFilter.value) return false;
+  unansweredFilter.value = want;
+  extraFilters.value = want ? { unreplied: 'true' } : {};
+  return true;
+}
+
+function clearFilter() {
+  unansweredFilter.value = false;
+  extraFilters.value = {};
+  router.replace({ name: 'Chat' }).catch(() => {});
+  void fetchConversations({ bypassCache: true });
+}
 
 function onFilterAccount(id: string | null) {
   accountFilter.value = id;
@@ -66,6 +97,18 @@ function onFilterAccount(id: string | null) {
 
 function goBack() {
   selectedConvId.value = null;
+  // Rời URL /chat/:convId → F5/link không mở lại hội thoại cũ.
+  if (route.params.convId || route.query.contactId) {
+    router.replace({ name: 'Chat' }).catch(() => {});
+  }
+}
+
+/** Chọn hội thoại + đồng bộ URL để F5 / chia sẻ link vẫn mở đúng thread. */
+function onSelectConversation(id: string) {
+  void selectConversation(id);
+  if (route.params.convId !== id) {
+    router.replace({ name: 'Chat', params: { convId: id } }).catch(() => {});
+  }
 }
 
 // Merge real messages with pending offline messages
@@ -108,8 +151,34 @@ function onOnline() {
   flush(sendMessageTo);
 }
 
-onMounted(() => {
-  fetchConversations();
+/** Mở hội thoại từ deep-link: /chat/:convId hoặc /chat?contactId=... */
+async function openFromRoute() {
+  const cid = route.params.convId;
+  if (typeof cid === 'string' && cid) {
+    // Đã mở sẵn (vd vừa bấm trong list → URL sync) → không fetch lại.
+    if (cid === selectedConvId.value) return;
+    await selectConversation(cid);
+    return;
+  }
+  const contactId = route.query.contactId;
+  if (typeof contactId === 'string' && contactId) {
+    const conv = conversations.value.find(c => c.contact?.id === contactId);
+    if (conv) {
+      await selectConversation(conv.id);
+      const q = { ...route.query };
+      delete q.contactId;
+      router.replace({ name: 'Chat', params: { convId: conv.id }, query: q }).catch(() => {});
+    }
+    return;
+  }
+  // Về /chat (vd bấm tab Hội thoại khi đang mở thread) → đóng thread, hiện danh sách.
+  if (selectedConvId.value) selectedConvId.value = null;
+}
+
+onMounted(async () => {
+  syncFilterFromQuery();
+  await fetchConversations();
+  await openFromRoute();
   initSocket();
   window.addEventListener('online', onOnline);
 });
@@ -125,4 +194,113 @@ watch(searchQuery, () => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => fetchConversations(), 300);
 });
+
+// Điều hướng từ nơi khác (vd bấm thông báo) trong lúc màn chat đang mở.
+const routeKey = computed(
+  () =>
+    `${String(route.params.convId ?? '')}|${String(route.query.contactId ?? '')}|${String(route.query.filter ?? '')}`,
+);
+watch(routeKey, async () => {
+  if (syncFilterFromQuery()) await fetchConversations({ bypassCache: true });
+  await openFromRoute();
+});
 </script>
+
+<style scoped>
+.m-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--surface, #fff);
+}
+
+/* ── List mode ───────────────────────────────────────────────────────── */
+.m-chat__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: calc(52px + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) 6px 0 14px;
+  background: var(--surface, #fff);
+  border-bottom: 1px solid var(--line, #e2e8f0);
+}
+.m-chat__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ink, #101e34);
+}
+.m-chat__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.m-chat__filter {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 14px;
+  background: var(--brand-soft, #e8eef8);
+  color: var(--brand-700, #163870);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.m-chat__filter button {
+  border: 0;
+  background: transparent;
+  color: var(--brand, #2151a1);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.m-chat__body :deep(.conv-list) {
+  height: 100%;
+}
+
+/* ── Thread mode ─────────────────────────────────────────────────────── */
+.m-chat__thread {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.m-chat__mt {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Chừa chỗ cho nút Back + đẩy header xuống dưới tai thỏ. */
+.m-chat__mt :deep(.chat-header) {
+  padding-top: calc(8px + env(safe-area-inset-top, 0px));
+  padding-left: 46px;
+}
+.m-chat__back {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: 4px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink, #101e34);
+  box-shadow: 0 1px 4px rgba(16, 30, 52, 0.12);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.m-chat__back:active {
+  background: var(--surface-3, #f4f6f8);
+}
+</style>
