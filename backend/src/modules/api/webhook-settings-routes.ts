@@ -9,7 +9,7 @@ import { prisma } from '../../shared/database/prisma-client.js';
 import { authMiddleware } from '../auth/auth-middleware.js';
 import { requireGrant } from '../rbac/rbac-middleware.js';
 import { logger } from '../../shared/utils/logger.js';
-import { emitWebhook } from './webhook-service.js';
+import { assertSafeOutboundUrl } from '../../shared/utils/ssrf-guard.js';
 import crypto from 'node:crypto';
 
 export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void> {
@@ -25,12 +25,17 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
         prisma.appSetting.findFirst({ where: { orgId, settingKey: 'webhook_secret' } }),
       ]);
 
+      const url = urlSetting?.valuePlain ?? null;
+      const rawSecret = secretSetting?.valuePlain ?? null;
+      const maskedSecret = rawSecret
+        ? `${'*'.repeat(Math.max(0, rawSecret.length - 4))}${rawSecret.slice(-4)}`
+        : null;
+
       return {
-        url: urlSetting?.valuePlain ?? null,
-        // Mask secret — show only last 4 chars
-        secret: secretSetting?.valuePlain
-          ? `${'*'.repeat(Math.max(0, secretSetting.valuePlain.length - 4))}${secretSetting.valuePlain.slice(-4)}`
-          : null,
+        url,
+        secret: maskedSecret,
+        webhookUrl: url,
+        webhookSecret: maskedSecret,
       };
     } catch (err) {
       logger.error('[webhook-settings] GET error:', err);
@@ -42,11 +47,17 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
   app.put('/api/v1/settings/webhook', { preHandler: requireGrant('webhook', 'edit') }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { orgId } = request.user!;
-      const { url, secret } = request.body as { url?: string; secret?: string };
+      const body = (request.body ?? {}) as { url?: string; secret?: string; webhookUrl?: string; webhookSecret?: string };
+      const url = body.url !== undefined ? body.url : body.webhookUrl;
+      const secret = body.secret !== undefined ? body.secret : body.webhookSecret;
+
+      // Only update secret if user supplied a new, unmasked string
+      const shouldUpdateSecret =
+        secret !== undefined && secret.trim() !== '' && !secret.includes('*');
 
       await Promise.all([
-        upsertSetting(orgId, 'webhook_url', url ?? ''),
-        secret !== undefined ? upsertSetting(orgId, 'webhook_secret', secret) : Promise.resolve(),
+        url !== undefined ? upsertSetting(orgId, 'webhook_url', url ?? '') : Promise.resolve(),
+        shouldUpdateSecret ? upsertSetting(orgId, 'webhook_secret', secret!) : Promise.resolve(),
       ]);
 
       return { success: true };
@@ -60,17 +71,66 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
   app.post('/api/v1/settings/webhook/test', { preHandler: requireGrant('webhook', 'edit') }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { orgId } = request.user!;
+      const body = (request.body ?? {}) as { url?: string; secret?: string; webhookUrl?: string; webhookSecret?: string };
+      let targetUrl = body.url || body.webhookUrl;
+      let targetSecret = body.secret || body.webhookSecret;
 
-      const config = await prisma.appSetting.findFirst({ where: { orgId, settingKey: 'webhook_url' } });
-      if (!config?.valuePlain) {
-        return reply.status(400).send({ error: 'No webhook URL configured' });
+      if (!targetUrl) {
+        const config = await prisma.appSetting.findFirst({ where: { orgId, settingKey: 'webhook_url' } });
+        targetUrl = config?.valuePlain ?? undefined;
+      }
+      if (!targetSecret || targetSecret.includes('*')) {
+        const secretConfig = await prisma.appSetting.findFirst({ where: { orgId, settingKey: 'webhook_secret' } });
+        targetSecret = secretConfig?.valuePlain ?? undefined;
       }
 
-      await emitWebhook(orgId, 'webhook.test', { message: 'Test event from Zalo CRM', orgId });
-      return { success: true, sentTo: config.valuePlain };
-    } catch (err) {
+      if (!targetUrl) {
+        return reply.status(400).send({ error: 'Chưa cấu hình URL webhook. Vui lòng nhập URL và bấm Lưu cấu hình.' });
+      }
+
+      const safeUrl = assertSafeOutboundUrl(targetUrl);
+      const nowEpoch = Date.now().toString();
+      const payload = JSON.stringify({
+        event: 'webhook.test',
+        timestamp: new Date().toISOString(),
+        data: { message: 'Test event from Zalo CRM', orgId },
+      });
+      const signature = targetSecret
+        ? crypto.createHmac('sha256', targetSecret).update(payload).digest('hex')
+        : '';
+
+      const res = await fetch(safeUrl.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Webhook-Signature': signature,
+          'X-Webhook-Event': 'webhook.test',
+          'X-Webhook-Timestamp': nowEpoch,
+        },
+        body: payload,
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        let cleanErr = errText;
+        try {
+          const parsed = JSON.parse(errText);
+          cleanErr = parsed.details || parsed.error || errText;
+        } catch {}
+        return reply.status(400).send({
+          error: `Điểm nhận phản hồi lỗi HTTP ${res.status}: ${cleanErr.slice(0, 180)}`,
+        });
+      }
+
+      return {
+        success: true,
+        message: `Gửi test webhook thành công (HTTP ${res.status})`,
+        sentTo: safeUrl.toString(),
+      };
+    } catch (err: any) {
       logger.error('[webhook-settings] Test error:', err);
-      return reply.status(500).send({ error: 'Failed to send test webhook' });
+      return reply.status(500).send({ error: err.message || 'Lỗi khi gửi test webhook' });
     }
   });
 
@@ -82,7 +142,7 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
       const newKey = `zcrm_${crypto.randomBytes(24).toString('hex')}`;
       await upsertSetting(orgId, 'public_api_key', newKey);
 
-      return { key: newKey };
+      return { key: newKey, apiKey: newKey };
     } catch (err) {
       logger.error('[webhook-settings] Generate API key error:', err);
       return reply.status(500).send({ error: 'Failed to generate API key' });
@@ -95,12 +155,12 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
       const { orgId } = request.user!;
 
       const setting = await prisma.appSetting.findFirst({ where: { orgId, settingKey: 'public_api_key' } });
-      if (!setting?.valuePlain) return { key: null };
+      if (!setting?.valuePlain) return { key: null, apiKey: null };
 
       const k = setting.valuePlain;
       // Show prefix + first 8 chars + mask + last 4 chars
       const masked = k.length > 12 ? `${k.slice(0, 12)}${'*'.repeat(k.length - 16)}${k.slice(-4)}` : `${k.slice(0, 4)}****`;
-      return { key: masked };
+      return { key: masked, apiKey: masked };
     } catch (err) {
       logger.error('[webhook-settings] GET API key error:', err);
       return reply.status(500).send({ error: 'Failed to fetch API key' });

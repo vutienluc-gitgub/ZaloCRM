@@ -36,6 +36,7 @@ export async function emitWebhook(orgId: string, event: string, data: any): Prom
       where: { orgId, settingKey: 'webhook_secret' },
     });
 
+    const nowEpoch = Date.now().toString();
     const payload = JSON.stringify({ event, timestamp: new Date().toISOString(), data });
     const signature = secretSetting?.valuePlain
       ? crypto.createHmac('sha256', secretSetting.valuePlain).update(payload).digest('hex')
@@ -48,6 +49,7 @@ export async function emitWebhook(orgId: string, event: string, data: any): Prom
         'Content-Type': 'application/json',
         'X-Webhook-Signature': signature,
         'X-Webhook-Event': event,
+        'X-Webhook-Timestamp': nowEpoch,
       },
       body: payload,
       signal: AbortSignal.timeout(10000),

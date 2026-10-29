@@ -130,7 +130,7 @@ function showSnack(text: string, color = 'success') {
 async function loadApiKey() {
   try {
     const res = await api.get('/settings/api-key');
-    apiKey.value = res.data.apiKey ?? '';
+    apiKey.value = res.data.apiKey ?? res.data.key ?? '';
   } catch {
     apiKey.value = '';
   }
@@ -139,8 +139,8 @@ async function loadApiKey() {
 async function loadWebhook() {
   try {
     const res = await api.get('/settings/webhook');
-    webhookUrl.value = res.data.webhookUrl ?? '';
-    webhookSecret.value = res.data.webhookSecret ?? '';
+    webhookUrl.value = res.data.webhookUrl ?? res.data.url ?? '';
+    webhookSecret.value = res.data.webhookSecret ?? res.data.secret ?? '';
   } catch {
     webhookUrl.value = '';
     webhookSecret.value = '';
@@ -165,7 +165,7 @@ async function generateKey() {
   generatingKey.value = true;
   try {
     const res = await api.post('/settings/api-key/generate');
-    apiKey.value = res.data.apiKey ?? '';
+    apiKey.value = res.data.apiKey ?? res.data.key ?? '';
     showSnack('API key mới đã được tạo');
   } catch {
     showSnack('Tạo key thất bại', 'error');
@@ -183,13 +183,20 @@ async function copyKey() {
 async function saveWebhook() {
   saving.value = true;
   try {
-    await api.put('/settings/webhook', {
+    const payload: { url: string; webhookUrl: string; secret?: string; webhookSecret?: string } = {
+      url: webhookUrl.value,
       webhookUrl: webhookUrl.value,
-      webhookSecret: webhookSecret.value,
-    });
+    };
+    if (webhookSecret.value && !webhookSecret.value.includes('*')) {
+      payload.secret = webhookSecret.value;
+      payload.webhookSecret = webhookSecret.value;
+    }
+    await api.put('/settings/webhook', payload);
     showSnack('Đã lưu cấu hình webhook');
-  } catch {
-    showSnack('Lưu thất bại', 'error');
+    await loadWebhook();
+  } catch (err: any) {
+    const msg = err.response?.data?.error || err.message || 'Lưu thất bại';
+    showSnack(msg, 'error');
   } finally {
     saving.value = false;
   }
@@ -198,10 +205,19 @@ async function saveWebhook() {
 async function testWebhook() {
   testing.value = true;
   try {
-    await api.post('/settings/webhook/test');
-    showSnack('Gửi test webhook thành công');
-  } catch {
-    showSnack('Test webhook thất bại', 'error');
+    const payload: { url?: string; secret?: string; webhookUrl?: string; webhookSecret?: string } = {
+      url: webhookUrl.value,
+      webhookUrl: webhookUrl.value,
+    };
+    if (webhookSecret.value && !webhookSecret.value.includes('*')) {
+      payload.secret = webhookSecret.value;
+      payload.webhookSecret = webhookSecret.value;
+    }
+    const res = await api.post('/settings/webhook/test', payload);
+    showSnack(res.data?.message || 'Gửi test webhook thành công');
+  } catch (err: any) {
+    const msg = err.response?.data?.error || err.message || 'Test webhook thất bại';
+    showSnack(msg, 'error');
   } finally {
     testing.value = false;
   }
