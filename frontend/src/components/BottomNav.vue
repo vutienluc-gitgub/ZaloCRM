@@ -114,7 +114,7 @@ function onInbound() {
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  height: calc(52px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--surface, #fff);
   border-top: 1px solid var(--line, #e2e8f0);
@@ -124,10 +124,11 @@ function onInbound() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 2px;
+  padding-bottom: 4px;
   min-width: 0;
-  height: 56px;
+  height: 52px;
   color: var(--ink-4, #64748b);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;

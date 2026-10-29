@@ -25,7 +25,7 @@
             </button>
           </header>
 
-          <div class="msheet__body">
+          <div class="msheet__body" :class="{ 'is-flush': flush }">
             <slot />
           </div>
 
@@ -48,8 +48,10 @@ const props = withDefaults(
     /** Chiều cao tối đa — mặc định 90% viewport động. */
     maxHeight?: string;
     closeOnBackdrop?: boolean;
+    /** Bỏ padding đáy của body — action sheet có danh sách sát đáy. */
+    flush?: boolean;
   }>(),
-  { title: '', maxHeight: '90dvh', closeOnBackdrop: true },
+  { title: '', maxHeight: '90dvh', closeOnBackdrop: true, flush: false },
 );
 
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>();
@@ -202,6 +204,10 @@ onBeforeUnmount(unlockBody);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding: 0 16px 16px;
+}
+/* Action sheet: danh sách sát đáy, chỉ chừa safe-area của panel. */
+.msheet__body.is-flush {
+  padding-bottom: 0;
 }
 .msheet__foot {
   flex: 0 0 auto;

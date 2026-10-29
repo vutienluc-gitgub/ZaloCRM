@@ -53,7 +53,7 @@
 
     <!-- Header actions sheet (P1 2026-10-29): thay v-menu desktop bằng bottom
          sheet — ngón cái với tới, có danh tính tài khoản, an toàn khi đóng. -->
-    <MobileSheet v-model="menuOpen" title="Tài khoản">
+    <MobileSheet v-model="menuOpen" title="Tài khoản" flush>
       <div class="m-acct">
         <Avatar :src="user?.avatarUrl || null" :name="user?.fullName || '?'" :size="44" />
         <div class="m-acct__txt">
