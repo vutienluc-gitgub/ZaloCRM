@@ -9,7 +9,8 @@
 | Nhánh / remote | `main` → `origin/main` |
 | Người thực hiện | OpenCode Agent |
 | Môi trường đo | Chrome (Playwright), build production `vite preview` tại `http://localhost:4173`, API mock |
-| Kết quả tổng | **10/10 kiểm tra tương tác PASS**, **18/18 route Cài đặt không tràn ngang**, **26/26 unit test PASS**, build + typecheck PASS |
+| Triển khai production | **29/10/2026 17:33–17:34 ICT** — `http://103.213.216.31:3090`, commit `8c78c47a`, script `./scripts/zalocrm-deploy.sh upgrade` |
+| Kết quả tổng | **10/10 kiểm tra tương tác PASS**, **18/18 route Cài đặt không tràn ngang**, **26/26 unit test PASS**, build + typecheck PASS, production **health OK / asset khớp** |
 
 > Phạm vi: chỉ thay đổi giao diện mobile của khu vực Cài đặt. Không đổi API, DB, quyền, luồng nghiệp vụ hay identifier nội bộ.
 
@@ -25,8 +26,9 @@
 - Các trang từng vỡ khác đã được chỉnh: Hồ sơ tổ chức, Sơ đồ tổ chức, Trạng thái KH, Thông báo hệ thống.
 - Desktop không hồi quy: sidebar 260px, breadcrumb, bảng nhân viên và redirect `/settings` giữ nguyên.
 - Không tràn ngang toàn cục, không lỗi console/page error trong 18 route được quét.
+- Đã triển khai lên production `http://103.213.216.31:3090` lúc **17:34 ngày 29/10/2026** (commit `8c78c47a`); health `ok`, DB `connected`, asset phục vụ đúng hash (mục 6).
 
-**Đạt điều kiện bàn giao**, kèm 1 bước kiểm tra cảm giác chạm trên thiết bị thật (mục 7).
+**Đạt điều kiện bàn giao**, kèm 1 bước kiểm tra cảm giác chạm trên thiết bị thật (mục 8).
 
 ---
 
@@ -158,12 +160,59 @@ Chi tiết: [`assets/evidence.json`](assets/evidence.json) và [`assets/routes-s
 
 ---
 
-## 6. Danh mục bằng chứng bàn giao
+## 6. Xác minh trên production
+
+Triển khai bằng `./scripts/zalocrm-deploy.sh upgrade` trên VPS `VinhPhat-VPS`, thư mục `/srv/zcrm`.
+
+| Hạng mục | Giá trị |
+|---|---|
+| Thời điểm deploy | 29/10/2026 **17:33:27 → 17:34:54 ICT** (≈87 giây) |
+| Commit trên VPS | `8c78c47a09f373461e2b4dd2a7776d414ba90d85` — `docs(acceptance): biên bản nghiệm thu trang Cài đặt mobile` |
+| Working tree VPS | Sạch (0 file thay đổi) |
+| Backup DB trước deploy | `backup-zalocrm-2026-10-29-1733.sql` — 7.943.015 bytes (7.6 MB) |
+| Migration | `No pending migrations` — `Database schema is up to date!` |
+| Container | `zalo-crm-app` (`7272109cd957…`), image `zcrm-app`, running `0.0.0.0:3090->3000/tcp` |
+| Health | `GET /health` → `200` `{"status":"ok","db":"connected"}` |
+| Trang đăng nhập | `GET /` → `200`, 3.844 bytes |
+
+Asset do production phục vụ (tải qua HTTP và băm SHA-256 tại chỗ):
+
+| Asset | HTTP | Bytes | SHA-256 | Marker |
+|---|---:|---:|---|---|
+| `assets/SettingsLayout-8ZKAh7sL.js` | 200 | 10.773 | `4534a24e…b41ca790` | `sl-mobile-head` ×5, `sl-mobile-home` ×1 |
+| `assets/UsersRbacView-D2NbnHil.js` | 200 | 50.052 | `0e9b75a0…df99750` | `ur-card` ×10 |
+| `assets/index-Dy35hqPI.js` | 200 | 373.641 | `aaa8767a…ba466dfb` | — |
+
+Header mẫu của chunk Cài đặt:
+
+```http
+HTTP/1.1 200 OK
+cache-control: public, max-age=0
+last-modified: Thu, 29 Oct 2026 10:34:26 GMT
+etag: W/"2a15-1a18739ab50"
+content-type: application/javascript; charset=utf-8
+content-length: 10773
+```
+
+Kiểm tra từ máy trạm qua IP công khai cho cùng kết quả: health `ok`, trang chủ `200`, hai chunk Settings/Users `200` và chứa marker tương ứng.
+
+Lưu ý vận hành:
+
+- Script deploy **cutover token cũ**, nên toàn bộ người dùng phải **đăng nhập lại một lần**.
+- Bản deploy chỉ gồm frontend + tài liệu, **không có migration dữ liệu**; rollback không cần khôi phục DB.
+- Log production còn 2 lỗi nền **có từ trước**, không liên quan bản deploy: `prisma.crmTag.update()` vi phạm unique `(org_id, name)`, và `getFriendOnlines` trả 404 từ Zalo SDK.
+
+Số liệu gốc: [`assets/production-verify.json`](assets/production-verify.json).
+
+---
+
+## 7. Danh mục bằng chứng bàn giao
 
 | Tệp | Nội dung |
 |---|---|
 | `assets/evidence.json` | 10 assertion + số đo + lỗi console của bộ kiểm thử chính |
 | `assets/routes-sweep.json` | Kết quả quét 18 route Cài đặt |
+| `assets/production-verify.json` | Số liệu xác minh production: commit, thời điểm deploy, health, hash asset, backup |
 | `assets/before-metrics.json` | Số đo trạng thái lỗi trước khi sửa |
 | `assets/build-output.txt` | Log typecheck + build |
 | `assets/test-output.txt` | Log Vitest |
@@ -180,9 +229,9 @@ Chi tiết: [`assets/evidence.json`](assets/evidence.json) và [`assets/routes-s
 
 ---
 
-## 7. Checklist nghiệm thu trên thiết bị thật
+## 8. Checklist nghiệm thu trên thiết bị thật
 
-Thực hiện trên Chrome Android hoặc Safari iOS, bản build từ commit `0fa8fe3e`:
+Thực hiện trên Chrome Android hoặc Safari iOS, bản build từ commit `8c78c47a` đang chạy tại `http://103.213.216.31:3090` (đăng nhập lại trước khi kiểm tra):
 
 - [ ] Vào Tài khoản → Cài đặt: mở trang danh mục, thấy đủ 6 nhóm.
 - [ ] Chọn Nhân viên: không còn sidebar, danh sách dạng card, không phải kéo ngang.
@@ -199,36 +248,45 @@ Thực hiện trên Chrome Android hoặc Safari iOS, bản build từ commit `0
 
 ---
 
-## 8. Giới hạn & lưu ý
+## 9. Giới hạn & lưu ý
 
-1. **API mock**: số đo và tương tác được kiểm tra với API giả lập đầy đủ DTO; chưa chạy với backend/credentials thật trong phiên này.
+1. **API mock**: số đo và tương tác được kiểm tra với API giả lập đầy đủ DTO. Production mới được xác minh ở tầng hạ tầng (health, trang đăng nhập, hash asset); **chưa đăng nhập bằng tài khoản thật** trong phiên này — cần anh kiểm tra theo mục 8.
 2. **Bảng rộng**: Trạng thái KH và Thông báo hệ thống vẫn dùng bảng cuộn ngang trong khung. Muốn tối ưu hơn nữa có thể chuyển sang card list ở hạng mục sau.
-3. **Safe-area**: Chromium desktop không mô phỏng `env(safe-area-inset-bottom)`. Cần xác nhận trực quan trên iPhone thật (mục 7).
+3. **Safe-area**: Chromium desktop không mô phỏng `env(safe-area-inset-bottom)`. Cần xác nhận trực quan trên iPhone thật (mục 8).
 4. **Trình duyệt**: đo trên Chromium. Safari iOS có thể sai khác nhỏ về `dvh`; cần xác nhận trên thiết bị thật.
 5. Không thay đổi DB, API, quyền hay dữ liệu — không cần migration/rollback dữ liệu.
 
 ---
 
-## 9. Rollback
+## 10. Rollback
 
-Nếu cần hoàn tác:
+Hoàn tác trên mã nguồn:
 
 ```powershell
 git revert 0fa8fe3e
 ```
 
-Không ảnh hưởng dữ liệu.
+Đưa production về bản trước (commit `2bc6df27`) nếu cần gấp:
+
+```bash
+ssh VinhPhat-VPS
+cd /srv/zcrm
+git checkout 2bc6df27
+./scripts/zalocrm-deploy.sh upgrade
+```
+
+Không ảnh hưởng dữ liệu. Bản deploy này **không có migration**, nên không cần khôi phục DB; backup `backup-zalocrm-2026-10-29-1733.sql` chỉ dùng khi có sự cố dữ liệu ngoài phạm vi thay đổi.
 
 ---
 
-## 10. Ký nhận
+## 11. Ký nhận
 
 | Vai trò | Họ tên | Ngày | Kết quả | Ký tên |
 |---|---|---|---|---|
-| Người thực hiện (OpenCode Agent) | — | 29/10/2026 | Đã bàn giao | — |
+| Người thực hiện (OpenCode Agent) | — | 29/10/2026 | Đã bàn giao + deploy production | — |
 | Người nghiệm thu (Chủ dự án) |  |  | ☐ Đạt  ☐ Cần chỉnh |  |
 | Đại diện vận hành |  |  | ☐ Đạt  ☐ Cần chỉnh |  |
 
 ---
 
-*Biên bản được tạo từ kết quả kiểm thử thực tế. Mọi số liệu đều truy vết được về `assets/evidence.json`, `assets/routes-sweep.json` và log tương ứng.*
+*Biên bản được tạo từ kết quả kiểm thử thực tế. Mọi số liệu đều truy vết được về `assets/evidence.json`, `assets/routes-sweep.json`, `assets/production-verify.json` và log tương ứng.*

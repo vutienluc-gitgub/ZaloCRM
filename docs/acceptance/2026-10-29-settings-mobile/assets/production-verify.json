@@ -1,0 +1,106 @@
+{
+  "capturedAt": "2026-10-29T17:38:20+07:00",
+  "target": {
+    "url": "http://103.213.216.31:3090",
+    "sshHost": "VinhPhat-VPS",
+    "repoPath": "/srv/zcrm",
+    "container": "zalo-crm-app"
+  },
+  "commit": {
+    "full": "8c78c47a09f373461e2b4dd2a7776d414ba90d85",
+    "short": "8c78c47a",
+    "committedAt": "2026-10-29T17:21:51+07:00",
+    "subject": "docs(acceptance): biên bản nghiệm thu trang Cài đặt mobile",
+    "dirtyFiles": 0
+  },
+  "deploy": {
+    "mode": "upgrade",
+    "script": "./scripts/zalocrm-deploy.sh upgrade",
+    "startedAt": "2026-10-29T17:33:27+07:00",
+    "containerStartedAt": "2026-10-29T17:34:54+07:00",
+    "durationSeconds": 87,
+    "previousCommit": "2bc6df27",
+    "databaseMigration": "No pending migrations",
+    "migrationStatusCheck": "Database schema is up to date!"
+  },
+  "container": {
+    "id": "7272109cd9570af8bf6d4e692c7dd23be8c8f28270be36864fa10bd37b276329",
+    "image": "zcrm-app",
+    "imageCreatedAt": "2026-10-29T17:34:28+07:00",
+    "status": "running",
+    "ports": "0.0.0.0:3090->3000/tcp"
+  },
+  "health": {
+    "endpoint": "/health",
+    "httpStatus": 200,
+    "body": {
+      "status": "ok",
+      "db": "connected",
+      "timestamp": "2026-10-29T10:38:20.181Z"
+    }
+  },
+  "loginPage": {
+    "httpStatus": 200,
+    "bytes": 3844
+  },
+  "assets": [
+    {
+      "path": "assets/SettingsLayout-8ZKAh7sL.js",
+      "httpStatus": 200,
+      "bytes": 10773,
+      "sha256": "4534a24eb71e9324f699370d6f539287f9e73c0fbc387e684a4199bcb41ca790",
+      "markers": {
+        "sl-mobile-head": 5,
+        "sl-mobile-home": 1
+      }
+    },
+    {
+      "path": "assets/UsersRbacView-D2NbnHil.js",
+      "httpStatus": 200,
+      "bytes": 50052,
+      "sha256": "0e9b75a0919b3ccbea42bacf706070ea5573d8fd28749900a02d77202df99750",
+      "markers": {
+        "ur-card": 10
+      }
+    },
+    {
+      "path": "assets/index-Dy35hqPI.js",
+      "httpStatus": 200,
+      "bytes": 373641,
+      "sha256": "aaa8767a61fd512e5a3fff755e0131eedcd87ff2043d0f7b99ba17d3ba466dfb"
+    }
+  ],
+  "headerSample": {
+    "path": "assets/SettingsLayout-8ZKAh7sL.js",
+    "status": "HTTP/1.1 200 OK",
+    "cacheControl": "public, max-age=0",
+    "lastModified": "Thu, 29 Oct 2026 10:34:26 GMT",
+    "etag": "W/\"2a15-1a18739ab50\"",
+    "contentType": "application/javascript; charset=utf-8",
+    "contentLength": 10773
+  },
+  "backup": {
+    "file": "backup-zalocrm-2026-10-29-1733.sql",
+    "bytes": 7943015,
+    "createdAt": "2026-10-29 17:33"
+  },
+  "disk": {
+    "filesystem": "/dev/root",
+    "size": "233G",
+    "used": "63G",
+    "available": "170G",
+    "usePercent": "27%"
+  },
+  "knownBackgroundErrors": [
+    {
+      "where": "prisma.crmTag.update()",
+      "message": "Unique constraint failed on the fields: (org_id, name)",
+      "impact": "none — lỗi nền khi đồng bộ nhãn Zalo, có từ trước bản deploy này"
+    },
+    {
+      "where": "zalo-ops getFriendOnlines",
+      "message": "ZaloApiError [ZcaApiError]: Request failed with status code 404",
+      "impact": "none — Zalo SDK trả 404, có từ trước bản deploy này"
+    }
+  ]
+}
