@@ -3,9 +3,12 @@
 <script setup lang="ts">
 import { api } from '@/api'
 import { ref, onMounted, computed, watch } from 'vue'
+import { useMobile } from '@/composables/use-mobile'
+import MobileReportsHome from './MobileReportsHome.vue'
 
 type Range = 'today' | '7d' | '30d'
 
+const { isMobile } = useMobile()
 const data = ref<any>(null)
 const loading = ref(true)
 const range = ref<Range>('30d')
@@ -48,8 +51,16 @@ async function load() {
   }
 }
 
-onMounted(load)
-watch(range, load)
+onMounted(() => {
+  if (!isMobile.value) load()
+})
+watch(range, () => {
+  if (!isMobile.value) load()
+})
+// Mobile render MobileReportsHome (tự fetch); quay lại desktop mới nạp bảng.
+watch(isMobile, (mobile) => {
+  if (!mobile && !data.value) load()
+})
 
 // ---- helpers --------------------------------------------------------------
 function n(v: any): string {
@@ -146,7 +157,8 @@ function quotaW(v: any): string {
 </script>
 
 <template>
-  <div class="rpt">
+  <MobileReportsHome v-if="isMobile" />
+  <div v-else class="rpt">
     <!-- HEAD -->
     <div class="rpt-head">
       <div class="rpt-titles">

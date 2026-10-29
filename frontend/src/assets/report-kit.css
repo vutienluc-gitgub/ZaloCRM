@@ -115,3 +115,36 @@
 .rpt-subnav a{display:inline-flex;align-items:center;gap:7px;padding:13px 14px;font-size:13px;font-weight:600;color:#6b7785;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap}
 .rpt-subnav a:hover{color:var(--brand-700,#0b5880)}
 .rpt-subnav a.router-link-active{color:var(--brand,#1786be);border-bottom-color:var(--brand,#1786be)}
+
+/* ── Mobile (2026-10-29 P1) ────────────────────────────────────────────────
+   MobileLayout already scrolls (.m-main) → shell không tự cuộn nữa, sub-nav
+   sticky thành chip cuộn ngang; grid về 1 cột; bảng cuộn ngang trong card. */
+@media (max-width: 768px) {
+  .rpt-shell { height: auto; min-height: 0; overflow: visible; }
+  .rpt-shell > .rpt-scope { flex: none; overflow: visible; }
+  .rpt-subnav { position: sticky; top: 0; z-index: 6; padding: 0 8px; gap: 2px; scrollbar-width: none; }
+  .rpt-subnav::-webkit-scrollbar { display: none; }
+  .rpt-subnav a { padding: 11px 10px; font-size: 12.5px; gap: 5px; }
+  .rpt-scope .rpt { padding: 12px 12px calc(28px + env(safe-area-inset-bottom, 0px)); }
+  .rpt-scope .rpt-head { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 12px; }
+  .rpt-scope .rpt-head .ic { width: 36px; height: 36px; border-radius: 10px; }
+  .rpt-scope .rpt-h1 { font-size: 17.5px; }
+  .rpt-scope .rpt-sub { font-size: 12px; }
+  .rpt-scope .rpt-actions { width: 100%; }
+  .rpt-scope .rpt-actions .rk-btn { flex: 1 1 0; justify-content: center; }
+  .rpt-scope .rpt-filters { padding: 7px 8px; margin-bottom: 12px; gap: 6px; }
+  .rpt-scope .seg { width: 100%; justify-content: space-between; }
+  .rpt-scope .seg button { flex: 1 1 0; padding: 5px 6px; }
+  .rpt-scope .grid { gap: 8px; }
+  .rpt-scope .g-4, .rpt-scope .g-3, .rpt-scope .g-2 { grid-template-columns: minmax(0, 1fr); }
+  .rpt-scope .col-2, .rpt-scope .col-3 { grid-column: span 1; }
+  .rpt-scope .kpi { padding: 11px 12px; }
+  .rpt-scope .kpi .val { font-size: 22px; }
+  .rpt-scope .card-h { padding: 11px 12px; }
+  .rpt-scope .card-b { padding: 12px; }
+  .rpt-scope .card-b:has(> .tbl) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rpt-scope .tbl { min-width: 480px; }
+  .rpt-scope .tbl th, .rpt-scope .tbl td { padding: 8px 10px; }
+  .rpt-scope .rk-loading { padding: 32px 16px; }
+  .rpt-scope .rk-empty { padding: 20px 12px; }
+}
