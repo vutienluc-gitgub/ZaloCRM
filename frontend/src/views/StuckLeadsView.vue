@@ -140,7 +140,6 @@ import {
   Loader2,
   CheckCircle2,
   Lightbulb,
-  Send,
   MessageSquare,
   Clock,
   X,

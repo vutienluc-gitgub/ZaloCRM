@@ -79,7 +79,7 @@
         :class="{ active: activeTab === t.key }"
         @click="activeTab = t.key"
       >
-        {{ t.icon }} {{ t.label }}
+        <component :is="t.iconComp" :size="13" class="inline-icon mr-1" /> {{ t.label }}
         <span v-if="t.count !== undefined" class="cdp-tab-count">({{ t.count }})</span>
       </button>
     </nav>
