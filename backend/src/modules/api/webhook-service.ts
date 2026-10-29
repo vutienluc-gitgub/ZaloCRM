@@ -38,8 +38,9 @@ export async function emitWebhook(orgId: string, event: string, data: any): Prom
 
     const nowEpoch = Date.now().toString();
     const payload = JSON.stringify({ event, timestamp: new Date().toISOString(), data });
-    const signature = secretSetting?.valuePlain
-      ? crypto.createHmac('sha256', secretSetting.valuePlain).update(payload).digest('hex')
+    const secretVal = secretSetting?.valuePlain ? secretSetting.valuePlain.trim() : '';
+    const signature = secretVal
+      ? crypto.createHmac('sha256', secretVal).update(payload).digest('hex')
       : '';
 
     // Fire and forget — never block the caller

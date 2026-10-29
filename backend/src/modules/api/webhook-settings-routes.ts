@@ -95,8 +95,9 @@ export async function webhookSettingsRoutes(app: FastifyInstance): Promise<void>
         timestamp: new Date().toISOString(),
         data: { message: 'Test event from Zalo CRM', orgId },
       });
-      const signature = targetSecret
-        ? crypto.createHmac('sha256', targetSecret).update(payload).digest('hex')
+      const cleanSecret = targetSecret ? targetSecret.trim() : '';
+      const signature = cleanSecret
+        ? crypto.createHmac('sha256', cleanSecret).update(payload).digest('hex')
         : '';
 
       const res = await fetch(safeUrl.toString(), {
