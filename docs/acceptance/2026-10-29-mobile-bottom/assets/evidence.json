@@ -1,0 +1,764 @@
+{
+  "generatedAt": "2026-10-29T06:50:35.191Z",
+  "app": "Vĩnh Phát CRM",
+  "base": "http://localhost:4173",
+  "viewports": {
+    "390x844": {
+      "nav": {
+        "present": true,
+        "rect": {
+          "top": 792,
+          "bottom": 844,
+          "height": 52
+        },
+        "viewportH": 844,
+        "tabCount": 5,
+        "tabs": [
+          {
+            "label": "Tổng quan",
+            "active": true,
+            "width": 78,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "3Hội thoại",
+            "active": false,
+            "width": 78,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Khách hàng",
+            "active": false,
+            "width": 78,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "2Lịch hẹn",
+            "active": false,
+            "width": 78,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Thêm",
+            "active": false,
+            "width": 78,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          }
+        ],
+        "overflowX": false,
+        "activeLabel": "Tổng quan"
+      },
+      "sheet": {
+        "open": true,
+        "title": "Tài khoản",
+        "name": "Nguyễn Văn A",
+        "email": "admin@vinhphat.vn",
+        "panel": {
+          "top": 482,
+          "bottom": 844,
+          "height": 362
+        },
+        "viewportH": 844,
+        "panelBottomGap": 0,
+        "menuBottomGap": 0,
+        "lastRowBottomGap": 1,
+        "bodyPaddingBottom": "0px",
+        "bodyScrolls": false,
+        "closeButton": {
+          "w": 44,
+          "h": 44
+        },
+        "rows": [
+          {
+            "label": "Hồ sơ của tôi",
+            "height": 52,
+            "bottom": 687,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Cài đặt",
+            "height": 52,
+            "bottom": 739,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Báo cáo",
+            "height": 52,
+            "bottom": 791,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Đăng xuất",
+            "height": 52,
+            "bottom": 843,
+            "visible": true,
+            "danger": true
+          }
+        ],
+        "allRowsVisible": true,
+        "sheetZ": "3000",
+        "bodyOverflow": "hidden"
+      }
+    },
+    "360x740": {
+      "nav": {
+        "present": true,
+        "rect": {
+          "top": 688,
+          "bottom": 740,
+          "height": 52
+        },
+        "viewportH": 740,
+        "tabCount": 5,
+        "tabs": [
+          {
+            "label": "Tổng quan",
+            "active": true,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "3Hội thoại",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Khách hàng",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "2Lịch hẹn",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Thêm",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          }
+        ],
+        "overflowX": false,
+        "activeLabel": "Tổng quan"
+      },
+      "sheet": {
+        "open": true,
+        "title": "Tài khoản",
+        "name": "Nguyễn Văn A",
+        "email": "admin@vinhphat.vn",
+        "panel": {
+          "top": 378,
+          "bottom": 740,
+          "height": 362
+        },
+        "viewportH": 740,
+        "panelBottomGap": 0,
+        "menuBottomGap": 0,
+        "lastRowBottomGap": 1,
+        "bodyPaddingBottom": "0px",
+        "bodyScrolls": false,
+        "closeButton": {
+          "w": 44,
+          "h": 44
+        },
+        "rows": [
+          {
+            "label": "Hồ sơ của tôi",
+            "height": 52,
+            "bottom": 583,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Cài đặt",
+            "height": 52,
+            "bottom": 635,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Báo cáo",
+            "height": 52,
+            "bottom": 687,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Đăng xuất",
+            "height": 52,
+            "bottom": 739,
+            "visible": true,
+            "danger": true
+          }
+        ],
+        "allRowsVisible": true,
+        "sheetZ": "3000",
+        "bodyOverflow": "hidden"
+      }
+    },
+    "360x640": {
+      "nav": {
+        "present": true,
+        "rect": {
+          "top": 588,
+          "bottom": 640,
+          "height": 52
+        },
+        "viewportH": 640,
+        "tabCount": 5,
+        "tabs": [
+          {
+            "label": "Tổng quan",
+            "active": true,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "3Hội thoại",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Khách hàng",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "2Lịch hẹn",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          },
+          {
+            "label": "Thêm",
+            "active": false,
+            "width": 72,
+            "height": 52,
+            "labelGapToNavBottom": 3,
+            "iconTopFromNav": 12.5
+          }
+        ],
+        "overflowX": false,
+        "activeLabel": "Tổng quan"
+      },
+      "sheet": {
+        "open": true,
+        "title": "Tài khoản",
+        "name": "Nguyễn Văn A",
+        "email": "admin@vinhphat.vn",
+        "panel": {
+          "top": 278,
+          "bottom": 640,
+          "height": 362
+        },
+        "viewportH": 640,
+        "panelBottomGap": 0,
+        "menuBottomGap": 0,
+        "lastRowBottomGap": 1,
+        "bodyPaddingBottom": "0px",
+        "bodyScrolls": false,
+        "closeButton": {
+          "w": 44,
+          "h": 44
+        },
+        "rows": [
+          {
+            "label": "Hồ sơ của tôi",
+            "height": 52,
+            "bottom": 483,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Cài đặt",
+            "height": 52,
+            "bottom": 535,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Báo cáo",
+            "height": 52,
+            "bottom": 587,
+            "visible": true,
+            "danger": false
+          },
+          {
+            "label": "Đăng xuất",
+            "height": 52,
+            "bottom": 639,
+            "visible": true,
+            "danger": true
+          }
+        ],
+        "allRowsVisible": true,
+        "sheetZ": "3000",
+        "bodyOverflow": "hidden"
+      }
+    }
+  },
+  "interactions": {
+    "open": {
+      "open": true,
+      "z": "3000",
+      "bodyOverflow": "hidden"
+    },
+    "backdropClose": {
+      "sheetCount": 0,
+      "bodyOverflow": ""
+    },
+    "profile": {
+      "url": "/profile",
+      "sheetCount": 0
+    },
+    "settings": {
+      "url": "/settings/rbac/users",
+      "sheetCount": 0
+    },
+    "reports": {
+      "url": "/reports/tong-quan",
+      "mobileReportHome": 1,
+      "sheetCount": 0
+    },
+    "logoutConfirm": {
+      "open": true,
+      "z": "4000",
+      "sheetZ": null,
+      "title": "Đăng xuất?",
+      "buttons": [
+        "Hủy",
+        "Đăng xuất"
+      ]
+    },
+    "logoutCancel": {
+      "url": "/",
+      "confirmOpen": 0,
+      "token": "fake-token"
+    },
+    "logoutDone": {
+      "url": "/login",
+      "token": null,
+      "loginForm": 1
+    }
+  },
+  "staff": {
+    "items": [
+      "Hồ sơ của tôi",
+      "Cài đặt",
+      "Đăng xuất"
+    ],
+    "hasReports": false,
+    "sheet": {
+      "open": true,
+      "title": "Tài khoản",
+      "name": "Trần Thị Nhân Viên",
+      "email": "admin@vinhphat.vn",
+      "panel": {
+        "top": 534,
+        "bottom": 844,
+        "height": 310
+      },
+      "viewportH": 844,
+      "panelBottomGap": 0,
+      "menuBottomGap": 0,
+      "lastRowBottomGap": 1,
+      "bodyPaddingBottom": "0px",
+      "bodyScrolls": false,
+      "closeButton": {
+        "w": 44,
+        "h": 44
+      },
+      "rows": [
+        {
+          "label": "Hồ sơ của tôi",
+          "height": 52,
+          "bottom": 739,
+          "visible": true,
+          "danger": false
+        },
+        {
+          "label": "Cài đặt",
+          "height": 52,
+          "bottom": 791,
+          "visible": true,
+          "danger": false
+        },
+        {
+          "label": "Đăng xuất",
+          "height": 52,
+          "bottom": 843,
+          "visible": true,
+          "danger": true
+        }
+      ],
+      "allRowsVisible": true,
+      "sheetZ": "3000",
+      "bodyOverflow": "hidden"
+    }
+  },
+  "desktop": {
+    "mobileShell": false,
+    "mobileNav": false,
+    "overflowX": false,
+    "path": "/",
+    "errors": []
+  },
+  "assertions": [
+    {
+      "name": "390x844: đủ 5 tab",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "390x844: nav sát đáy viewport",
+      "pass": true,
+      "detail": {
+        "top": 792,
+        "bottom": 844,
+        "height": 52
+      }
+    },
+    {
+      "name": "390x844: tab cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "390x844: label cách đáy nav <= 4px",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "390x844: sheet mở và nằm trong viewport",
+      "pass": true,
+      "detail": {
+        "top": 482,
+        "bottom": 844,
+        "height": 362
+      }
+    },
+    {
+      "name": "390x844: hàng cuối sát đáy panel (<= 2px)",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "390x844: tất cả mục sheet hiển thị",
+      "pass": true,
+      "detail": [
+        "Hồ sơ của tôi",
+        "Cài đặt",
+        "Báo cáo",
+        "Đăng xuất"
+      ]
+    },
+    {
+      "name": "390x844: hàng sheet cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "390x844: không tràn ngang",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "360x740: đủ 5 tab",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "360x740: nav sát đáy viewport",
+      "pass": true,
+      "detail": {
+        "top": 688,
+        "bottom": 740,
+        "height": 52
+      }
+    },
+    {
+      "name": "360x740: tab cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "360x740: label cách đáy nav <= 4px",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "360x740: sheet mở và nằm trong viewport",
+      "pass": true,
+      "detail": {
+        "top": 378,
+        "bottom": 740,
+        "height": 362
+      }
+    },
+    {
+      "name": "360x740: hàng cuối sát đáy panel (<= 2px)",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "360x740: tất cả mục sheet hiển thị",
+      "pass": true,
+      "detail": [
+        "Hồ sơ của tôi",
+        "Cài đặt",
+        "Báo cáo",
+        "Đăng xuất"
+      ]
+    },
+    {
+      "name": "360x740: hàng sheet cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "360x740: không tràn ngang",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "360x640: đủ 5 tab",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "360x640: nav sát đáy viewport",
+      "pass": true,
+      "detail": {
+        "top": 588,
+        "bottom": 640,
+        "height": 52
+      }
+    },
+    {
+      "name": "360x640: tab cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "360x640: label cách đáy nav <= 4px",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "360x640: sheet mở và nằm trong viewport",
+      "pass": true,
+      "detail": {
+        "top": 278,
+        "bottom": 640,
+        "height": 362
+      }
+    },
+    {
+      "name": "360x640: hàng cuối sát đáy panel (<= 2px)",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "360x640: tất cả mục sheet hiển thị",
+      "pass": true,
+      "detail": [
+        "Hồ sơ của tôi",
+        "Cài đặt",
+        "Báo cáo",
+        "Đăng xuất"
+      ]
+    },
+    {
+      "name": "360x640: hàng sheet cao >= 44px",
+      "pass": true,
+      "detail": [
+        52,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "name": "360x640: không tràn ngang",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "sheet mở đúng z-index 3000",
+      "pass": true,
+      "detail": "3000"
+    },
+    {
+      "name": "chạm backdrop đóng sheet + mở khoá cuộn",
+      "pass": true,
+      "detail": {
+        "sheetCount": 0,
+        "bodyOverflow": ""
+      }
+    },
+    {
+      "name": "nút Hồ sơ điều hướng /profile",
+      "pass": true,
+      "detail": {
+        "url": "/profile",
+        "sheetCount": 0
+      }
+    },
+    {
+      "name": "nút Cài đặt điều hướng /settings/*",
+      "pass": true,
+      "detail": {
+        "url": "/settings/rbac/users",
+        "sheetCount": 0
+      }
+    },
+    {
+      "name": "nút Báo cáo điều hướng /reports/tong-quan",
+      "pass": true,
+      "detail": {
+        "url": "/reports/tong-quan",
+        "mobileReportHome": 1,
+        "sheetCount": 0
+      }
+    },
+    {
+      "name": "confirm đăng xuất nằm trên sheet (z=4000)",
+      "pass": true,
+      "detail": {
+        "open": true,
+        "z": "4000",
+        "sheetZ": null,
+        "title": "Đăng xuất?",
+        "buttons": [
+          "Hủy",
+          "Đăng xuất"
+        ]
+      }
+    },
+    {
+      "name": "huỷ đăng xuất giữ phiên",
+      "pass": true,
+      "detail": {
+        "url": "/",
+        "confirmOpen": 0,
+        "token": "fake-token"
+      }
+    },
+    {
+      "name": "xác nhận đăng xuất về /login và xoá token",
+      "pass": true,
+      "detail": {
+        "url": "/login",
+        "token": null,
+        "loginForm": 1
+      }
+    },
+    {
+      "name": "staff không thấy mục Báo cáo",
+      "pass": true,
+      "detail": [
+        "Hồ sơ của tôi",
+        "Cài đặt",
+        "Đăng xuất"
+      ]
+    },
+    {
+      "name": "desktop không render mobile shell/nav",
+      "pass": true,
+      "detail": {
+        "mobileShell": false,
+        "mobileNav": false,
+        "overflowX": false,
+        "path": "/",
+        "errors": []
+      }
+    },
+    {
+      "name": "desktop không tràn ngang",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "desktop không lỗi console",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "consoleErrors": [
+    {
+      "viewport": "390x844",
+      "path": "/profile",
+      "msg": "TypeError: r.value.map is not a function\n    at un.fn (http://localhost:4173/assets/ProfileView-D6Btqd6C.js:1:14175)\n    at He (http://localhost:4173/assets/runtime-core.esm-bundler-BYv28aB6.js:1:6575)\n    at Ve (http://localhost:4173/assets/runtime-core.esm-bundler-BYv28aB6.js:1:6283)\n    at Me.runIfDirty (http://localhost:4173/assets/runtime-core.esm-bundler-BYv28aB6.js:1:5477)\n    at vn (http://localhost:4173/assets/runtime-core.esm-bundler-BYv28aB6.js:1:20321)\n    at Pn (http://localhost:4173/assets/runtime-core.esm-bundler-BYv28aB6.js:1:21988)"
+    }
+  ],
+  "summary": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0
+  }
+}
