@@ -4,33 +4,33 @@
   <div class="settings-view">
     <header class="settings-header">
       <button class="back-btn" @click="$router.back()">← Quay lại</button>
-      <h1>⚙️ Cài đặt chấm điểm khách hàng</h1>
+      <h1><Settings :size="20" class="inline-icon" /> Cài đặt chấm điểm khách hàng</h1>
     </header>
 
-    <div v-if="loading" class="loading">⏳ Đang tải…</div>
+    <div v-if="loading" class="loading"><Loader2 :size="14" class="inline-icon animate-spin" /> Đang tải…</div>
 
     <div v-else-if="config" class="settings-cards">
       <!-- Weights -->
       <section class="card">
-        <h2>📊 Trọng số 4 chiều — tổng phải = 100%</h2>
+        <h2><BarChart2 :size="16" class="inline-icon" /> Trọng số 4 chiều — tổng phải = 100%</h2>
         <div class="weight-rows">
           <div class="weight-row">
-            <label>🗨️ Tương tác (Engagement)</label>
+            <label><MessageSquare :size="13" class="inline-icon" /> Tương tác (Engagement)</label>
             <input v-model.number="weights.engagement" type="number" min="0" max="100" />
             <span class="unit">%</span>
           </div>
           <div class="weight-row">
-            <label>🎯 Ý định mua (Intent)</label>
+            <label><Target :size="13" class="inline-icon" /> Ý định mua (Intent)</label>
             <input v-model.number="weights.intent" type="number" min="0" max="100" />
             <span class="unit">%</span>
           </div>
           <div class="weight-row">
-            <label>🎯 Phù hợp (Fit)</label>
+            <label><Award :size="13" class="inline-icon" /> Phù hợp (Fit)</label>
             <input v-model.number="weights.fit" type="number" min="0" max="100" />
             <span class="unit">%</span>
           </div>
           <div class="weight-row">
-            <label>⚡ Đà tăng nhiệt (Velocity)</label>
+            <label><Zap :size="13" class="inline-icon" /> Đà tăng nhiệt (Velocity)</label>
             <input v-model.number="weights.velocity" type="number" min="0" max="100" />
             <span class="unit">%</span>
           </div>
@@ -43,7 +43,7 @@
 
       <!-- Decay rules -->
       <section class="card">
-        <h2>📉 Giảm điểm khi KH im lặng</h2>
+        <h2><TrendingDown :size="16" class="inline-icon" /> Giảm điểm khi KH im lặng</h2>
         <p class="hint">Mỗi ngày silent: trừ điểm từ Engagement</p>
         <div class="weight-rows">
           <div class="weight-row">
@@ -71,7 +71,7 @@
 
       <!-- Flags -->
       <section class="card">
-        <h2>🎛️ Cờ điều khiển</h2>
+        <h2><Sliders :size="16" class="inline-icon" /> Cờ điều khiển</h2>
         <div class="toggle-row">
           <label>
             <input v-model="flags.autoPromote" type="checkbox" />
@@ -94,26 +94,26 @@
 
       <!-- Actions -->
       <section class="card actions-card">
-        <h2>🛠️ Hành động quản trị</h2>
+        <h2><Wrench :size="16" class="inline-icon" /> Hành động quản trị</h2>
         <div class="action-buttons">
           <button class="btn-primary" :disabled="saving || weightSum !== 100" @click="save">
-            {{ saving ? '⏳ Đang lưu…' : '💾 Lưu cấu hình' }}
+            <span v-if="saving"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang lưu…</span><span v-else><Save :size="13" class="inline-icon" /> Lưu cấu hình</span>
           </button>
           <button class="btn-secondary" :disabled="seeding" @click="seedDefaults">
-            {{ seeding ? '⏳ Đang seed…' : '🌱 Seed defaults (idempotent)' }}
+            <span v-if="seeding"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang seed…</span><span v-else><RotateCw :size="13" class="inline-icon" /> Seed defaults</span>
           </button>
           <button class="btn-secondary" :disabled="recomputing" @click="recompute">
-            {{ recomputing ? '⏳ Đang tính lại…' : '🔁 Tính lại toàn bộ điểm' }}
+            <span v-if="recomputing"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang tính lại…</span><span v-else><RefreshCw :size="13" class="inline-icon" /> Tính lại toàn bộ điểm</span>
           </button>
           <button class="btn-secondary" :disabled="scanning" @click="scanStuck">
-            {{ scanning ? '⏳ Đang quét…' : '🔍 Quét stuck ngay' }}
+            <span v-if="scanning"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang quét…</span><span v-else><Search :size="13" class="inline-icon" /> Quét stuck ngay</span>
           </button>
         </div>
       </section>
 
       <!-- Signal rules table (read-only summary, full edit modal in future) -->
       <section class="card">
-        <h2>📜 Quy tắc chấm điểm ({{ rules.length }})</h2>
+        <h2><FileText :size="16" class="inline-icon" /> Quy tắc chấm điểm ({{ rules.length }})</h2>
         <table class="rules-table">
           <thead>
             <tr>
@@ -180,13 +180,13 @@ const weightSum = computed(
 function dimensionLabel(d: string): string {
   switch (d) {
     case 'engagement':
-      return '🗨️ Tương tác';
+      return 'Tương tác';
     case 'intent':
-      return '🎯 Ý định';
+      return 'Ý định';
     case 'fit':
-      return '🎯 Phù hợp';
+      return 'Phù hợp';
     case 'velocity':
-      return '⚡ Đà nhiệt';
+      return 'Đà nhiệt';
     default:
       return d;
   }
@@ -244,7 +244,7 @@ async function save() {
       stuckDetectionEnabled: flags.stuckDetectionEnabled,
       explainabilityEnabled: flags.explainabilityEnabled,
     });
-    showToast('success', '✓ Đã lưu cấu hình');
+    showToast('success', 'Đã lưu cấu hình');
   } catch (err: any) {
     showToast('error', 'Lưu thất bại: ' + (err?.response?.data?.error || err?.message));
   } finally {
@@ -495,4 +495,7 @@ onMounted(load);
 }
 .toast.success { background: #10B981; }
 .toast.error { background: #EF4444; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

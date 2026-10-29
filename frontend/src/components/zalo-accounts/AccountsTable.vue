@@ -18,7 +18,7 @@
                  (chỉ admin). Cột này GIỮ để xem usage; cấu hình trần KHÔNG còn ở đây. -->
           </th>
           <th title="Tin nhắn GỬI ĐI cho người lạ hôm nay / giới hạn người lạ. Bạn bè + tin nhận KHÔNG tính.">Gửi người lạ</th>
-          <th>Hôm nay <span class="th-hint">📥📤🤖🤝🔍</span></th>
+          <th>Hôm nay</th>
           <th>Hoạt động 7d</th>
           <th>Kết nối / Hoạt động</th>
           <th class="th-actions">Action</th>
@@ -102,7 +102,7 @@
                     class="badge-internal"
                     :title="`Đang là nick liên lạc nội bộ của ${acct.isInternalContactFor.fullName || acct.isInternalContactFor.id}`"
                   >
-                    🏠 Liên lạc nội bộ
+                    Liên lạc nội bộ
                   </span>
                 </div>
               </div>
@@ -167,27 +167,27 @@
                 <div class="h total">Σ</div>
               </div>
               <div class="hn-mt-row" :title="`Đến: ${acct.metricsToday.msgReceivedFromFriends} bạn / ${acct.metricsToday.msgReceivedFromStrangers} lạ`">
-                <div class="label"><span class="em">📥</span>Đến</div>
-                <div class="friend" :class="{ zero: acct.metricsToday.msgReceivedFromFriends === 0 }"><span class="cell-icon">👥</span>{{ acct.metricsToday.msgReceivedFromFriends }}</div>
-                <div class="stranger" :class="{ zero: acct.metricsToday.msgReceivedFromStrangers === 0 }"><span class="cell-icon">🕵🏽</span>{{ acct.metricsToday.msgReceivedFromStrangers }}</div>
+                <div class="label"><span class="em"><Inbox :size="11" /></span>Đến</div>
+                <div class="friend" :class="{ zero: acct.metricsToday.msgReceivedFromFriends === 0 }"><span class="cell-icon"><Users :size="10" /></span>{{ acct.metricsToday.msgReceivedFromFriends }}</div>
+                <div class="stranger" :class="{ zero: acct.metricsToday.msgReceivedFromStrangers === 0 }"><span class="cell-icon"><UserX :size="10" /></span>{{ acct.metricsToday.msgReceivedFromStrangers }}</div>
                 <div class="total" :class="{ zero: acct.metricsToday.msgReceivedTotal === 0 }">{{ acct.metricsToday.msgReceivedTotal }}</div>
               </div>
               <div class="hn-mt-row" :title="`Đi: ${acct.metricsToday.msgSentByUser} sale / ${acct.metricsToday.msgSentByBot} bot`">
-                <div class="label"><span class="em">📤</span>Đi</div>
-                <div class="user" :class="{ zero: acct.metricsToday.msgSentByUser === 0 }"><span class="cell-icon">👤</span>{{ acct.metricsToday.msgSentByUser }}</div>
-                <div class="bot" :class="{ zero: acct.metricsToday.msgSentByBot === 0 }"><span class="cell-icon">🤖</span>{{ acct.metricsToday.msgSentByBot }}</div>
+                <div class="label"><span class="em"><Send :size="11" /></span>Đi</div>
+                <div class="user" :class="{ zero: acct.metricsToday.msgSentByUser === 0 }"><span class="cell-icon"><User :size="10" /></span>{{ acct.metricsToday.msgSentByUser }}</div>
+                <div class="bot" :class="{ zero: acct.metricsToday.msgSentByBot === 0 }"><span class="cell-icon"><Bot :size="10" /></span>{{ acct.metricsToday.msgSentByBot }}</div>
                 <div class="total" :class="{ zero: acct.metricsToday.msgSentTotal === 0 }">{{ acct.metricsToday.msgSentTotal }}</div>
               </div>
               <div class="hn-mt-row" :title="`Kết bạn: ${acct.metricsToday.friendReqByUser} thủ công / ${acct.metricsToday.friendReqByBot} auto`">
-                <div class="label"><span class="em">🤝</span>Kết bạn</div>
-                <div class="user" :class="{ zero: acct.metricsToday.friendReqByUser === 0 }"><span class="cell-icon">👤</span>{{ acct.metricsToday.friendReqByUser }}</div>
-                <div class="bot" :class="{ zero: acct.metricsToday.friendReqByBot === 0 }"><span class="cell-icon">🤖</span>{{ acct.metricsToday.friendReqByBot }}</div>
+                <div class="label"><span class="em"><UserPlus :size="11" /></span>Kết bạn</div>
+                <div class="user" :class="{ zero: acct.metricsToday.friendReqByUser === 0 }"><span class="cell-icon"><User :size="10" /></span>{{ acct.metricsToday.friendReqByUser }}</div>
+                <div class="bot" :class="{ zero: acct.metricsToday.friendReqByBot === 0 }"><span class="cell-icon"><Bot :size="10" /></span>{{ acct.metricsToday.friendReqByBot }}</div>
                 <div class="total" :class="{ zero: acct.metricsToday.friendReqSent === 0 }">{{ acct.metricsToday.friendReqSent }}</div>
               </div>
               <div class="hn-mt-row" :title="`Tìm KH: ${acct.metricsToday.phoneSearchByUser} thủ công / ${acct.metricsToday.phoneSearchByBot} auto`">
-                <div class="label"><span class="em">🔍</span>Tìm KH</div>
-                <div class="user" :class="{ zero: acct.metricsToday.phoneSearchByUser === 0 }"><span class="cell-icon">👤</span>{{ acct.metricsToday.phoneSearchByUser }}</div>
-                <div class="bot" :class="{ zero: acct.metricsToday.phoneSearchByBot === 0 }"><span class="cell-icon">🤖</span>{{ acct.metricsToday.phoneSearchByBot }}</div>
+                <div class="label"><span class="em"><Search :size="11" /></span>Tìm KH</div>
+                <div class="user" :class="{ zero: acct.metricsToday.phoneSearchByUser === 0 }"><span class="cell-icon"><User :size="10" /></span>{{ acct.metricsToday.phoneSearchByUser }}</div>
+                <div class="bot" :class="{ zero: acct.metricsToday.phoneSearchByBot === 0 }"><span class="cell-icon"><Bot :size="10" /></span>{{ acct.metricsToday.phoneSearchByBot }}</div>
                 <div class="total" :class="{ zero: acct.metricsToday.phoneSearchTotal === 0 }">{{ acct.metricsToday.phoneSearchTotal }}</div>
               </div>
             </div>
@@ -208,7 +208,7 @@
             <!-- 2026-06-09: ngày giờ KẾT NỐI (lastConnectedAt) + hoạt động cuối (lastActivityAt) -->
             <div class="conn-cell">
               <div class="conn-at" :title="acct.lastConnectedAt ? 'Kết nối lúc: ' + fmtDateTime(acct.lastConnectedAt) : 'Chưa từng kết nối'">
-                <span class="conn-ic">🔗</span>{{ acct.lastConnectedAt ? fmtDateTime(acct.lastConnectedAt) : '—' }}
+                <span class="conn-ic"><Link :size="11" /></span>{{ acct.lastConnectedAt ? fmtDateTime(acct.lastConnectedAt) : '—' }}
               </div>
               <div class="conn-act" title="Hoạt động cuối (có tin nhắn)">{{ relativeTime(acct.lastActivityAt) }}</div>
             </div>
@@ -230,7 +230,7 @@
               <button class="icon-btn" title="Xem chi tiết (chỉ đọc — không phải chính chủ)" @click="$emit('open-detail', acct.id)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
-              <span class="readonly-badge" title="Bạn không phải chính chủ nick này — chỉ xem được">🔒</span>
+              <span class="readonly-badge" title="Bạn không phải chính chủ nick này — chỉ xem được"><Lock :size="12" /></span>
             </template>
           </td>
         </tr>

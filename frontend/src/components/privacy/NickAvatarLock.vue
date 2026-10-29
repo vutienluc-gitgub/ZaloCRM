@@ -17,11 +17,12 @@
       v-if="privacyMode === 'main'"
       class="nick-lock-badge"
       :title="lockTitle"
-    >🔒</span>
+    ><Lock :size="10" /></span>
   </span>
 </template>
 
 <script setup lang="ts">
+import { Lock } from 'lucide-vue-next';
 withDefaults(
   defineProps<{
     privacyMode?: string | null;

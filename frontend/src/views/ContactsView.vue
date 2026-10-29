@@ -287,8 +287,8 @@
                 <div class="cl-name-stack cl-name-stack--master">
                   <div class="cl-name-line">
                     <span class="cl-nm">{{ contact.crmName || contact.fullName || '—' }}</span>
-                    <span v-if="contact.gender === 'male'" class="gtag gtag-male" :title="genderLabel(contact.gender)">♂</span>
-                    <span v-else-if="contact.gender === 'female'" class="gtag gtag-female" :title="genderLabel(contact.gender)">♀</span>
+                    <span v-if="contact.gender === 'male'" class="gtag gtag-male" :title="genderLabel(contact.gender)">Nam</span>
+                    <span v-else-if="contact.gender === 'female'" class="gtag gtag-female" :title="genderLabel(contact.gender)">Nữ</span>
                     <span v-if="ageOf(contact)" class="age-inline">{{ ageOf(contact) }}t</span>
                   </div>
                   <div v-if="contact.fullName && contact.crmName && contact.fullName !== contact.crmName" class="cl-name-sub">{{ contact.fullName }}</div>

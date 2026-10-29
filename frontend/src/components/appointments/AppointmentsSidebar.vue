@@ -80,7 +80,7 @@
     <!-- Cream callout: keyboard tip -->
     <div class="side-section">
       <div class="sidebar-callout">
-        <strong>💡 Mẹo nhanh</strong><br>
+        <strong><Lightbulb :size="13" class="inline-icon text-amber-500" /> Mẹo nhanh</strong><br>
         Bấm <kbd>N</kbd> để tạo nhắc hẹn nhanh · <kbd>←</kbd><kbd>→</kbd> chuyển tuần · click slot trống để chọn giờ
       </div>
     </div>
@@ -107,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+import { Lightbulb } from 'lucide-vue-next';
 import { computed } from 'vue';
 import {
   saleColor,
@@ -527,4 +528,6 @@ function fmtTime(a: Appointment): string {
   font-size: 11px;
   color: var(--at-ink);
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-amber-500 { color: #f59e0b; }
 </style>

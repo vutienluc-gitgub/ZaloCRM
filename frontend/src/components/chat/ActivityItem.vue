@@ -2,7 +2,7 @@
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
   <div class="activity-item" :class="`cat-${item.category || 'system'}`">
-    <span class="act-icon" :style="`color: ${categoryColor}`">{{ icon }}</span>
+    <component :is="iconComp" :size="13" class="act-icon" :style="`color: ${categoryColor}`" />
     <div class="act-body">
       <div class="act-text">
         <strong>{{ actionLabel }}</strong>
@@ -127,6 +127,52 @@ function statusPillHtml(code: string | null | undefined): string {
   return `<span class="status-pill" style="background:${meta.color}22;color:${meta.color};border-color:${meta.color}66">${escape(meta.label)}</span>`;
 }
 
+import {
+  FileText,
+  Tag,
+  Circle,
+  RotateCw,
+  TrendingUp,
+  Calendar,
+  MessageSquare,
+  Settings,
+  Bot,
+  Sparkles,
+  Phone,
+  User,
+  Plus,
+  Minus,
+  CheckCircle2,
+  X,
+  Inbox,
+  Send,
+  VolumeX,
+  Users,
+} from 'lucide-vue-next';
+
+const ICON_COMPONENTS: Record<string, any> = {
+  FileText,
+  Tag,
+  Circle,
+  RotateCw,
+  TrendingUp,
+  Calendar,
+  MessageSquare,
+  Settings,
+  Bot,
+  Sparkles,
+  Phone,
+  User,
+  Plus,
+  Minus,
+  CheckCircle2,
+  X,
+  Inbox,
+  Send,
+  VolumeX,
+  Users,
+};
+
 const props = defineProps<{ item: ActivityLogItem }>();
 
 const cat = computed<ActivityCategory>(() =>
@@ -135,6 +181,7 @@ const cat = computed<ActivityCategory>(() =>
 const categoryMeta = computed(() => CATEGORY_META[cat.value]);
 const actionMeta = computed(() => ACTION_META[props.item.action] || { label: props.item.action });
 const icon = computed(() => actionMeta.value.icon || categoryMeta.value.icon);
+const iconComp = computed(() => ICON_COMPONENTS[icon.value] || FileText);
 const categoryColor = computed(() => categoryMeta.value.color);
 const actionLabel = computed(() => actionMeta.value.label);
 

@@ -31,15 +31,15 @@ export interface CategoryMeta {
 }
 
 export const CATEGORY_META: Record<ActivityCategory, CategoryMeta> = {
-  customer_info: { label: 'Thông tin KH',  icon: '📝', color: '#1976D2', defaultVisible: true },
-  tags_crm:      { label: 'Tag CRM',       icon: '🏷️', color: '#7B1FA2', defaultVisible: true },
-  tags_zalo:     { label: 'Tag Zalo',      icon: '🔵', color: '#0288D1', defaultVisible: false }, // sync nhiều
-  status_care:   { label: 'Trạng thái',    icon: '🔄', color: '#388E3C', defaultVisible: true },
-  score:         { label: 'Điểm số',       icon: '📈', color: '#F57C00', defaultVisible: true },
-  appointment:   { label: 'Lịch hẹn',      icon: '📅', color: '#C2185B', defaultVisible: true },
-  interaction:   { label: 'Tương tác',     icon: '💬', color: '#5D4037', defaultVisible: false }, // nhiều event
-  system:        { label: 'Hệ thống',      icon: '⚙️', color: '#546E7A', defaultVisible: false },
-  automation:    { label: 'Tự động (Bot)', icon: '🤖', color: '#00897B', defaultVisible: true }, // bao gồm auto_tag_change — sale cần thấy KH state change
+  customer_info: { label: 'Thông tin KH',  icon: 'FileText', color: '#1976D2', defaultVisible: true },
+  tags_crm:      { label: 'Tag CRM',       icon: 'Tag', color: '#7B1FA2', defaultVisible: true },
+  tags_zalo:     { label: 'Tag Zalo',      icon: 'Circle', color: '#0288D1', defaultVisible: false }, // sync nhiều
+  status_care:   { label: 'Trạng thái',    icon: 'RotateCw', color: '#388E3C', defaultVisible: true },
+  score:         { label: 'Điểm số',       icon: 'TrendingUp', color: '#F57C00', defaultVisible: true },
+  appointment:   { label: 'Lịch hẹn',      icon: 'Calendar', color: '#C2185B', defaultVisible: true },
+  interaction:   { label: 'Tương tác',     icon: 'MessageSquare', color: '#5D4037', defaultVisible: false }, // nhiều event
+  system:        { label: 'Hệ thống',      icon: 'Settings', color: '#546E7A', defaultVisible: false },
+  automation:    { label: 'Tự động (Bot)', icon: 'Bot', color: '#00897B', defaultVisible: true }, // bao gồm auto_tag_change — sale cần thấy KH state change
 };
 
 /* Action-level metadata — icon đặc biệt + label động cho từng action.
@@ -52,18 +52,18 @@ export interface ActionMeta {
 export const ACTION_META: Record<string, ActionMeta> = {
   // customer_info
   customer_update:         { label: 'Cập nhật thông tin' },
-  customer_create:         { label: 'Tạo KH', icon: '✨' },
+  customer_create:         { label: 'Tạo KH', icon: 'Sparkles' },
   customer_rename:         { label: 'Đổi tên' },
-  customer_phone_change:   { label: 'Đổi SĐT', icon: '📞' },
-  customer_birthday_change:{ label: 'Đổi ngày sinh', icon: '🎂' },
+  customer_phone_change:   { label: 'Đổi SĐT', icon: 'Phone' },
+  customer_birthday_change:{ label: 'Đổi ngày sinh', icon: 'Calendar' },
   customer_gender_change:  { label: 'Đổi giới tính' },
-  customer_assign:         { label: 'Gán phụ trách', icon: '👤' },
+  customer_assign:         { label: 'Gán phụ trách', icon: 'User' },
   friend_alias_change:     { label: 'Đổi tên gợi nhớ' },
-  friend_zalo_name_change: { label: 'Tên Zalo đổi', icon: '🔄' },
+  friend_zalo_name_change: { label: 'Tên Zalo đổi', icon: 'RotateCw' },
 
   // tags_crm
-  tag_add_crm:    { label: 'Gắn tag', icon: '➕' },
-  tag_remove_crm: { label: 'Gỡ tag', icon: '➖' },
+  tag_add_crm:    { label: 'Gắn tag', icon: 'Plus' },
+  tag_remove_crm: { label: 'Gỡ tag', icon: 'Minus' },
   tag_replace_crm:{ label: 'Đổi tag' },
 
   // tags_zalo
@@ -80,19 +80,19 @@ export const ACTION_META: Record<string, ActionMeta> = {
   score_change: { label: 'Đổi điểm' },
 
   // appointment
-  appointment_create:     { label: 'Tạo lịch hẹn', icon: '✨' },
+  appointment_create:     { label: 'Tạo lịch hẹn', icon: 'Sparkles' },
   appointment_update:     { label: 'Sửa lịch hẹn' },
-  appointment_complete:   { label: 'Hoàn thành lịch', icon: '✅' },
-  appointment_cancel:     { label: 'Huỷ lịch', icon: '❌' },
-  appointment_reschedule: { label: 'Dời lịch', icon: '🔁' },
-  appointment_no_show:    { label: 'Vắng mặt', icon: '😶' },
+  appointment_complete:   { label: 'Hoàn thành lịch', icon: 'CheckCircle2' },
+  appointment_cancel:     { label: 'Huỷ lịch', icon: 'X' },
+  appointment_reschedule: { label: 'Dời lịch', icon: 'RotateCw' },
+  appointment_no_show:    { label: 'Vắng mặt', icon: 'User' },
 
   // interaction
-  first_inbound:           { label: 'KH nhắn lần đầu', icon: '📩' },
-  first_outbound:          { label: 'Mình nhắn lần đầu', icon: '📤' },
-  silent_30d:              { label: 'Im lặng 30 ngày', icon: '🔇' },
-  call_logged:             { label: 'Đã gọi', icon: '📞' },
-  meeting_logged:          { label: 'Đã gặp', icon: '🤝' },
+  first_inbound:           { label: 'KH nhắn lần đầu', icon: 'Inbox' },
+  first_outbound:          { label: 'Mình nhắn lần đầu', icon: 'Send' },
+  silent_30d:              { label: 'Im lặng 30 ngày', icon: 'VolumeX' },
+  call_logged:             { label: 'Đã gọi', icon: 'Phone' },
+  meeting_logged:          { label: 'Đã gặp', icon: 'Users' },
 
   // system
   contact_link_parent:     { label: 'Liên kết KH cha' },

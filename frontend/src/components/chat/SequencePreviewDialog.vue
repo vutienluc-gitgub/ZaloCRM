@@ -50,7 +50,7 @@
         <template v-else>
           <div class="spd-cols" :class="{ two: data.contacts.length === 2 }">
             <div v-for="pc in data.contacts" :key="pc.contactId" class="spd-col">
-              <div class="spd-col-head">💬 Sale gửi cho <strong>{{ pc.name }}</strong></div>
+              <div class="spd-col-head"><MessageSquare :size="13" class="inline-icon" /> Sale gửi cho <strong>{{ pc.name }}</strong></div>
               <div class="spd-chat">
                 <div v-for="st in pc.steps" :key="st.stepIdx" class="spd-step">
                   <div class="spd-step-time">
@@ -236,4 +236,5 @@ function formatSendTime(iso: string | null): string {
 /* Dòng kết thúc luồng */
 .spd-done { align-self: center; display: inline-flex; align-items: center; gap: 5px; margin-top: 4px; padding: 5px 12px; background: #e7f6ec; color: #157f3c; border-radius: 14px; font-size: 12px; font-weight: 500; }
 .spd-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line, #e6e8eb); display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: #6b7280; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

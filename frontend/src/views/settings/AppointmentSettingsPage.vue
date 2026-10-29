@@ -8,7 +8,7 @@
 <template>
   <div class="ap-settings">
     <header class="ap-head">
-      <div class="ap-ico">📅</div>
+      <div class="ap-ico"><Calendar :size="24" /></div>
       <div>
         <h1 class="ap-h1">Lịch hẹn &amp; Nhắc hẹn Zalo</h1>
         <p class="ap-sub">
@@ -133,6 +133,7 @@
 </template>
 
 <script setup lang="ts">
+import { Calendar } from 'lucide-vue-next';
 import { ref, reactive, computed, onMounted } from 'vue';
 import { api } from '@/api';
 import { useToast } from '@/composables/use-toast';

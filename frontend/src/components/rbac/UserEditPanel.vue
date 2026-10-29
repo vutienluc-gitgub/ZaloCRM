@@ -52,7 +52,7 @@
             />
             <div class="info-status-row">
               <span class="role-tag" :class="user?.isActive ? 'role-deputy' : 'role-empty-tag'">
-                {{ user?.isActive ? '🟢 Đang hoạt động' : '⚪ Đã vô hiệu hóa' }}
+                {{ user?.isActive ? 'Đang hoạt động' : 'Đã vô hiệu hóa' }}
               </span>
               <span class="role-tag" :class="`role-legacy-${user?.role}`">
                 {{ legacyRoleLabel(user?.role) }}
@@ -78,9 +78,9 @@
               :disabled="busy"
               @change="onDeptRoleChange"
             >
-              <option value="member">👤 Nhân viên</option>
-              <option value="deputy">🎖️ Phó phòng</option>
-              <option value="leader">👑 Trưởng phòng</option>
+              <option value="member">Nhân viên</option>
+              <option value="deputy">Phó phòng</option>
+              <option value="leader">Trưởng phòng</option>
             </select>
             <p v-if="deptIdLocal" class="hint-soft">
               <strong>Lưu ý:</strong> Mỗi phòng chỉ có 1 Trưởng phòng + 1 Phó phòng. Nếu vị trí đã có người giữ, bạn phải bỏ chức vụ của họ trước (tại trang Sơ đồ tổ chức) rồi mới gán cho người khác.
@@ -99,7 +99,7 @@
             </select>
             <div v-if="currentGroup" class="group-preview">
               <div class="preview-head">
-                <span class="role-tag role-leader">🛡 {{ currentGroup.name }}</span>
+                <span class="role-tag role-leader">{{ currentGroup.name }}</span>
                 <span class="preview-stat">{{ activeGrantsCount }} quyền active</span>
               </div>
               <p class="preview-desc">
@@ -158,11 +158,11 @@
             </div>
             <ul class="ob-steplist">
               <li class="ob-stepitem" :class="{ done: user.onboarding.changePassword }">
-                <span class="ob-mark">{{ user.onboarding.changePassword ? '✅' : '⬜' }}</span>
+                <span class="ob-mark"><Check v-if="user.onboarding.changePassword" :size="12" class="text-success" /><span v-else class="ob-uncheck" /></span>
                 Đổi mật khẩu lần đầu
               </li>
               <li class="ob-stepitem" :class="{ done: user.onboarding.connectNick }">
-                <span class="ob-mark">{{ user.onboarding.connectNick ? '✅' : '⬜' }}</span>
+                <span class="ob-mark"><Check v-if="user.onboarding.connectNick" :size="12" class="text-success" /><span v-else class="ob-uncheck" /></span>
                 Kết nối ≥ 1 nick Zalo
               </li>
               <li
@@ -170,7 +170,7 @@
                 :class="{ done: user.onboarding.pin && !user.onboarding.pinSkipped, skipped: user.onboarding.pinSkipped }"
               >
                 <span class="ob-mark">
-                  {{ user.onboarding.pinSkipped ? '⊘' : (user.onboarding.pin ? '✅' : '⬜') }}
+                  <span v-if="user.onboarding.pinSkipped">Bỏ qua</span><Check v-else-if="user.onboarding.pin" :size="12" class="text-success" /><span v-else class="ob-uncheck" />
                 </span>
                 Đặt PIN bảo mật (tuỳ chọn)
                 <span v-if="user.onboarding.pinSkipped" class="ob-tag-mini">đã bỏ qua</span>
@@ -194,12 +194,12 @@
               <div class="reset-pw-row">
                 <span class="reset-pw-label">Mật khẩu mới:</span>
                 <code class="reset-pw-code">{{ resetPwResult }}</code>
-                <button class="btn-copy-sm" @click="copyResetPw" title="Copy">📋</button>
+                <button class="btn-copy-sm" @click="copyResetPw" title="Copy"><Copy :size="12" /></button>
               </div>
               <p class="reset-pw-note">Gửi mật khẩu này cho nhân viên. Họ sẽ buộc đổi lại khi đăng nhập.</p>
             </div>
             <button class="btn-reset-pw" :disabled="busy" @click="confirmResetPassword">
-              🔑 Đặt lại mật khẩu
+              <Key :size="13" class="inline-icon" /> Đặt lại mật khẩu
             </button>
           </section>
 
@@ -226,7 +226,7 @@
               {{ handoffResult.contacts }} khách, {{ handoffResult.nicks }} nick, {{ handoffResult.appointments }} lịch hẹn.
             </div>
             <button class="btn-handoff" :disabled="busy || !handoffToId" @click="confirmHandoff">
-              🔄 Bàn giao ngay
+              <RotateCw :size="13" class="inline-icon" /> Bàn giao ngay
             </button>
           </section>
 
@@ -244,10 +244,10 @@
               :disabled="busy"
               @click="confirmDeactivate"
             >
-              🚫 Vô hiệu hóa user
+              <Ban :size="13" class="inline-icon" /> Vô hiệu hóa user
             </button>
             <button v-else class="btn-primary-sm" :disabled="busy" @click="confirmReactivate">
-              ✓ Kích hoạt lại
+              <Check :size="13" class="inline-icon" /> Kích hoạt lại
             </button>
           </section>
         </div>
@@ -282,6 +282,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { Check, Copy, Key, RotateCw, Ban } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 import {
   useRbacStore,
@@ -369,7 +370,7 @@ function confirmResetPassword() {
   openConfirm({
     title: 'Đặt lại mật khẩu',
     message: `Đặt lại mật khẩu cho "${props.user.fullName}"? Mật khẩu cũ sẽ mất, nhân viên phải đăng nhập lại bằng mật khẩu mới.`,
-    okLabel: '🔑 Đặt lại',
+    okLabel: 'Đặt lại',
     showZaloOpt: true,
     action: doResetPassword,
   });
@@ -413,7 +414,7 @@ function confirmHandoff() {
   openConfirm({
     title: 'Bàn giao khách hàng',
     message: `Bàn giao toàn bộ của "${props.user.fullName}" sang "${toName}"? Khách hàng, nick Zalo, lịch hẹn sẽ chuyển sang người nhận.`,
-    okLabel: '🔄 Bàn giao',
+    okLabel: 'Bàn giao',
     action: doHandoff,
   });
 }
@@ -638,7 +639,7 @@ function confirmDeactivate() {
   openConfirm({
     title: 'Vô hiệu hóa nhân viên',
     message: `Vô hiệu hóa "${props.user.fullName || props.user.email}"? Nhân viên sẽ không đăng nhập được. Nên bàn giao khách hàng trước.`,
-    okLabel: '🚫 Vô hiệu hóa',
+    okLabel: 'Vô hiệu hóa',
     danger: true,
     action: doDeactivate,
   });
@@ -677,9 +678,9 @@ function legacyRoleLabel(r?: string) {
 }
 
 function statusLabel(s: string): string {
-  if (s === 'connected') return '🟢 Đã kết nối';
-  if (s === 'disconnected') return '⚪ Ngắt';
-  if (s === 'qr_pending') return '🟡 Chờ QR';
+  if (s === 'connected') return 'Đã kết nối';
+  if (s === 'disconnected') return 'Ngắt';
+  if (s === 'qr_pending') return 'Chờ QR';
   return s;
 }
 
@@ -870,4 +871,7 @@ function avatarColor(name: string): string {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.ob-uncheck { display: inline-block; width: 10px; height: 10px; border: 1px solid #cbd5e1; border-radius: 2px; }
 </style>

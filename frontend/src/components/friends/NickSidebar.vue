@@ -10,7 +10,7 @@
       <input
         v-model="searchQuery"
         class="search"
-        placeholder="🔍 Tìm nick..."
+        placeholder="Tìm nick..."
       />
     </div>
 

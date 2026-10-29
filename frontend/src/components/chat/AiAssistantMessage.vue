@@ -3,7 +3,7 @@
 <template>
   <!-- M53 2026-05-30: AI Trợ Lý bubble + suggestion card -->
   <div class="ai-msg-row">
-    <div class="ai-avatar">🤖</div>
+    <div class="ai-avatar"><Bot :size="16" /></div>
     <div class="ai-body">
       <div class="ai-bubble">
         <div class="ai-label">
@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Bot } from 'lucide-vue-next';
 import type { Message } from '@/composables/use-chat';
 import AiSuggestionCard from '@/components/chat/AiSuggestionCard.vue';
 

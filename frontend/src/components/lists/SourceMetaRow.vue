@@ -13,7 +13,7 @@
       </div>
       <div v-if="id" class="smr-id">
         ID: <code>{{ id }}</code>
-        <button v-if="id" class="smr-copy" :title="'Copy ' + id" @click="copyId">📋</button>
+        <button v-if="id" class="smr-copy" :title="'Copy ' + id" @click="copyId"><Copy :size="11" /></button>
       </div>
       <div v-if="extra" class="smr-extra">{{ extra }}</div>
     </div>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { useToast } from '@/composables/use-toast';
+import { Copy } from 'lucide-vue-next';
 const props = defineProps<{
   icon: string;
   label: string;

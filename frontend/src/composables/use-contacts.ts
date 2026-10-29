@@ -162,16 +162,16 @@ export const CONSENT_OPTIONS = [
 // khi content rỗng (media/sự kiện thuần).
 export const CONTENT_TYPE_LABEL: Record<string, string> = {
   text: 'Tin nhắn',
-  image: '📷 Hình ảnh',
-  file: '📎 File',
-  sticker: '🎴 Sticker',
-  voice: '🎤 Tin thoại',
-  audio: '🎤 Tin thoại',
-  video: '🎥 Video',
+  image: '[Hình ảnh]',
+  file: '[Tệp đính kèm]',
+  sticker: '[Sticker]',
+  voice: '[Tin thoại]',
+  audio: '[Tin thoại]',
+  video: '[Video]',
   gif: '🎞 GIF',
   link: '🔗 Liên kết',
   contact_card: '👤 Danh thiếp',
-  location: '📍 Vị trí',
+  location: '[Vị trí]',
   // 8 entry bổ sung — proposal G3 fix (trước đây hiện raw "bank_transfer", "call", ...)
   bank_transfer: '💳 Chuyển khoản',
   call: '📞 Cuộc gọi',

@@ -53,7 +53,7 @@
         </v-form>
 
         <v-alert v-if="passwordChangedNotice" type="success" class="mt-4" density="compact" closable variant="tonal">
-          ✅ Mật khẩu đã đổi thành công. Vui lòng đăng nhập lại với mật khẩu mới.
+          Mật khẩu đã đổi thành công. Vui lòng đăng nhập lại với mật khẩu mới.
         </v-alert>
         <v-alert v-if="error" type="error" class="mt-4" density="compact" closable variant="tonal">
           {{ error }}

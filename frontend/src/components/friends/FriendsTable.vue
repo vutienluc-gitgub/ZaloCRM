@@ -19,25 +19,25 @@
           <th>Tên CRM / Nick</th>
           <th>Trạng thái KB</th>
           <th>Trạng thái KH</th>
-          <th title="Auto tag system (active/cold/stuck/ready) + CRM tag manual">🤖 Tag</th>
+          <th title="Auto tag system (active/cold/stuck/ready) + CRM tag manual"><Bot :size="13" class="inline-icon" /> Tag</th>
           <th>Tag CRM</th>
-          <th title="Ngày kết bạn Zalo">🕒 KB từ</th>
+          <th title="Ngày kết bạn Zalo"><Clock :size="13" class="inline-icon" /> KB từ</th>
           <th
             class="stuck-col sortable"
             :class="{ 'sort-active': sortBy === 'stuck' }"
             title="KH bị flag stuck — click để sort theo stuck trước"
             @click="toggleStuckSort"
-          >⚠ Stuck<span class="sort-arrow">{{ sortBy === 'stuck' ? ' ↑' : '' }}</span></th>
+          ><AlertTriangle :size="13" class="inline-icon" /> Stuck<span class="sort-arrow">{{ sortBy === 'stuck' ? ' ↑' : '' }}</span></th>
           <!-- Tier 2 optional cols (conditional v-if) -->
-          <th v-if="visibleCols.zaloGlobalId" title="Zalo global identity">🌐 Global ID</th>
+          <th v-if="visibleCols.zaloGlobalId" title="Zalo global identity"><Globe :size="13" class="inline-icon" /> Global ID</th>
           <th v-if="visibleCols.zaloUsername" title="Zalo username handle">@ Username</th>
-          <th v-if="visibleCols.lastInboundAt" title="KH nhắn cuối (inbound)">📥 KH cuối</th>
-          <th v-if="visibleCols.lastOutboundAt" title="Sale nhắn cuối (outbound)">📤 Sale cuối</th>
-          <th v-if="visibleCols.firstMessageAt" title="Lần đầu mở chat 1-1">💬 First msg</th>
-          <th v-if="visibleCols.stageEnteredAt" title="Vào stage hiện tại lúc nào">⏱ Stage từ</th>
-          <th v-if="visibleCols.silent" class="silent-col" title="Số ngày KH không nhắn">🔇 Silent</th>
-          <th v-if="visibleCols.replyRate" class="reply-col" title="Tỷ lệ sale/KH messages">📨 Reply</th>
-          <th v-if="visibleCols.healthBars" class="health-col" title="Score 4 chiều (engage/intent/fit/velocity)">🌡 Health</th>
+          <th v-if="visibleCols.lastInboundAt" title="KH nhắn cuối (inbound)"><Inbox :size="13" class="inline-icon" /> KH cuối</th>
+          <th v-if="visibleCols.lastOutboundAt" title="Sale nhắn cuối (outbound)"><Send :size="13" class="inline-icon" /> Sale cuối</th>
+          <th v-if="visibleCols.firstMessageAt" title="Lần đầu mở chat 1-1"><MessageSquare :size="13" class="inline-icon" /> First msg</th>
+          <th v-if="visibleCols.stageEnteredAt" title="Vào stage hiện tại lúc nào"><Clock :size="13" class="inline-icon" /> Stage từ</th>
+          <th v-if="visibleCols.silent" class="silent-col" title="Số ngày KH không nhắn"><VolumeX :size="13" class="inline-icon" /> Silent</th>
+          <th v-if="visibleCols.replyRate" class="reply-col" title="Tỷ lệ sale/KH messages"><Mail :size="13" class="inline-icon" /> Reply</th>
+          <th v-if="visibleCols.healthBars" class="health-col" title="Score 4 chiều (engage/intent/fit/velocity)"><Activity :size="13" class="inline-icon" /> Health</th>
           <th>Tương tác cuối</th>
           <th
             class="sortable"
@@ -85,9 +85,9 @@
                 <!-- Sub row: UID KH per-nick · SĐT · Giới tính · Tuổi (info dày, dòng dưới tên) -->
                 <div class="sub">
                   <span v-if="f.zaloUidInNick" class="sub-uid" :title="'UID Zalo của KH (nhìn từ nick ' + (f.zaloAccount?.displayName || '?') + ')'">
-                    🆔 {{ f.zaloUidInNick }}
+                    ID: {{ f.zaloUidInNick }}
                   </span>
-                  <template v-if="f.contact?.phone">· 📱 {{ f.contact.phone }}</template>
+                  <template v-if="f.contact?.phone">· <Phone :size="10" class="inline-icon" /> {{ f.contact.phone }}</template>
                   <template v-if="f.contact?.gender">· {{ genderShort(f.contact.gender) }}</template>
                   <template v-if="f.contact?.birthYear">· {{ age(f.contact.birthYear) }}t</template>
                 </div>
@@ -138,7 +138,7 @@
                 class="auto-tag-chip"
                 :class="autoTagColor(t)"
                 :title="'Auto tag system: ' + t"
-              >🤖 {{ autoTagLabel(t) }}</span>
+              ><Bot :size="10" class="inline-icon" /> {{ autoTagLabel(t) }}</span>
             </div>
             <span v-else class="dim-cell">—</span>
           </td>
@@ -159,7 +159,7 @@
                 class="tag-chip zalo-label"
                 :style="l.color ? { background: hexAlpha(l.color, 0.18), color: l.color, borderColor: hexAlpha(l.color, 0.4) } : {}"
                 :title="'Label Zalo: ' + l.name"
-              >🏷 {{ l.name }}</span>
+              ><Tag :size="10" class="inline-icon" /> {{ l.name }}</span>
             </div>
             <span v-else class="dim-cell">—</span>
           </td>
@@ -173,7 +173,7 @@
           <!-- ⚠ Đình trệ (Tier 1) -->
           <td class="stuck-col">
             <span v-if="f.stuckSince" class="stuck-badge" :title="'Đình trệ từ ' + formatExactDate(f.stuckSince)">
-              ⚠ {{ stuckDaysLabel(f.stuckSince) }}
+              <AlertTriangle :size="11" class="inline-icon text-warning" /> {{ stuckDaysLabel(f.stuckSince) }}
             </span>
             <span v-else class="dim-cell">—</span>
           </td>
@@ -187,11 +187,11 @@
             <span v-else class="dim-cell">—</span>
           </td>
           <td v-if="visibleCols.lastInboundAt">
-            <span v-if="f.lastInboundAt" class="last-int" :title="formatExactDate(f.lastInboundAt)">📥 {{ relativeDate(f.lastInboundAt) }}</span>
+            <span v-if="f.lastInboundAt" class="last-int" :title="formatExactDate(f.lastInboundAt)"><Inbox :size="11" class="inline-icon" /> {{ relativeDate(f.lastInboundAt) }}</span>
             <span v-else class="dim-cell">—</span>
           </td>
           <td v-if="visibleCols.lastOutboundAt">
-            <span v-if="f.lastOutboundAt" class="last-int" :title="formatExactDate(f.lastOutboundAt)">📤 {{ relativeDate(f.lastOutboundAt) }}</span>
+            <span v-if="f.lastOutboundAt" class="last-int" :title="formatExactDate(f.lastOutboundAt)"><Send :size="11" class="inline-icon" /> {{ relativeDate(f.lastOutboundAt) }}</span>
             <span v-else class="dim-cell">—</span>
           </td>
           <td v-if="visibleCols.firstMessageAt">
@@ -205,7 +205,7 @@
           <!-- 🔇 Silent (Phase 2 derived) — số ngày KH không nhắn -->
           <td v-if="visibleCols.silent" class="silent-col">
             <span v-if="silentDays(f) >= 7" class="silent-badge" :class="silentSeverity(f)" :title="silentTooltip(f)">
-              🔇 {{ silentDays(f) }}d
+              <VolumeX :size="11" class="inline-icon" /> {{ silentDays(f) }}d
             </span>
             <span v-else-if="silentDays(f) > 0" class="dim-cell">{{ silentDays(f) }}d</span>
             <span v-else class="dim-cell">—</span>
@@ -226,7 +226,7 @@
             </div>
           </td>
           <td>
-            <span v-if="f.lastInteractionAt" class="last-int">📥 {{ relativeDate(f.lastInteractionAt) }}</span>
+            <span v-if="f.lastInteractionAt" class="last-int"><Inbox :size="11" class="inline-icon" /> {{ relativeDate(f.lastInteractionAt) }}</span>
             <span v-else class="dim-cell">chưa nhắn</span>
           </td>
           <td>
@@ -238,8 +238,8 @@
           <td><span class="dim-cell">{{ f.totalInbound }} / {{ f.totalOutbound }}</span></td>
           <td class="action-col" @click.stop>
             <div class="row-actions">
-              <button title="Mở chat" @click="$emit('open-chat', f)">💬</button>
-              <button title="Hồ sơ" @click="$emit('open-contact', f)">👤</button>
+              <button title="Mở chat" @click="$emit('open-chat', f)"><MessageSquare :size="13" /></button>
+              <button title="Hồ sơ" @click="$emit('open-contact', f)"><User :size="13" /></button>
               <button title="Thêm">⋯</button>
             </div>
           </td>
@@ -248,13 +248,13 @@
     </table>
 
     <div v-if="!friends.length && !loading" class="empty">
-      <div class="icon">👋</div>
+      <div class="icon"><UserPlus :size="32" /></div>
       <h3>Chưa có bạn bè trong tab này</h3>
       <p>Thử bỏ filter hoặc đồng bộ lại Zalo.</p>
     </div>
 
     <div v-if="loading" class="empty">
-      <div class="icon">⏳</div>
+      <div class="icon"><Clock :size="32" /></div>
       <p>Đang tải...</p>
     </div>
   </div>
@@ -437,7 +437,7 @@ function kbBadgeLabel(kind: string): string {
     friend: '● Đã kết bạn',
     pending_friend: '◐ Đã gửi mời',
     chatting_stranger: '◯ Đang nhắn lạ',
-    ghost: '✕ Đã ngắt',
+    ghost: 'Đã ngắt',
   };
   return m[kind] ?? '—';
 }
@@ -447,12 +447,12 @@ function careLabel(f: DbFriend): string {
   if (!name) return '';
   // Add emoji prefix dựa trên tên status
   const lower = name.toLowerCase();
-  if (lower.includes('nóng')) return '🔥 ' + name;
-  if (lower.includes('lạnh')) return '❄ ' + name;
-  if (lower.includes('chốt')) return '✅ ' + name;
-  if (lower.includes('đàm')) return '⚡ ' + name;
-  if (lower.includes('chăm')) return '🤝 ' + name;
-  if (lower.includes('quan tâm')) return '💬 ' + name;
+  if (lower.includes('nóng')) return name;
+  if (lower.includes('lạnh')) return name;
+  if (lower.includes('chốt')) return name;
+  if (lower.includes('đàm')) return name;
+  if (lower.includes('chăm')) return name;
+  if (lower.includes('quan tâm')) return name;
   return name;
 }
 function careClass(f: DbFriend): string {
@@ -976,4 +976,6 @@ function healthTooltip(f: DbFriend): string {
 .av-c5 { background: linear-gradient(135deg, #db2777, #be185d); }
 .av-c6 { background: linear-gradient(135deg, #0891b2, #0e7490); }
 .av-c7 { background: linear-gradient(135deg, #ea580c, #c2410c); }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-warning { color: #f59e0b; }
 </style>

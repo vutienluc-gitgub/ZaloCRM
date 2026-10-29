@@ -43,7 +43,12 @@
       :class="gender === 'female' ? 'gender-female' : 'gender-male'"
       :style="genderBadgeStyle"
     >
-      {{ gender === 'female' ? '♀' : '♂' }}
+      <svg v-if="gender === 'female'" viewBox="0 0 24 24" fill="currentColor" width="10" height="10" aria-hidden="true">
+        <path d="M12 2a5 5 0 0 0-5 5c0 2.37 1.66 4.35 3.88 4.86V14H9v2h1.88v3H8v2h2.88V23h2.24v-2H15v-2h-1.88v-3H15v-2h-1.88v-2.14A5.003 5.003 0 0 0 12 2zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
+      </svg>
+      <svg v-else viewBox="0 0 24 24" fill="currentColor" width="10" height="10" aria-hidden="true">
+        <path d="M19 3h-5v2h2.59l-3.3 3.3a6 6 0 1 0 1.41 1.41L18 6.41V9h2V3h-1zM7 17a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+      </svg>
     </span>
 
     <!-- Platform mark (Z badge cho Zalo) -->

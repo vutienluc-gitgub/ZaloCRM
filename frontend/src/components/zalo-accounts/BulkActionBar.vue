@@ -18,7 +18,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
         Disable
       </button>
-      <button class="x" @click="$emit('clear')" title="Bỏ chọn tất cả">✕</button>
+      <button class="x" @click="$emit('clear')" title="Bỏ chọn tất cả"><X :size="14" /></button>
     </div>
   </transition>
 </template>

@@ -12,8 +12,8 @@
       <v-tab value="teams">Đội nhóm</v-tab>
       <v-tab value="org">Tổ chức</v-tab>
       <v-tab value="statuses">Trạng thái KH</v-tab>
-      <v-tab value="crm-tags">🏷 Tag CRM</v-tab>
-      <v-tab value="zalo-labels">⚑ Tag Zalo</v-tab>
+      <v-tab value="crm-tags"><Tag :size="13" class="inline-icon" /> Tag CRM</v-tab>
+      <v-tab value="zalo-labels"><Flag :size="13" class="inline-icon" /> Tag Zalo</v-tab>
     </v-tabs>
 
     <v-window v-model="tab">
@@ -147,6 +147,7 @@
 </template>
 
 <script setup lang="ts">
+import { Tag, Flag } from 'lucide-vue-next';
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUsers, type OrgUser } from '@/composables/use-users';

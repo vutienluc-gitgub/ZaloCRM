@@ -11,7 +11,7 @@
         <div class="panel-head">
           <div class="ev-color" :style="{ background: typeBgColor(appointment.type) }" />
           <h3>{{ appointment.contact?.fullName || 'Lịch hẹn' }} — {{ typeLabel(appointment.type) }}</h3>
-          <button class="close" @click="$emit('close')">✕</button>
+          <button class="close" @click="$emit('close')"><X :size="16" /></button>
         </div>
 
         <div class="panel-body">
@@ -33,7 +33,7 @@
               <div class="info">
                 <div class="name">{{ appointment.contact?.fullName || 'Chưa rõ' }}</div>
                 <div class="sub">
-                  <span v-if="appointment.contact?.phone">📱 {{ appointment.contact.phone }}</span>
+                  <span v-if="appointment.contact?.phone"><Phone :size="11" class="inline-icon" /> {{ appointment.contact.phone }}</span>
                   <span v-if="appointment.contact?.zaloUid"> · 🔵 {{ appointment.contact.zaloUid }}</span>
                 </div>
               </div>
@@ -42,12 +42,12 @@
                   v-if="appointment.source === 'zalo' && appointment.conversationId"
                   title="Mở Zalo chat"
                   @click="$emit('open-chat', appointment)"
-                >💬</button>
+                ><MessageSquare :size="13" /></button>
                 <button
                   v-if="appointment.contact?.id"
                   title="Hồ sơ KH"
                   @click="$emit('open-contact', appointment)"
-                >👤</button>
+                ><User :size="13" /></button>
               </div>
             </div>
           </div>
@@ -55,37 +55,37 @@
           <div class="panel-section">
             <h5>Chi tiết</h5>
             <div class="kv-row">
-              <span class="k">⏰ Thời gian</span>
+              <span class="k"><Clock :size="12" class="inline-icon" /> Thời gian</span>
               <span class="v"><b>{{ timeRangeLabel }}</b></span>
             </div>
             <div class="kv-row">
-              <span class="k">🎯 Loại</span>
+              <span class="k"><Target :size="12" class="inline-icon" /> Loại</span>
               <span class="v">
                 <span class="pill type">{{ typeIcon(appointment.type) }} {{ typeLabel(appointment.type) }}</span>
               </span>
             </div>
             <div class="kv-row">
-              <span class="k">✅ Trạng thái</span>
+              <span class="k"><CheckCircle2 :size="12" class="inline-icon text-success" /> Trạng thái</span>
               <span class="v">
                 <span class="pill" :class="`status-${appointment.status}`">{{ statusLabel(appointment.status) }}</span>
               </span>
             </div>
             <div class="kv-row">
-              <span class="k">👤 Sale</span>
+              <span class="k"><User :size="12" class="inline-icon" /> Sale</span>
               <span class="v">
                 <span class="av-mini" :style="{ background: saleColor(ownerId(appointment)).bg }">{{ initials(ownerName(appointment)) }}</span>
                 {{ ownerName(appointment) }}
               </span>
             </div>
             <div class="kv-row">
-              <span class="k">🔗 Nguồn</span>
+              <span class="k"><Link :size="12" class="inline-icon" /> Nguồn</span>
               <span class="v">
                 {{ appointment.source === 'zalo' ? 'Tự tạo từ chat Zalo' : 'Tạo thủ công' }}
                 <a v-if="appointment.source === 'zalo' && appointment.conversationId" href="#" class="link" @click.prevent="$emit('open-chat', appointment)">· Xem chat gốc →</a>
               </span>
             </div>
             <div v-if="appointment.notes" class="kv-row">
-              <span class="k">📝 Ghi chú</span>
+              <span class="k"><FileText :size="12" class="inline-icon" /> Ghi chú</span>
               <span class="v">{{ appointment.notes }}</span>
             </div>
           </div>
@@ -95,11 +95,11 @@
             <div class="timeline">
               <div v-if="appointment.statusChangedAt && appointment.statusChangedBy" class="tl-item done">
                 <div class="when">{{ formatRelative(appointment.statusChangedAt) }}</div>
-                <div class="what">✅ {{ statusLabel(appointment.status) }} — bởi {{ appointment.statusChangedBy.fullName || appointment.statusChangedBy.email }}</div>
+                <div class="what"><CheckCircle2 :size="12" class="inline-icon text-success" /> {{ statusLabel(appointment.status) }} — bởi {{ appointment.statusChangedBy.fullName || appointment.statusChangedBy.email }}</div>
               </div>
               <div class="tl-item done">
                 <div class="when">{{ formatRelative(appointment.createdAt) }}</div>
-                <div class="what">🆕 Lịch hẹn được tạo</div>
+                <div class="what">Lịch hẹn được tạo</div>
                 <div v-if="appointment.source === 'zalo'" class="more">Auto-detect từ chat Zalo</div>
               </div>
             </div>
@@ -107,22 +107,22 @@
         </div>
 
         <div class="panel-foot">
-          <button class="btn" @click="$emit('reschedule', appointment)">📅 Đổi giờ</button>
+          <button class="btn" @click="$emit('reschedule', appointment)"><Calendar :size="12" class="inline-icon" /> Đổi giờ</button>
           <button
             v-if="appointment.status === 'scheduled' || appointment.status === 'overdue'"
             class="btn danger"
             @click="$emit('cancel', appointment)"
-          >✕ Huỷ</button>
+          ><X :size="12" class="inline-icon" /> Huỷ</button>
           <button
             v-if="appointment.status === 'scheduled' || appointment.status === 'overdue'"
             class="btn warn"
             @click="$emit('no-show', appointment)"
-          >👤 Vắng</button>
+          ><User :size="12" class="inline-icon" /> Vắng</button>
           <button
             v-if="appointment.status === 'scheduled' || appointment.status === 'overdue'"
             class="btn primary"
             @click="$emit('complete', appointment)"
-          >✓ Hoàn thành</button>
+          ><Check :size="12" class="inline-icon" /> Hoàn thành</button>
         </div>
       </template>
     </div>
@@ -491,4 +491,6 @@ function formatRelative(iso: string): string {
 .panel-foot .btn.danger:active { background: #fbe6dc; }
 .panel-foot .btn.warn { color: #7a5818; border-color: var(--at-mustard); }
 .panel-foot .btn.warn:active { background: #fdf3df; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
 </style>

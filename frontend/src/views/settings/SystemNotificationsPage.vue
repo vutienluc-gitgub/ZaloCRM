@@ -5,7 +5,7 @@
     <!-- 2026-06-04 (Anh chốt) — redesign Atlas v2: topbar + 4 tab ngang. -->
     <div class="sn-topbar">
       <div class="sn-topbar-title">
-        <div class="sn-ico">🔔</div>
+        <div class="sn-ico"><Bell :size="24" /></div>
         <div>
           <div class="sn-h1">Thông báo hệ thống</div>
           <div class="sn-sub">Nick tổ chức tự gửi thông báo nội bộ cho nhân viên · tin chào mừng khi tạo tài khoản</div>
@@ -20,12 +20,12 @@
          tab 'Nhân viên nhận' vì cùng luồng: chọn nick gửi → xem ai nhận. -->
     <v-tabs v-model="activeTab" class="sn-tabs" color="primary" density="comfortable">
       <v-tab value="people">
-        👥 Nhân viên nhận
+        <Users :size="13" class="inline-icon" /> Nhân viên nhận
         <span class="sn-tab-cnt">{{ recipients.length }}</span>
       </v-tab>
-      <v-tab value="welcome">📨 Tin chào mừng</v-tab>
+      <v-tab value="welcome"><Mail :size="13" class="inline-icon" /> Tin chào mừng</v-tab>
       <v-tab value="logs">
-        📜 Lịch sử gửi
+        <FileText :size="13" class="inline-icon" /> Lịch sử gửi
         <span class="sn-tab-cnt">{{ logTotal }}</span>
       </v-tab>
     </v-tabs>
@@ -40,7 +40,7 @@
       <section class="wm-compose">
         <div class="wm-compose-head">
           <div>
-            <div class="wm-compose-title">📨 Tin chào mừng khi tạo user mới</div>
+            <div class="wm-compose-title"><Mail :size="14" class="inline-icon" /> Tin chào mừng khi tạo user mới</div>
             <div class="wm-compose-sub">
               Khi admin tạo sale mới + check SĐT Zalo OK, hệ thống tự gửi tin đăng nhập này. Bôi đen chữ rồi bấm Đậm / Màu / Cỡ như soạn trên Zalo.
             </div>
@@ -96,7 +96,7 @@
             <input ref="imageFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none" @change="onImagePicked" />
             <div class="d-flex ga-2 mt-2">
               <v-btn size="small" variant="tonal" :loading="imageUploading" @click="imageFileInput?.click()">⬆ Chọn ảnh</v-btn>
-              <v-btn v-if="welcomeImageUrl" size="small" variant="text" color="error" @click="clearImage">🗑 Xoá</v-btn>
+              <v-btn v-if="welcomeImageUrl" size="small" variant="text" color="error" @click="clearImage"><Trash2 :size="13" class="inline-icon" /> Xoá</v-btn>
             </div>
           </div>
 
@@ -216,9 +216,9 @@
 
     <!-- KPI (2026-06-10: theo cơ chế Check Live) -->
     <div class="sn-kpi-grid">
-      <div class="sn-kpi green"><div class="sn-kpi-val">{{ summary.ready || 0 }}</div><div class="sn-kpi-lbl">✅ Sẵn sàng nhận</div></div>
-      <div class="sn-kpi amber"><div class="sn-kpi-val">{{ (summary.uid_not_found || 0) + (summary.missing_internal_contact || 0) + (summary.missing_internal_phone || 0) }}</div><div class="sn-kpi-lbl">🟡 Chưa Check Live</div></div>
-      <div class="sn-kpi red"><div class="sn-kpi-val">{{ (summary.lookup_failed || 0) + (summary.sender_disconnected || 0) + (summary.missing_system_sender || 0) }}</div><div class="sn-kpi-lbl">🔴 Lỗi / offline</div></div>
+      <div class="sn-kpi green"><div class="sn-kpi-val">{{ summary.ready || 0 }}</div><div class="sn-kpi-lbl">Sẵn sàng nhận</div></div>
+      <div class="sn-kpi amber"><div class="sn-kpi-val">{{ (summary.uid_not_found || 0) + (summary.missing_internal_contact || 0) + (summary.missing_internal_phone || 0) }}</div><div class="sn-kpi-lbl">Chưa Check Live</div></div>
+      <div class="sn-kpi red"><div class="sn-kpi-val">{{ (summary.lookup_failed || 0) + (summary.sender_disconnected || 0) + (summary.missing_system_sender || 0) }}</div><div class="sn-kpi-lbl">Lỗi / offline</div></div>
       <div class="sn-kpi"><div class="sn-kpi-val">{{ recipients.length }}</div><div class="sn-kpi-lbl">Tổng nhân viên</div></div>
     </div>
 
@@ -298,9 +298,9 @@
       <v-window-item value="logs">
     <!-- Thống kê đếm — KPI tile -->
     <div class="sn-kpi-grid">
-      <div class="sn-kpi green"><div class="sn-kpi-val">{{ logStatusCounts.sent || 0 }}</div><div class="sn-kpi-lbl">✅ Đã gửi</div></div>
-      <div class="sn-kpi red"><div class="sn-kpi-val">{{ logStatusCounts.failed || 0 }}</div><div class="sn-kpi-lbl">❌ Thất bại</div></div>
-      <div class="sn-kpi amber"><div class="sn-kpi-val">{{ logStatusCounts.pending || 0 }}</div><div class="sn-kpi-lbl">⏳ Đang chờ</div></div>
+      <div class="sn-kpi green"><div class="sn-kpi-val">{{ logStatusCounts.sent || 0 }}</div><div class="sn-kpi-lbl">Đã gửi</div></div>
+      <div class="sn-kpi red"><div class="sn-kpi-val">{{ logStatusCounts.failed || 0 }}</div><div class="sn-kpi-lbl">Thất bại</div></div>
+      <div class="sn-kpi amber"><div class="sn-kpi-val">{{ logStatusCounts.pending || 0 }}</div><div class="sn-kpi-lbl">Đang chờ</div></div>
       <div class="sn-kpi"><div class="sn-kpi-val">{{ logTotal }}</div><div class="sn-kpi-lbl">Tổng tin</div></div>
     </div>
 
@@ -500,9 +500,9 @@
         </v-card-title>
         <v-card-text>
           <div class="d-flex flex-wrap ga-2 mb-3">
-            <v-chip size="small" color="success" variant="tonal">✅ Đúng: {{ recheckAllResult.summary.ready || 0 }}</v-chip>
-            <v-chip size="small" color="info" variant="tonal">🔄 Đã đổi UID: {{ recheckAllResult.summary.updated || 0 }}</v-chip>
-            <v-chip size="small" color="error" variant="tonal">⚠️ Lệch người: {{ recheckAllResult.summary.mismatch || 0 }}</v-chip>
+            <v-chip size="small" color="success" variant="tonal"><Check :size="11" class="inline-icon" /> Đúng: {{ recheckAllResult.summary.ready || 0 }}</v-chip>
+            <v-chip size="small" color="info" variant="tonal"><RotateCw :size="11" class="inline-icon" /> Đã đổi UID: {{ recheckAllResult.summary.updated || 0 }}</v-chip>
+            <v-chip size="small" color="error" variant="tonal"><AlertTriangle :size="11" class="inline-icon" /> Lệch người: {{ recheckAllResult.summary.mismatch || 0 }}</v-chip>
             <v-chip size="small" color="warning" variant="tonal">Không Zalo: {{ recheckAllResult.summary.no_zalo || 0 }}</v-chip>
             <v-chip size="small" variant="tonal">Lỗi tra: {{ recheckAllResult.summary.failed || 0 }}</v-chip>
           </div>
@@ -1124,9 +1124,9 @@ const typeFilterOptions = computed(() =>
   Object.entries(TYPE_META).map(([value, m]) => ({ value, label: `${m.icon} ${m.label}` })),
 );
 const statusFilterOptions = [
-  { value: 'sent', label: '✅ Đã gửi' },
-  { value: 'failed', label: '❌ Thất bại' },
-  { value: 'pending', label: '⏳ Đang chờ' },
+  { value: 'sent', label: 'Đã gửi' },
+  { value: 'failed', label: 'Thất bại' },
+  { value: 'pending', label: 'Đang chờ' },
 ];
 const channelFilterOptions = [
   { value: 'zalo', label: 'Zalo' },
@@ -1134,9 +1134,9 @@ const channelFilterOptions = [
 ];
 
 function logStatusLabel(s: string): string {
-  if (s === 'sent') return '✅ Đã gửi';
-  if (s === 'failed') return '❌ Thất bại';
-  if (s === 'pending') return '⏳ Đang chờ';
+  if (s === 'sent') return 'Đã gửi';
+  if (s === 'failed') return 'Thất bại';
+  if (s === 'pending') return 'Đang chờ';
   return s;
 }
 function logStatusColor(s: string): string {
@@ -1149,9 +1149,9 @@ function logStatusColor(s: string): string {
 // Đã nhận/đã xem — chỉ tin gửi qua Zalo thành công mới có (delivered/seen từ Message).
 function readReceiptLabel(log: LogItem): string {
   if (log.channel !== 'zalo' || log.status !== 'sent') return '—';
-  if (log.seenAt) return '👀 Đã xem';
-  if (log.deliveredAt) return '✓✓ Đã nhận';
-  return '✓ Đã gửi';
+  if (log.seenAt) return 'Đã xem';
+  if (log.deliveredAt) return 'Đã nhận';
+  return 'Đã gửi';
 }
 function readReceiptTitle(log: LogItem): string {
   if (log.channel !== 'zalo' || log.status !== 'sent') return 'Không gửi qua Zalo';
@@ -1641,4 +1641,5 @@ onMounted(async () => {
   max-height: 40vh;
   overflow: auto;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

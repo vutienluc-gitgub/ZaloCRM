@@ -17,7 +17,7 @@
         <div class="orad-panel" role="dialog" aria-labelledby="orad-title">
           <header class="orad-head">
             <h3 id="orad-title">Chuyển nhượng Owner nick</h3>
-            <button class="orad-x" @click="$emit('update:modelValue', false)">✕</button>
+            <button class="orad-x" @click="$emit('update:modelValue', false)"><X :size="16" /></button>
           </header>
 
           <div class="orad-body">
@@ -30,7 +30,7 @@
                 <div class="orad-nick-name">{{ account.displayName || 'Nick chưa đặt tên' }}</div>
                 <div class="orad-nick-uid">
                   <span v-if="account.zaloUid">UID {{ account.zaloUid }}</span>
-                  <span v-if="account.privacyMode === 'main'" class="orad-priv">🔒 Riêng tư</span>
+                  <span v-if="account.privacyMode === 'main'" class="orad-priv"><Lock :size="11" class="inline-icon" /> Riêng tư</span>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@
 
             <!-- Privacy warning -->
             <div class="orad-warning">
-              <span class="orad-warn-icon">⚠️</span>
+              <AlertTriangle :size="14" class="orad-warn-icon text-warning" />
               <div>
                 <div class="orad-warn-title">Side effect</div>
                 <div class="orad-warn-body">

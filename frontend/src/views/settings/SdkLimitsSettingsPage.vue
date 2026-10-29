@@ -10,7 +10,7 @@
 <template>
   <div class="sdk-page">
     <header class="sdk-page-head">
-      <div class="ico">🛡️</div>
+      <div class="ico"><Shield :size="24" /></div>
       <div>
         <h1>Trần an toàn SDK Zalo</h1>
         <p>
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { Shield } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
 import { api } from '@/api';
 import SdkLimitsDialog from '@/components/zalo-accounts/SdkLimitsDialog.vue';

@@ -6,9 +6,9 @@
     <header class="apt-hero">
       <div class="apt-hero-row1">
         <div class="title-block">
-          <button class="icon-btn icon-btn--bordered drawer-toggle" title="Mở bộ lọc" @click="sidebarOpen = !sidebarOpen">☰</button>
+          <button class="icon-btn icon-btn--bordered drawer-toggle" title="Mở bộ lọc" @click="sidebarOpen = !sidebarOpen"><Menu :size="16" /></button>
           <div>
-            <h1 class="apt-hero-title">📅 Lịch hẹn</h1>
+            <h1 class="apt-hero-title"><Calendar :size="20" class="inline-icon" /> Lịch hẹn</h1>
             <div class="apt-hero-sub">
               <b>{{ totalLabel }}</b> · {{ weekLabel }}
             </div>
@@ -105,7 +105,7 @@
         <span v-if="scope !== 'me'" class="chip-info">· {{ visibleAppointments.length }} lịch</span>
       </span>
       <span v-if="source !== 'all'" class="at-chip" @click="source = 'all'">
-        Nguồn: {{ source === 'zalo' ? 'Zalo' : 'Thủ công' }} <span class="x">✕</span>
+        Nguồn: {{ source === 'zalo' ? 'Zalo' : 'Thủ công' }} <X :size="12" class="x" />
       </span>
       <span v-if="selectedStatuses.size < APPOINTMENT_STATUS_OPTIONS.length" class="at-chip">
         Trạng thái: {{ selectedStatuses.size }}/{{ APPOINTMENT_STATUS_OPTIONS.length }}
@@ -815,4 +815,5 @@ onBeforeUnmount(() => {
   .apt-date-nav { flex: 1 1 100%; justify-content: space-between; }
   .apt-date-nav .week-range { min-width: 100px; font-size: 12px; }
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

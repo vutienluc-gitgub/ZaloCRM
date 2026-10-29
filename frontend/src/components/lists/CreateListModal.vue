@@ -4,8 +4,8 @@
   <div v-if="modelValue" class="clm-overlay" @click.self="$emit('update:modelValue', false)">
     <div class="clm-modal">
       <div class="clm-head">
-        <h3 class="clm-title">📥 Tạo tệp khách hàng mới</h3>
-        <button class="clm-x" aria-label="Đóng" @click="$emit('update:modelValue', false)">✕</button>
+        <h3 class="clm-title"><FolderPlus :size="16" class="inline-icon" /> Tạo tệp khách hàng mới</h3>
+        <button class="clm-x" aria-label="Đóng" @click="$emit('update:modelValue', false)"><X :size="16" /></button>
       </div>
       <div class="clm-body">
         <!-- Tên + Icon -->
@@ -86,7 +86,7 @@
               <div class="clm-dz-sub">
                 {{ activeTab === 'excel' ? '.xlsx hoặc .xls' : '.csv (UTF-8 khuyến nghị)' }} — tối đa 10MB
               </div>
-              <div v-if="fileError" class="clm-dz-error">⚠️ {{ fileError }}</div>
+              <div v-if="fileError" class="clm-dz-error"><AlertTriangle :size="13" class="inline-icon" /> {{ fileError }}</div>
             </div>
           </div>
 
@@ -104,21 +104,21 @@
               <label class="clm-label">Ghép cột (chỉ cần SĐT là bắt buộc)</label>
               <div class="clm-map-grid">
                 <div class="clm-map-cell">
-                  <span class="clm-map-label">📞 SĐT <em>*</em></span>
+                  <span class="clm-map-label"><Phone :size="12" class="inline-icon" /> SĐT <em>*</em></span>
                   <select class="clm-select" v-model="mapping.phone">
                     <option :value="null" disabled>— Chọn cột —</option>
                     <option v-for="(h, i) in fileHeaders" :key="'p'+i" :value="i">{{ h || `Cột ${i+1}` }}</option>
                   </select>
                 </div>
                 <div class="clm-map-cell">
-                  <span class="clm-map-label">👤 Tên KH</span>
+                  <span class="clm-map-label"><User :size="12" class="inline-icon" /> Tên KH</span>
                   <select class="clm-select" v-model="mapping.name">
                     <option :value="null">— Không map —</option>
                     <option v-for="(h, i) in fileHeaders" :key="'n'+i" :value="i">{{ h || `Cột ${i+1}` }}</option>
                   </select>
                 </div>
                 <div class="clm-map-cell">
-                  <span class="clm-map-label">💬 Lời mời / tin nhắn riêng</span>
+                  <span class="clm-map-label"><MessageSquare :size="12" class="inline-icon" /> Lời mời / tin nhắn riêng</span>
                   <select class="clm-select" v-model="mapping.note">
                     <option :value="null">— Không map —</option>
                     <option v-for="(h, i) in fileHeaders" :key="'g'+i" :value="i">{{ h || `Cột ${i+1}` }}</option>
@@ -187,7 +187,7 @@
               maxlength="32"
               @input="onIntegrationKeyInput"
             />
-            <div v-if="integrationKeyError" class="clm-err">⚠️ {{ integrationKeyError }}</div>
+            <div v-if="integrationKeyError" class="clm-err"><AlertTriangle :size="13" class="inline-icon" /> {{ integrationKeyError }}</div>
             <div class="clm-hint">
               Đặt tên chiến dịch trên FB là <code>Sunshine Q7 #{{ integrationKey || 'A-001' }}</code> để lead chảy về tệp này.
               Mỗi tệp 1 mã, không trùng trong tổ chức.
@@ -205,7 +205,7 @@
           </label>
 
           <div class="clm-callout">
-            <span class="clm-callout-ico">💡</span>
+            <span class="clm-callout-ico"><Lightbulb :size="15" /></span>
             <span>Tạo xong, anh vào <b>Cài đặt → Kênh & Tích hợp → {{ leadPlatform === 'fb-leadads' ? 'Facebook Lead Ads' : 'tích hợp tương ứng' }}</b> để kết nối page/app.</span>
           </div>
         </div>
@@ -213,22 +213,22 @@
         <!-- ───── Dry-run preview chung ───── -->
         <div v-if="dryRunResult" class="clm-parse">
           <div class="clm-pp-row">
-            <span class="clm-pp-ico">📋</span> Đã nhận diện <b>{{ dryRunResult.total }} dòng</b>
+            <span class="clm-pp-ico"><ClipboardList :size="14" class="inline-icon" /></span> Đã nhận diện <b>{{ dryRunResult.total }} dòng</b>
           </div>
           <div class="clm-pp-row clm-pp--ok">
-            <span class="clm-pp-ico">✓</span> <b>{{ dryRunResult.valid }} SĐT</b> hợp lệ
+            <span class="clm-pp-ico"><Check :size="14" class="inline-icon text-success" /></span> <b>{{ dryRunResult.valid }} SĐT</b> hợp lệ
           </div>
           <div v-if="dryRunResult.invalid > 0" class="clm-pp-row clm-pp--err">
-            <span class="clm-pp-ico">✗</span> <b>{{ dryRunResult.invalid }} dòng</b> bỏ qua (sai format / khác VN)
+            <span class="clm-pp-ico"><X :size="14" class="inline-icon text-danger" /></span> <b>{{ dryRunResult.invalid }} dòng</b> bỏ qua (sai format / khác VN)
           </div>
           <div v-if="dryRunResult.dupInList > 0" class="clm-pp-row clm-pp--warn">
             <span class="clm-pp-ico">↺</span> <b>{{ dryRunResult.dupInList }} SĐT</b> trùng trong cùng danh sách
           </div>
           <div v-if="dryRunResult.dupCrossList > 0" class="clm-pp-row clm-pp--warn">
-            <span class="clm-pp-ico">↔</span> <b>{{ dryRunResult.dupCrossList }} SĐT</b> trùng với tệp khác trong tổ chức
+            <span class="clm-pp-ico"><RotateCw :size="14" class="inline-icon" /></span> <b>{{ dryRunResult.dupCrossList }} SĐT</b> trùng với tệp khác trong tổ chức
           </div>
           <div v-if="dryRunResult.dupWithCrm > 0" class="clm-pp-row clm-pp--warn">
-            <span class="clm-pp-ico">⚷</span> <b>{{ dryRunResult.dupWithCrm }} SĐT</b> trùng với Contact hiện có trong CRM
+            <span class="clm-pp-ico"><Link :size="14" class="inline-icon" /></span> <b>{{ dryRunResult.dupWithCrm }} SĐT</b> trùng với Contact hiện có trong CRM
           </div>
         </div>
       </div>
@@ -863,4 +863,7 @@ watch(activeTab, (newTab, oldTab) => {
   display: flex; gap: 8px; line-height: 1.45;
 }
 .clm-callout-ico { font-size: 16px; flex-shrink: 0; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.text-danger { color: #dc2626; }
 </style>

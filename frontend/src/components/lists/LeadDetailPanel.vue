@@ -16,46 +16,46 @@
               <div v-if="data?.entry.phoneLocal || data?.entry.phoneE164" class="ldp-phone">
                 <span class="ldp-phone-num">{{ formatPhone(data.entry.phoneLocal || data.entry.phoneE164 || '') }}</span>
                 <button class="ldp-phone-btn" title="Sao chép số" @click="copyPhone">⧉</button>
-                <a class="ldp-phone-btn call" :href="`tel:${data.entry.phoneE164 || data.entry.phoneLocal}`" title="Gọi">📞</a>
+                <a class="ldp-phone-btn call" :href="`tel:${data.entry.phoneE164 || data.entry.phoneLocal}`" title="Gọi"><Phone :size="12" /></a>
               </div>
-              <div v-if="customEmail" class="ldp-contact">📧 {{ customEmail }}</div>
+              <div v-if="customEmail" class="ldp-contact"><Mail :size="12" class="inline-icon" /> {{ customEmail }}</div>
               <div class="ldp-badges">
                 <span v-if="isFresh" class="ldp-badge fresh">Vừa mới · {{ relativeTime(data!.entry.createdAt) }}</span>
                 <span v-else class="ldp-badge time">{{ relativeTime(data?.entry.createdAt ?? '') }}</span>
-                <span v-if="data?.entry.hasZalo === true" class="ldp-badge zalo">💬 Có Zalo</span>
-                <span v-else-if="data?.entry.hasZalo === false" class="ldp-badge no-zalo">🚫 Không Zalo</span>
-                <span v-else class="ldp-badge pending">⏳ Đang quét</span>
+                <span v-if="data?.entry.hasZalo === true" class="ldp-badge zalo"><MessageSquare :size="11" class="inline-icon" /> Có Zalo</span>
+                <span v-else-if="data?.entry.hasZalo === false" class="ldp-badge no-zalo">Không Zalo</span>
+                <span v-else class="ldp-badge pending"><Loader2 :size="11" class="inline-icon animate-spin" /> Đang quét</span>
                 <span v-if="sourcePlatform" :class="['ldp-badge', 'source', sourcePlatformClass]">{{ sourcePlatformLabel }}</span>
               </div>
             </div>
-            <button class="ldp-x" @click="close">✕</button>
+            <button class="ldp-x" @click="close"><X :size="16" /></button>
           </div>
 
           <div class="ldp-actions">
-            <button class="ldp-btn-primary" :disabled="data?.entry.hasZalo !== true" @click="openZaloChat">💬 Mở chat Zalo</button>
-            <a class="ldp-btn-ghost" :class="{ disabled: !canCall }" :href="canCall ? `tel:${data?.entry.phoneE164 || data?.entry.phoneLocal}` : undefined">📞 Gọi</a>
-            <button class="ldp-btn-ghost" @click="openNote">📝 Note</button>
-            <button class="ldp-btn-ghost disabled" disabled title="Sắp có">↪ Chuyển tệp</button>
+            <button class="ldp-btn-primary" :disabled="data?.entry.hasZalo !== true" @click="openZaloChat"><MessageSquare :size="13" class="inline-icon" /> Mở chat Zalo</button>
+            <a class="ldp-btn-ghost" :class="{ disabled: !canCall }" :href="canCall ? `tel:${data?.entry.phoneE164 || data?.entry.phoneLocal}` : undefined"><Phone :size="12" class="inline-icon" /> Gọi</a>
+            <button class="ldp-btn-ghost" @click="openNote"><FileText :size="12" class="inline-icon" /> Note</button>
+            <button class="ldp-btn-ghost disabled" disabled title="Sắp có"><CornerUpRight :size="12" class="inline-icon" /> Chuyển tệp</button>
           </div>
           <!-- Nút Tìm Zalo riêng cho lead (chỉ khi chưa có Zalo) -->
           <div v-if="data?.entry.hasZalo !== true" class="ldp-findzalo-row">
             <button ref="findZaloBtnRef" class="ldp-btn-findzalo" :disabled="finding" @click="onFindZaloClick">
-              <span v-if="finding">⏳ Đang tìm Zalo...</span>
-              <span v-else>🔍 Tìm Zalo cho khách này</span>
+              <span v-if="finding"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang tìm Zalo...</span>
+              <span v-else><Search :size="12" class="inline-icon" /> Tìm Zalo cho khách này</span>
             </button>
           </div>
         </header>
 
         <!-- Body -->
         <div class="ldp-body">
-          <div v-if="loading" class="ldp-loading-msg">⏳ Đang tải chi tiết...</div>
+          <div v-if="loading" class="ldp-loading-msg"><Loader2 :size="14" class="inline-icon animate-spin" /> Đang tải chi tiết...</div>
           <div v-else-if="error" class="ldp-err">{{ error }}</div>
 
           <template v-else-if="data">
             <!-- Section 1: Custom fields (câu hỏi khách trả lời) -->
             <section v-if="hasCustomFields || inboxUrl" class="ldp-section">
               <div class="ldp-section-head">
-                <span class="ldp-icon">📝</span>
+                <span class="ldp-icon"><FileText :size="13" /></span>
                 <span class="ldp-section-title">Câu hỏi form ({{ customFieldsList.length }} câu)</span>
               </div>
               <div v-if="hasCustomFields" class="ldp-custom-card">
@@ -65,7 +65,7 @@
                 </div>
               </div>
               <a v-if="inboxUrl" :href="inboxUrl" target="_blank" class="ldp-inbox-link">
-                💬 Mở hội thoại Facebook của khách ↗
+                <MessageSquare :size="12" class="inline-icon" /> Mở hội thoại Facebook của khách <ExternalLink :size="11" class="inline-icon" />
               </a>
             </section>
 
@@ -76,14 +76,14 @@
                 <span class="ldp-section-title">Nguồn lead ({{ sourcePlatformLabel }} payload)</span>
               </div>
               <div class="ldp-source-card">
-                <SourceMetaRow v-if="meta.campaignName || meta.campaignId" icon="🎯" label="Chiến dịch" :name="meta.campaignName" :id="meta.campaignId" :extra-pill="data.list.integrationKey ? '#' + data.list.integrationKey : null" />
-                <SourceMetaRow v-if="meta.adsetName || meta.adsetId" icon="📊" label="Nhóm quảng cáo" :name="meta.adsetName" :id="meta.adsetId" />
-                <SourceMetaRow v-if="meta.adName || meta.adId" icon="🖼" label="Quảng cáo" :name="meta.adName" :id="meta.adId" />
-                <SourceMetaRow v-if="meta.formName || meta.formId" icon="📄" label="Form" :name="meta.formName" :id="meta.formId" :extra="customFieldsList.length > 0 ? `${customFieldsList.length} câu hỏi` : null" />
-                <SourceMetaRow v-if="meta.pageId" icon="📘" label="Trang FB" :id="meta.pageId" />
-                <SourceMetaRow icon="🔑" label="Mã lead" :id="meta.externalLeadId" :extra="'Mã duy nhất · chống trùng'" />
-                <SourceMetaRow v-if="submittedAtVN" icon="🕑" label="Phát sinh" :name="submittedAtVN" extra="giờ Việt Nam" />
-                <SourceMetaRow v-if="platformLabel" icon="📱" label="Nền tảng" :name="platformLabel" />
+                <SourceMetaRow v-if="meta.campaignName || meta.campaignId" icon="Target" label="Chiến dịch" :name="meta.campaignName" :id="meta.campaignId" :extra-pill="data.list.integrationKey ? '#' + data.list.integrationKey : null" />
+                <SourceMetaRow v-if="meta.adsetName || meta.adsetId" icon="BarChart2" label="Nhóm quảng cáo" :name="meta.adsetName" :id="meta.adsetId" />
+                <SourceMetaRow v-if="meta.adName || meta.adId" icon="Image" label="Quảng cáo" :name="meta.adName" :id="meta.adId" />
+                <SourceMetaRow v-if="meta.formName || meta.formId" icon="FileText" label="Form" :name="meta.formName" :id="meta.formId" :extra="customFieldsList.length > 0 ? `${customFieldsList.length} câu hỏi` : null" />
+                <SourceMetaRow v-if="meta.pageId" icon="Facebook" label="Trang FB" :id="meta.pageId" />
+                <SourceMetaRow icon="Key" label="Mã lead" :id="meta.externalLeadId" :extra="'Mã duy nhất · chống trùng'" />
+                <SourceMetaRow v-if="submittedAtVN" icon="Clock" label="Phát sinh" :name="submittedAtVN" extra="giờ Việt Nam" />
+                <SourceMetaRow v-if="platformLabel" icon="Smartphone" label="Nền tảng" :name="platformLabel" />
               </div>
 
               <!-- Mini stats từ campaign -->
@@ -109,12 +109,12 @@
             <!-- Section 3: Timeline & kỹ thuật -->
             <section v-if="hasTimeline" class="ldp-section">
               <div class="ldp-section-head">
-                <span class="ldp-icon">⏱</span>
+                <span class="ldp-icon"><Clock :size="13" /></span>
                 <span class="ldp-section-title">Timeline & Kỹ thuật</span>
               </div>
               <div class="ldp-timeline">
                 <div v-for="step in timelineSteps" :key="step.name" class="ldp-time-row">
-                  <span class="ldp-time-check" :class="step.ok ? 'ok' : 'pending'">{{ step.ok ? '✓' : '⏳' }}</span>
+                  <span class="ldp-time-check" :class="step.ok ? 'ok' : 'pending'"><Check v-if="step.ok" :size="12" /><Loader2 v-else :size="12" class="animate-spin" /></span>
                   <span class="ldp-time-label">{{ step.label }}</span>
                   <span class="ldp-time-val">{{ step.value }}</span>
                   <span v-if="step.delta" :class="['ldp-time-delta', step.deltaSlow ? 'slow' : '']">{{ step.delta }}</span>
@@ -130,14 +130,14 @@
             <section v-if="data.webhookLog" class="ldp-section">
               <details>
                 <summary class="ldp-section-head" style="cursor:pointer;list-style:none">
-                  <span class="ldp-icon">🔧</span>
+                  <span class="ldp-icon"><RotateCw :size="13" /></span>
                   <span class="ldp-section-title">Raw payload JSON (debug)</span>
                   <span style="margin-left:auto;font-size:10.5px;color:#9CA3AF">click để xem</span>
                 </summary>
                 <pre class="ldp-raw">{{ formatJson(data.webhookLog.rawBody) }}</pre>
                 <div class="ldp-raw-actions">
-                  <button class="ldp-btn-ghost" @click="copyJson">📋 Copy JSON</button>
-                  <button class="ldp-btn-ghost" :disabled="!canReplay">🔄 Replay webhook</button>
+                  <button class="ldp-btn-ghost" @click="copyJson"><Copy :size="12" class="inline-icon" /> Copy JSON</button>
+                  <button class="ldp-btn-ghost" :disabled="!canReplay"><RotateCw :size="12" class="inline-icon" /> Replay webhook</button>
                 </div>
               </details>
             </section>
@@ -199,7 +199,7 @@
       <!-- Modal ghi chú -->
       <div v-if="showNote" class="ldp-note-bg" @click.self="showNote = false">
         <div class="ldp-note-modal">
-          <div class="ldp-note-head">📝 Ghi chú khách hàng</div>
+          <div class="ldp-note-head"><FileText :size="13" class="inline-icon" /> Ghi chú khách hàng</div>
           <textarea v-model="noteDraft" class="ldp-note-area" rows="4" placeholder="Nhập ghi chú về khách này..."></textarea>
           <div class="ldp-note-foot">
             <button class="ldp-btn-ghost" @click="showNote = false">Hủy</button>
@@ -218,6 +218,22 @@ import { api } from '@/api';
 import { useToast } from '@/composables/use-toast';
 import { formatInOrgTz } from '@/composables/use-org-timezone';
 import SourceMetaRow from './SourceMetaRow.vue';
+import {
+  Phone,
+  Mail,
+  MessageSquare,
+  X,
+  Search,
+  Loader2,
+  FileText,
+  Clock,
+  Check,
+  AlertTriangle,
+  Copy,
+  RotateCw,
+  CornerUpRight,
+  ExternalLink,
+} from 'lucide-vue-next';
 import NickPickerPopup, { type NickPickerAccount } from '@/components/zalo-accounts/NickPickerPopup.vue';
 
 const props = defineProps<{
@@ -472,13 +488,13 @@ const isFresh = computed(() => {
 
 const statusVN = computed(() => {
   const s = data.value?.entry.status;
-  if (s === 'validated') return '✓ Hợp lệ — đang chờ Zalo lookup';
-  if (s === 'enriched') return '✓ Đã quét Zalo';
-  if (s === 'invalid') return '⚠ Sai format';
-  if (s === 'pending') return '⏳ Đang xử lý';
+  if (s === 'validated') return 'Hợp lệ — đang chờ Zalo lookup';
+  if (s === 'enriched') return 'Đã quét Zalo';
+  if (s === 'invalid') return 'Sai format';
+  if (s === 'pending') return 'Đang xử lý';
   if (s === 'dup_in_list') return '↺ Trùng trong tệp';
-  if (s === 'dup_cross_list') return '↔ Trùng tệp khác';
-  if (s === 'dup_with_crm') return '⚷ Trùng Contact CRM';
+  if (s === 'dup_cross_list') return 'Trùng tệp khác';
+  if (s === 'dup_with_crm') return 'Trùng Contact CRM';
   return s || '—';
 });
 
@@ -517,7 +533,7 @@ const timelineSteps = computed<TimelineStep[]>(() => {
       label: s.label,
       ok: true,
       value: `+${ms}ms`,
-      delta: ms > 500 ? `+${ms}ms ⚠` : '',
+      delta: ms > 500 ? `+${ms}ms` : '',
       deltaSlow: ms > 500,
     });
   }
@@ -880,4 +896,7 @@ async function copyPhone() {
   color: #4F46E5; text-decoration: none; font-weight: 600;
 }
 .ldp-link:hover { text-decoration: underline; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

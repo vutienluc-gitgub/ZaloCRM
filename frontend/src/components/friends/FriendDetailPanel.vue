@@ -18,16 +18,16 @@
             <span v-else>{{ customerInitials(friend) }}</span>
           </div>
           <h3>{{ displayCustomerName(friend) }}</h3>
-          <button class="close" @click="$emit('close')">✕</button>
+          <button class="close" @click="$emit('close')"><X :size="16" /></button>
         </div>
 
         <div class="panel-body">
           <div class="panel-section">
             <h5>Thông tin KH</h5>
-            <div class="kv"><span class="k">📱 SĐT</span><span class="v"><b>{{ friend.contact?.phone || '—' }}</b></span></div>
-            <div class="kv"><span class="k">🔵 Zalo UID</span><span class="v">{{ friend.zaloUidInNick || '—' }}</span></div>
+            <div class="kv"><span class="k"><Phone :size="11" class="inline-icon" /> SĐT</span><span class="v"><b>{{ friend.contact?.phone || '—' }}</b></span></div>
+            <div class="kv"><span class="k">Zalo UID</span><span class="v">{{ friend.zaloUidInNick || '—' }}</span></div>
             <div class="kv">
-              <span class="k">📅 Là bạn từ</span>
+              <span class="k"><Calendar :size="11" class="inline-icon" /> Là bạn từ</span>
               <span class="v">
                 <template v-if="friend.becameFriendAt">
                   {{ formatDate(friend.becameFriendAt) }} ({{ daysSince(friend.becameFriendAt) }} ngày)
@@ -36,11 +36,11 @@
               </span>
             </div>
             <div v-if="friend.contact?.birthYear" class="kv">
-              <span class="k">🎂 Năm sinh</span>
+              <span class="k"><Calendar :size="11" class="inline-icon" /> Năm sinh</span>
               <span class="v">{{ friend.contact.birthYear }} ({{ age(friend.contact.birthYear) }} tuổi)<template v-if="friend.contact.gender"> · {{ genderShort(friend.contact.gender) }}</template></span>
             </div>
             <div v-if="friend.contact?.province" class="kv">
-              <span class="k">📍 Khu vực</span>
+              <span class="k"><MapPin :size="11" class="inline-icon" /> Khu vực</span>
               <span class="v">{{ [friend.contact.district, friend.contact.province].filter(Boolean).join(', ') }}</span>
             </div>
           </div>
@@ -103,9 +103,9 @@
         </div>
 
         <div class="panel-foot">
-          <button class="btn" @click="$emit('open-chat', friend)">💬 Mở chat</button>
-          <button class="btn" @click="$emit('call', friend)">📞 Gọi</button>
-          <button class="btn primary" @click="$emit('open-contact', friend)">👤 Hồ sơ</button>
+          <button class="btn" @click="$emit('open-chat', friend)"><MessageSquare :size="13" class="inline-icon" /> Mở chat</button>
+          <button class="btn" @click="$emit('call', friend)"><Phone :size="13" class="inline-icon" /> Gọi</button>
+          <button class="btn primary" @click="$emit('open-contact', friend)"><User :size="13" class="inline-icon" /> Hồ sơ</button>
         </div>
       </template>
     </aside>
@@ -167,7 +167,7 @@ function kbLabel(kind: string): string {
     friend: '● Đã kết bạn',
     pending_friend: '◐ Đã gửi mời',
     chatting_stranger: '◯ Đang nhắn lạ',
-    ghost: '✕ Đã ngắt',
+    ghost: 'Đã ngắt',
   };
   return m[kind] ?? '—';
 }
@@ -176,12 +176,12 @@ function careLabel(f: DbFriend): string {
   const name = f.statusRef?.name;
   if (!name) return '';
   const lower = name.toLowerCase();
-  if (lower.includes('nóng')) return '🔥 ' + name;
-  if (lower.includes('lạnh')) return '❄ ' + name;
-  if (lower.includes('chốt')) return '✅ ' + name;
-  if (lower.includes('đàm')) return '⚡ ' + name;
-  if (lower.includes('chăm')) return '🤝 ' + name;
-  if (lower.includes('quan tâm')) return '💬 ' + name;
+  if (lower.includes('nóng')) return name;
+  if (lower.includes('lạnh')) return name;
+  if (lower.includes('chốt')) return name;
+  if (lower.includes('đàm')) return name;
+  if (lower.includes('chăm')) return name;
+  if (lower.includes('quan tâm')) return name;
   return name;
 }
 function careClass(f: DbFriend): string {
@@ -338,4 +338,5 @@ function formatRelative(iso: string): string {
 .av-c5 { background: linear-gradient(135deg, #db2777, #be185d); }
 .av-c6 { background: linear-gradient(135deg, #0891b2, #0e7490); }
 .av-c7 { background: linear-gradient(135deg, #ea580c, #c2410c); }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

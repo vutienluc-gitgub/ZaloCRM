@@ -38,13 +38,14 @@
     </div>
 
     <div class="actions">
-      <button class="btn-ghost" disabled title="Sắp ra mắt">✏ Chỉnh sửa hồ sơ (sắp ra mắt)</button>
-      <RouterLink to="/settings/personal/password" class="btn-primary">🔑 Đổi mật khẩu</RouterLink>
+      <button class="btn-ghost" disabled title="Sắp ra mắt"><Edit2 :size="13" class="inline-icon" /> Chỉnh sửa hồ sơ (sắp ra mắt)</button>
+      <RouterLink to="/settings/personal/password" class="btn-primary"><Key :size="13" class="inline-icon" /> Đổi mật khẩu</RouterLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Edit2, Key } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -137,4 +138,5 @@ const roleClass = computed(() => `role-${authStore.user?.role || 'member'}`);
 .btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: #5E6AD2; border-color: #5E6AD2; color: white; }
 .btn-primary:hover { background: #4E5AB8; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
 </style>

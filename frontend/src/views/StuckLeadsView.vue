@@ -5,24 +5,24 @@
     <header class="stuck-header">
       <button class="back-btn" @click="$router.back()">← Quay lại</button>
       <h1>
-        🚨 Khách hàng đình trệ
+        <AlertTriangle :size="20" class="inline-icon text-warning" /> Khách hàng đình trệ
         <span v-if="data && data.totalStuck > 0" class="count-badge">{{ data.totalStuck }}</span>
       </h1>
       <div class="stuck-search">
         <input
           v-model="searchQuery"
           type="search"
-          placeholder="🔍 Tìm theo tên KH, SĐT, stage..."
+          placeholder="Tìm theo tên KH, SĐT, stage..."
           class="search-input"
         />
-        <button v-if="searchQuery" class="clear-search" @click="searchQuery = ''" title="Xoá tìm kiếm">✕</button>
+        <button v-if="searchQuery" class="clear-search" @click="searchQuery = ''" title="Xoá tìm kiếm"><X :size="13" /></button>
       </div>
       <div class="stuck-actions">
         <button class="refresh-btn" :disabled="loading" @click="loadData">
-          {{ loading ? '⏳' : '🔄' }} Làm mới
+          <RotateCw :size="13" class="inline-icon" :class="{ 'animate-spin': loading }" /> Làm mới
         </button>
         <button class="scan-btn" :disabled="scanning" @click="triggerScan">
-          {{ scanning ? '⏳ Đang quét…' : '🔍 Quét lại ngay' }}
+          <span v-if="scanning"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang quét…</span><span v-else><Search :size="13" class="inline-icon" /> Quét lại ngay</span>
         </button>
       </div>
     </header>
@@ -32,20 +32,20 @@
     <div v-else-if="error" class="error">⚠️ {{ error }}</div>
 
     <div v-else-if="data && data.totalStuck === 0" class="empty">
-      <div class="empty-icon">🎉</div>
+      <div class="empty-icon"><CheckCircle2 :size="48" class="text-success" /></div>
       <h2>Chưa có KH đình trệ nào</h2>
       <p>Pipeline đang chạy mượt. Tiếp tục nhé!</p>
     </div>
 
     <div v-else-if="data" class="stuck-banner">
       <div class="banner-content">
-        <strong>🚨 {{ data.totalStuck }} KH cần xử lý hôm nay</strong>
+        <strong><AlertTriangle :size="14" class="inline-icon text-warning" /> {{ data.totalStuck }} KH cần xử lý hôm nay</strong>
         <p>Click vào KH để mở chat, hoặc bấm "Gửi mẫu" để dùng template gợi ý.</p>
       </div>
     </div>
 
     <div v-if="data && filteredByStage.length === 0 && searchQuery" class="empty">
-      <div class="empty-icon">🔎</div>
+      <div class="empty-icon"><Search :size="48" /></div>
       <h2>Không tìm thấy KH phù hợp</h2>
       <p>Thử từ khoá khác hoặc bấm ✕ để xoá tìm kiếm.</p>
     </div>
@@ -83,7 +83,7 @@
                 </span>
               </div>
               <div v-if="group.nbaTemplate" class="suggest-box">
-                💡 {{ group.alertLabel }}
+                <Lightbulb :size="13" class="inline-icon" /> {{ group.alertLabel }}
               </div>
             </div>
             <div class="friend-actions">
@@ -94,8 +94,8 @@
               >
                 📤 Gửi mẫu
               </button>
-              <button class="btn-secondary" @click="openChat(f)">💬 Mở chat</button>
-              <button class="btn-ghost" @click="snooze(f)">⏸ Hoãn 3d</button>
+              <button class="btn-secondary" @click="openChat(f)"><MessageSquare :size="13" class="inline-icon" /> Mở chat</button>
+              <button class="btn-ghost" @click="snooze(f)"><Clock :size="13" class="inline-icon" /> Hoãn 3d</button>
             </div>
           </div>
         </div>
@@ -133,6 +133,18 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import {
+  AlertTriangle,
+  RotateCw,
+  Search,
+  Loader2,
+  CheckCircle2,
+  Lightbulb,
+  Send,
+  MessageSquare,
+  Clock,
+  X,
+} from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
 import { useScoring, type StuckLeadsResponse, type StuckStageGroup, type StuckFriend } from '@/composables/use-scoring';
 import { api } from '@/api/index';
@@ -279,7 +291,7 @@ async function confirmSendTemplate() {
     });
     if (res?.data?.ok) {
       previewTemplate.value = null;
-      showToast('success', '✅ Đã gửi tin nhắn cho KH');
+      showToast('success', 'Đã gửi tin nhắn cho KH');
       // Optional: open chat để sale theo dõi rep
       router.push(`/chat?friendId=${friendId}`);
     } else {
@@ -295,9 +307,9 @@ async function confirmSendTemplate() {
       showToast('success', 'KH chưa có hội thoại. Đã copy nội dung — mở chat để gửi.');
       router.push(`/chat?friendId=${friendId}`);
     } else if (msg === 'rate_limited') {
-      showToast('error', `🚫 ${detail || 'Đã đạt giới hạn nhắn tin hôm nay'}`);
+      showToast('error', detail || 'Đã đạt giới hạn nhắn tin hôm nay');
     } else if (msg === 'nick_disconnected') {
-      showToast('error', '⚠ Nick Zalo của KH đang ngắt kết nối — reconnect lại trước');
+      showToast('error', 'Nick Zalo của KH đang ngắt kết nối — reconnect lại trước');
     } else {
       showToast('error', `Lỗi: ${msg}`);
     }
@@ -696,4 +708,9 @@ onMounted(loadData);
   justify-content: flex-end;
   gap: 8px;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-warning { color: #f59e0b; }
+.text-success { color: #16a34a; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

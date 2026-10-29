@@ -29,7 +29,7 @@
       <div class="ob-headline">
         <h2 class="ob-greeting">
           <template v-if="state.percent === 100">
-            🎉 <strong>Setup hoàn tất!</strong> CRM sẵn sàng dùng.
+            <CheckCircle2 :size="16" class="inline-icon text-success" /> <strong>Setup hoàn tất!</strong> CRM sẵn sàng dùng.
           </template>
           <template v-else-if="state.completedCount === state.totalCount - 1">
             <strong>Gần xong rồi!</strong> Chỉ còn 1 bước cuối.
@@ -66,7 +66,7 @@
         }"
       >
         <div class="ob-marker" aria-hidden="true">
-          <template v-if="step.completed && !step.skipped">✓</template>
+          <Check v-if="step.completed && !step.skipped" :size="12" />
           <template v-else-if="step.skipped">⊘</template>
           <template v-else>{{ idx + 1 }}</template>
         </div>
@@ -104,6 +104,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { CheckCircle2, Check } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
 import { api } from '@/api/index';
 import { useAuthStore } from '@/stores/auth';
@@ -482,4 +483,6 @@ defineExpose({ fetchState });
   .ob-step { padding: 12px 18px; flex-wrap: wrap; }
   .ob-action { width: 100%; justify-content: flex-end; margin-top: 4px; }
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
 </style>

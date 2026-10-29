@@ -6,7 +6,7 @@
       <div class="shm-card" role="dialog" aria-modal="true">
         <header class="shm-head">
           <div>
-            <h3 class="shm-title">📜 Lịch sử chấm điểm</h3>
+            <h3 class="shm-title"><Clock :size="16" class="inline-icon" /> Lịch sử chấm điểm</h3>
             <div class="shm-sub">
               {{ contactName || 'Khách hàng' }}
               <span v-if="filteredSignals.length">· {{ filteredSignals.length }} sự kiện</span>
@@ -33,7 +33,7 @@
           >▼ Giảm điểm</span>
         </div>
 
-        <div v-if="loading" class="shm-loading">⏳ Đang tải lịch sử…</div>
+        <div v-if="loading" class="shm-loading"><Loader2 :size="14" class="inline-icon animate-spin" /> Đang tải lịch sử…</div>
         <div v-else-if="filteredSignals.length === 0" class="shm-empty">
           Không có sự kiện nào khớp bộ lọc.
         </div>
@@ -71,6 +71,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { Clock, Loader2 } from 'lucide-vue-next';
 import { useScoring, type ScoreBreakdown } from '@/composables/use-scoring';
 import { formatInOrgTz } from '@/composables/use-org-timezone';
 
@@ -331,4 +332,7 @@ function formatFull(iso: string | null): string {
   color: var(--smax-grey-700, #3d4456);
 }
 .shm-btn-secondary:hover { background: var(--smax-grey-50, #f8f9fb); }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

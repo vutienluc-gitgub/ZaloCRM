@@ -33,7 +33,7 @@
       </div>
 
       <div class="pv-lock-emblem">
-        <div class="pv-lock-hex"><div class="pv-lock-icon">🔒</div></div>
+        <div class="pv-lock-hex"><div class="pv-lock-icon"><Lock :size="24" /></div></div>
       </div>
 
       <div class="pv-title">Tin riêng tư · Chỉ chính chủ xem được</div>

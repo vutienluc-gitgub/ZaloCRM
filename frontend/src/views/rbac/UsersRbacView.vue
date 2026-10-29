@@ -21,15 +21,15 @@
         <div class="stat-value">{{ stats.total }}</div>
       </div>
       <div class="stat-card stat-forest">
-        <div class="stat-label">🟢 Hoạt động</div>
+        <div class="stat-label"><span class="sdot sdot-success"></span> Hoạt động</div>
         <div class="stat-value">{{ stats.statusActive }}<span class="stat-unit"> / {{ stats.total }}</span></div>
       </div>
       <div class="stat-card stat-mustard">
-        <div class="stat-label">🟡 Chưa kích hoạt</div>
+        <div class="stat-label"><span class="sdot sdot-warning"></span> Chưa kích hoạt</div>
         <div class="stat-value">{{ stats.statusPending }}<span class="stat-unit"> / {{ stats.total }}</span></div>
       </div>
       <div class="stat-card stat-cream">
-        <div class="stat-label">💤 Im lặng</div>
+        <div class="stat-label"><span class="sdot sdot-muted"></span> Im lặng</div>
         <div class="stat-value">{{ stats.statusSilent }}<span class="stat-unit"> / {{ stats.total }}</span></div>
       </div>
     </section>
@@ -37,18 +37,18 @@
     <!-- Filter bar -->
     <div class="at-toolbar" v-if="!loading && store.users.length > 0">
       <div class="search-box at-search">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"><Search :size="13" /></span>
         <input v-model="searchQ" placeholder="Tìm tên / SĐT / email..." @input="applyFilter" />
         <button v-if="searchQ" class="search-clear" @click="searchQ = ''; applyFilter()">×</button>
       </div>
       <select class="filter-select" v-model="filterDept" @change="applyFilter">
-        <option value="">🏢 Mọi phòng ban</option>
+        <option value="">Mọi phòng ban</option>
         <option v-for="d in flatDepts" :key="d.id" :value="d.id">
           {{ '— '.repeat(d._depth) }}{{ d.name }}
         </option>
       </select>
       <select class="filter-select" v-model="filterGroup" @change="applyFilter">
-        <option value="">🛡 Mọi nhóm quyền</option>
+        <option value="">Mọi nhóm quyền</option>
         <option v-for="g in flatGroups" :key="g.id" :value="g.id">
           {{ '— '.repeat(g._depth) }}{{ g.name }}
         </option>
@@ -73,7 +73,7 @@
       </div>
       <div class="at-toolbar-spacer"></div>
       <button class="filter-select toggle-email-btn" @click="showEmailColumn = !showEmailColumn" :title="showEmailColumn ? 'Ẩn cột email' : 'Hiện cột email'">
-        {{ showEmailColumn ? '✉️ Ẩn email' : '✉️ Hiện email' }}
+        {{ showEmailColumn ? 'Ẩn email' : 'Hiện email' }}
       </button>
       <span class="at-count">{{ filteredUsers.length }} / {{ stats.total }} nhân viên</span>
     </div>
@@ -102,7 +102,7 @@
     </div>
 
     <div v-else-if="filteredUsers.length === 0 && store.users.length === 0" class="empty-state">
-      <div class="empty-icon">👥</div>
+      <div class="empty-icon"><Users :size="48" /></div>
       <h3>Chưa có nhân viên nào</h3>
       <p>Bấm "Thêm nhân viên" ở góc phải trên để tạo tài khoản đầu tiên.</p>
       <button v-if="canCreateUser" class="btn-primary mt-3" @click="openCreateWithZaloDialog">
@@ -111,7 +111,7 @@
     </div>
 
     <div v-else-if="filteredUsers.length === 0" class="empty-state">
-      <div class="empty-icon">🔍</div>
+      <div class="empty-icon"><Search :size="48" /></div>
       <h3>Không tìm thấy nhân viên phù hợp</h3>
       <p>Thử bỏ bớt bộ lọc hoặc đổi từ khóa tìm kiếm.</p>
     </div>
@@ -126,13 +126,13 @@
             </th>
             <th class="th-num">#</th>
             <th class="th-name">Nhân viên</th>
-            <th class="th-phone">📱 SĐT</th>
+            <th class="th-phone"><Phone :size="12" class="inline-icon" /> SĐT</th>
             <th v-if="showEmailColumn" class="th-email">Email</th>
             <th class="th-dept">Phòng ban</th>
             <th class="th-role">Chức vụ</th>
             <th class="th-group">Nhóm quyền</th>
-            <th class="th-internal">🏠 Liên lạc nội bộ</th>
-            <th class="th-onboarding">🎯 Onboarding</th>
+            <th class="th-internal"><Bell :size="12" class="inline-icon" /> Liên lạc nội bộ</th>
+            <th class="th-onboarding"><Target :size="12" class="inline-icon" /> Onboarding</th>
             <th class="th-status">Trạng thái</th>
             <th class="th-actions"></th>
           </tr>
@@ -201,9 +201,9 @@
                    1. crm_nick + ready                       → SĐT nick CRM
                    2. personal_phone + ready                 → SĐT + tag "Zalo ngoài"
                    3. recipientStatus=ready, method=null     → SĐT user (handshake admin tạo)
-                   4. recipientStatus=pending_friend_request → "⏳ Chờ KB"
-                   5. recipientStatus=pending_user_confirm   → "🔐 Chờ mã verify"
-                   6. recipientStatus=invalid/error          → "⚠ Lỗi"
+                   4. recipientStatus=pending_friend_request → "<Clock :size="11" class="inline-icon" /> Chờ KB"
+                   5. recipientStatus=pending_user_confirm   → "<Lock :size="11" class="inline-icon" /> Chờ mã verify"
+                   6. recipientStatus=invalid/error          → "<AlertTriangle :size="11" class="inline-icon text-warning" /> Lỗi"
                    7. else                                   → "—" -->
               <!-- Case 1: nick CRM (đã verify ready) -->
               <RouterLink
@@ -233,7 +233,7 @@
                 @click.stop
               >
                 <code>{{ formatPhoneDisplay(u.phone) }}</code>
-                <span class="tag-instant">✓ Sẵn sàng</span>
+                <span class="tag-instant"><Check :size="11" class="inline-icon text-success" /> Sẵn sàng</span>
               </span>
               <!-- Case 4: chờ accept friend request -->
               <span
@@ -242,7 +242,7 @@
                 :title="`Đã gửi yêu cầu kết bạn từ nick CRM, chờ sale accept`"
                 @click.stop
               >
-                ⏳ Chờ KB
+                <Clock :size="11" class="inline-icon" /> Chờ KB
               </span>
               <!-- Case 5: chờ verify code 4 số -->
               <span
@@ -251,7 +251,7 @@
                 :title="`Sale đã accept, đang chờ gõ mã verify 4 số`"
                 @click.stop
               >
-                🔐 Chờ mã
+                <Lock :size="11" class="inline-icon" /> Chờ mã
               </span>
               <!-- Case 6: lỗi -->
               <span
@@ -260,7 +260,7 @@
                 :title="u.recipientError || 'Lỗi setup liên lạc nội bộ'"
                 @click.stop
               >
-                ⚠ Lỗi
+                <AlertTriangle :size="11" class="inline-icon text-warning" /> Lỗi
               </span>
               <!-- Case 7: chưa setup -->
               <span v-else class="at-empty" :title="`Sale chưa thiết lập liên lạc nội bộ`">—</span>
@@ -283,7 +283,7 @@
               </span>
             </td>
             <td class="cell-actions">
-              <button class="at-btn-icon" title="Mở chi tiết" @click.stop="openPanel(u)">✎</button>
+              <button class="at-btn-icon" title="Mở chi tiết" @click.stop="openPanel(u)"><Edit2 :size="12" /></button>
             </td>
           </tr>
         </tbody>
@@ -342,10 +342,10 @@ const filterGroup = ref('');
 //   - Chọn ≥1 chip → xem nhiều trạng thái cùng lúc (vd Im lặng + Vô hiệu).
 //   - Mặc định = chỉ 'Hoạt động'. Bỏ chọn hết (chip "Tất cả") = hiện tất cả.
 const STATUS_CHIPS: Array<{ value: 'active' | 'silent' | 'pending' | 'disabled'; label: string }> = [
-  { value: 'active', label: '🟢 Hoạt động' },
-  { value: 'silent', label: '💤 Im lặng' },
-  { value: 'pending', label: '🟡 Chưa kích hoạt' },
-  { value: 'disabled', label: '⚪ Vô hiệu' },
+  { value: 'active', label: 'Hoạt động' },
+  { value: 'silent', label: 'Im lặng' },
+  { value: 'pending', label: 'Chưa kích hoạt' },
+  { value: 'disabled', label: 'Vô hiệu' },
 ];
 const selectedStatuses = ref<Set<'active' | 'silent' | 'pending' | 'disabled'>>(new Set(['active'] as Array<'active'>));
 function toggleStatus(s: 'active' | 'silent' | 'pending' | 'disabled') {
@@ -1081,4 +1081,11 @@ function onboardingTooltip(s: OnboardingSummary): string {
 .cs-note { font-size: 11.5px; color: #6B7280; font-style: italic; }
 .cs-actions { display: flex; gap: 10px; width: 100%; margin-top: 4px; }
 .cs-actions button { flex: 1; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.text-warning { color: #f59e0b; }
+.sdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+.sdot-success { background: #22c55e; }
+.sdot-warning { background: #f59e0b; }
+.sdot-muted { background: #94a3b8; }
 </style>

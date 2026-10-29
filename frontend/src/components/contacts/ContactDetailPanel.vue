@@ -23,15 +23,15 @@
         <div class="cdp-head-info">
           <div class="cdp-name">
             {{ displayName }}
-            <span v-if="isOwner" class="cdp-crown" title="Chủ tổ chức">👑</span>
+            <span v-if="isOwner" class="cdp-crown" title="Chủ tổ chức"><Crown :size="13" class="inline-icon text-amber-500" /></span>
           </div>
           <div class="cdp-meta">
-            <span v-if="contact.phone" class="cdp-phone-line">📱 <code>{{ contact.phone }}</code></span>
-            <span v-if="contact.email" class="cdp-email-line">✉ {{ contact.email }}</span>
-            <span v-if="locationLine" class="cdp-loc-line">📍 {{ locationLine }}</span>
+            <span v-if="contact.phone" class="cdp-phone-line"><Phone :size="11" class="inline-icon" /> <code>{{ contact.phone }}</code></span>
+            <span v-if="contact.email" class="cdp-email-line"><Mail :size="11" class="inline-icon" /> {{ contact.email }}</span>
+            <span v-if="locationLine" class="cdp-loc-line"><MapPin :size="11" class="inline-icon" /> {{ locationLine }}</span>
           </div>
         </div>
-        <button class="cdp-close" @click="$emit('close')" title="Đóng panel">✕</button>
+        <button class="cdp-close" @click="$emit('close')" title="Đóng panel"><X :size="16" /></button>
       </div>
 
       <!-- Pills row: trạng thái Zalo + status + role -->
@@ -40,9 +40,9 @@
         <span v-if="(contact as any).displayStatus" class="cdp-pill" :style="statusPillStyle">
           {{ (contact as any).displayStatus.name }}
         </span>
-        <span v-for="t in (contact.tags || []).slice(0, 5)" :key="t" class="cdp-pill cdp-tag">🏷 {{ t }}</span>
-        <span v-if="(contact as any).viewerRole === 'primary'" class="cdp-pill cdp-role-primary">👤 Bạn phụ trách</span>
-        <span v-else-if="(contact as any).viewerRole === 'collaborator'" class="cdp-pill cdp-role-collab">🤝 Cùng chăm</span>
+        <span v-for="t in (contact.tags || []).slice(0, 5)" :key="t" class="cdp-pill cdp-tag"><Tag :size="11" class="inline-icon" /> {{ t }}</span>
+        <span v-if="(contact as any).viewerRole === 'primary'" class="cdp-pill cdp-role-primary"><User :size="11" class="inline-icon" /> Bạn phụ trách</span>
+        <span v-else-if="(contact as any).viewerRole === 'collaborator'" class="cdp-pill cdp-role-collab"><Users :size="11" class="inline-icon" /> Cùng chăm</span>
       </div>
 
       <!-- 2 action buttons chính -->
@@ -52,7 +52,7 @@
           v-if="contact.hasZalo"
           class="cdp-btn-primary"
           @click="$emit('go-chat')"
-        >💬 Mở chat Zalo</button>
+        ><MessageSquare :size="13" class="inline-icon" /> Mở chat Zalo</button>
         <button
           v-else
           class="cdp-btn-virtual"
@@ -60,13 +60,13 @@
           @click="openVirtualChat"
           title="KH chưa có Zalo — mở chat nội bộ để ghi nhật ký + AI gợi ý khai thác thông tin"
         >
-          <span v-if="virtualLoading">⏳</span>
-          <span v-else>🔒</span>
+          <Loader2 v-if="virtualLoading" :size="12" class="inline-icon animate-spin" />
+          <Lock v-else :size="12" class="inline-icon" />
           Mở chat nội bộ
         </button>
-        <button class="cdp-btn-outline" @click="openAppointment">📅 Đặt lịch hẹn</button>
-        <button class="cdp-btn-outline" @click="addNote">📝 Thêm note</button>
-        <button class="cdp-btn-outline" @click="$emit('edit')" title="Sửa thông tin">✎ Sửa</button>
+        <button class="cdp-btn-outline" @click="openAppointment"><Calendar :size="13" class="inline-icon" /> Đặt lịch hẹn</button>
+        <button class="cdp-btn-outline" @click="addNote"><FileText :size="13" class="inline-icon" /> Thêm note</button>
+        <button class="cdp-btn-outline" @click="$emit('edit')" title="Sửa thông tin"><Edit2 :size="12" class="inline-icon" /> Sửa</button>
       </div>
     </header>
 
@@ -101,7 +101,7 @@
           </div>
           <div class="cdp-info-row">
             <span class="cdp-info-label">Tổng tin nhắn</span>
-            <span class="cdp-info-value">📥 {{ (contact as any).totalInbound ?? 0 }} · 📤 {{ (contact as any).totalOutbound ?? 0 }}</span>
+            <span class="cdp-info-value"><Inbox :size="11" class="inline-icon" /> {{ (contact as any).totalInbound ?? 0 }} · <Send :size="11" class="inline-icon" /> {{ (contact as any).totalOutbound ?? 0 }}</span>
           </div>
           <div class="cdp-info-row">
             <span class="cdp-info-label">Hoạt động cuối</span>
@@ -123,7 +123,7 @@
         <div v-if="loadingFriends" class="cdp-loading">Đang tải nick chăm...</div>
         <template v-else>
           <div v-if="myFriends.length > 0" class="cdp-friend-group">
-            <h3 class="cdp-h3">👤 Bạn đang chăm qua {{ myFriends.length }} nick</h3>
+            <h3 class="cdp-h3"><User :size="13" class="inline-icon" /> Bạn đang chăm qua {{ myFriends.length }} nick</h3>
             <div v-for="f in myFriends" :key="f.id" class="cdp-friend-card cdp-friend-mine">
               <div class="cdp-friend-avatar" :style="{ background: friendBg(f) }">
                 <img v-if="f.zaloAvatarUrl" :src="f.zaloAvatarUrl" :alt="friendName(f)" />
@@ -136,22 +136,22 @@
                 </div>
                 <div class="cdp-friend-sub">
                   <span v-if="f.aliasInNick">KH gọi: "{{ f.aliasInNick }}"</span>
-                  <span class="cdp-when">⏱ {{ formatRelative(f.lastInboundAt || f.lastInteractionAt) }}</span>
+                  <span class="cdp-when"><Clock :size="11" class="inline-icon" /> {{ formatRelative(f.lastInboundAt || f.lastInteractionAt) }}</span>
                 </div>
                 <div v-if="f.lastInboundPreview" class="cdp-friend-msg">
-                  💬 <PrivateBlur v-if="f.redacted" :redacted="true" mode="inline" />
+                  <MessageSquare :size="11" class="inline-icon text-muted" /> <PrivateBlur v-if="f.redacted" :redacted="true" mode="inline" />
                   <template v-else>"{{ f.lastInboundPreview }}"</template>
                 </div>
               </div>
               <div class="cdp-friend-right">
                 <span class="cdp-friend-score" :class="friendScoreClass(f.leadScore)">{{ f.leadScore || 0 }}</span>
-                <span class="cdp-role-pill cdp-role-primary">👤 Bạn</span>
+                <span class="cdp-role-pill cdp-role-primary"><User :size="10" class="inline-icon" /> Bạn</span>
               </div>
             </div>
           </div>
 
           <div v-if="otherFriends.length > 0" class="cdp-friend-group">
-            <h3 class="cdp-h3">🤝 Đồng đội cùng chăm ({{ otherFriends.length }})</h3>
+            <h3 class="cdp-h3"><Users :size="13" class="inline-icon" /> Đồng đội cùng chăm ({{ otherFriends.length }})</h3>
             <div v-for="f in otherFriends" :key="f.id" class="cdp-friend-card">
               <div class="cdp-friend-avatar" :style="{ background: friendBg(f) }">
                 <img v-if="f.zaloAvatarUrl" :src="f.zaloAvatarUrl" :alt="friendName(f)" />
@@ -164,16 +164,16 @@
                 </div>
                 <div class="cdp-friend-sub">
                   <span>Sale: <b>{{ ownerName(f) }}</b></span>
-                  <span class="cdp-when">⏱ {{ formatRelative(f.lastInboundAt || f.lastInteractionAt) }}</span>
+                  <span class="cdp-when"><Clock :size="11" class="inline-icon" /> {{ formatRelative(f.lastInboundAt || f.lastInteractionAt) }}</span>
                 </div>
                 <div v-if="f.lastInboundPreview" class="cdp-friend-msg">
-                  💬 <PrivateBlur v-if="f.redacted" :redacted="true" mode="inline" />
+                  <MessageSquare :size="11" class="inline-icon text-muted" /> <PrivateBlur v-if="f.redacted" :redacted="true" mode="inline" />
                   <template v-else>"{{ f.lastInboundPreview }}"</template>
                 </div>
               </div>
               <div class="cdp-friend-right">
                 <span class="cdp-friend-score" :class="friendScoreClass(f.leadScore)">{{ f.leadScore || 0 }}</span>
-                <span class="cdp-role-pill cdp-role-collab">🤝 Đồng đội</span>
+                <span class="cdp-role-pill cdp-role-collab"><Users :size="10" class="inline-icon" /> Đồng đội</span>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@
         <div v-if="loadingAppts" class="cdp-loading">Đang tải lịch hẹn...</div>
         <template v-else>
           <div v-for="a in appointments" :key="a.id" class="cdp-appt-card">
-            <div class="cdp-appt-date">📅 {{ formatDate(a.appointmentDate) }} {{ a.appointmentTime || '' }}</div>
+            <div class="cdp-appt-date"><Calendar :size="12" class="inline-icon" /> {{ formatDate(a.appointmentDate) }} {{ a.appointmentTime || '' }}</div>
             <div class="cdp-appt-title">{{ a.title || a.type || '(Không tiêu đề)' }}</div>
             <div class="cdp-appt-status" :class="'appt-' + a.status">{{ apptStatusLabel(a.status) }}</div>
             <div v-if="a.notes" class="cdp-appt-notes">{{ a.notes }}</div>
@@ -232,6 +232,26 @@ import { useRouter } from 'vue-router';
 import { api } from '@/api/index';
 import type { Contact } from '@/composables/use-contacts';
 import PrivateBlur from '@/components/privacy/PrivateBlur.vue';
+import {
+  Crown,
+  Phone,
+  Mail,
+  MapPin,
+  X,
+  Tag,
+  User,
+  Users,
+  MessageSquare,
+  Lock,
+  Loader2,
+  Calendar,
+  FileText,
+  Edit2,
+  Inbox,
+  Send,
+  Clock,
+  ClipboardList,
+} from 'lucide-vue-next';
 
 const router = useRouter();
 
@@ -345,9 +365,9 @@ const zaloPillClass = computed(() => {
   return 'zalo-unknown';
 });
 const zaloPillText = computed(() => {
-  if (props.contact.hasZalo === true) return '🟢 Có Zalo';
-  if (props.contact.hasZalo === false) return '🔴 Không tìm thấy';
-  return '⚪ Chưa tìm';
+  if (props.contact.hasZalo === true) return 'Có Zalo';
+  if (props.contact.hasZalo === false) return 'Không tìm thấy';
+  return 'Chưa tìm';
 });
 
 const statusPillStyle = computed(() => {
@@ -371,11 +391,11 @@ const otherFriends = computed(() => {
 });
 
 const tabs = computed(() => [
-  { key: 'overview' as TabKey, icon: '📋', label: 'Tổng quan' },
-  { key: 'nicks' as TabKey, icon: '👥', label: 'Nick chăm', count: friends.value.length || (props.contact as any).childrenCount },
-  { key: 'chat' as TabKey, icon: '💬', label: 'Lịch sử chat' },
-  { key: 'appt' as TabKey, icon: '📅', label: 'Lịch hẹn', count: appointments.value.length || undefined },
-  { key: 'notes' as TabKey, icon: '📝', label: 'Notes', count: notes.value.length || undefined },
+  { key: 'overview' as TabKey, iconComp: ClipboardList, label: 'Tổng quan' },
+  { key: 'nicks' as TabKey, iconComp: Users, label: 'Nick chăm', count: friends.value.length || (props.contact as any).childrenCount },
+  { key: 'chat' as TabKey, iconComp: MessageSquare, label: 'Lịch sử chat' },
+  { key: 'appt' as TabKey, iconComp: Calendar, label: 'Lịch hẹn', count: appointments.value.length || undefined },
+  { key: 'notes' as TabKey, iconComp: FileText, label: 'Notes', count: notes.value.length || undefined },
 ]);
 
 // ── Helpers ──
@@ -398,11 +418,11 @@ function ownerName(f: any): string {
 }
 function kindLabel(k: string): string {
   return ({
-    friend: '🟢 Đã KB',
-    pending_friend: '🟡 Đã mời',
-    chatting_stranger: '💬 Chat lạ',
-    ghost: '🚫 Ngắt',
-    none: '⚪ Chưa KB',
+    friend: 'Đã kết bạn',
+    pending_friend: 'Đã mời',
+    chatting_stranger: 'Chat lạ',
+    ghost: 'Ngắt',
+    none: 'Chưa KB',
   } as Record<string, string>)[k] || k;
 }
 function kindClass(k: string): string {
@@ -438,10 +458,10 @@ function formatDate(d: string | Date | null | undefined): string {
 }
 function apptStatusLabel(s: string): string {
   return ({
-    scheduled: '📅 Đã lên lịch',
-    completed: '✅ Hoàn thành',
-    cancelled: '❌ Huỷ',
-    no_show: '⚠ Không đến',
+    scheduled: 'Đã lên lịch',
+    completed: 'Hoàn thành',
+    cancelled: 'Huỷ',
+    no_show: 'Không đến',
   } as Record<string, string>)[s] || s;
 }
 
@@ -817,4 +837,9 @@ async function openVirtualChat() {
   .cdp-name { font-size: 22px; }
   .cdp-friend-name { font-size: 14.5px; }
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-amber-500 { color: #f59e0b; }
+.text-muted { color: #64748b; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

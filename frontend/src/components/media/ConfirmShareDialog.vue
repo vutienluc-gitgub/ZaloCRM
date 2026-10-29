@@ -3,7 +3,7 @@
 <template>
   <div class="cs-overlay" @click.self="$emit('cancel')">
     <div class="cs-box">
-      <div class="cs-ic">⚠️</div>
+      <div class="cs-ic"><AlertTriangle :size="24" class="text-warning" /></div>
       <h3 class="cs-ttl">Chia sẻ ảnh từ nick Riêng tư?</h3>
       <p class="cs-msg">
         Ảnh này được lưu từ một nick Riêng tư và <b>có thể chứa thông tin khách hàng</b>.
@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { AlertTriangle } from 'lucide-vue-next';
 defineEmits<{ cancel: []; confirm: [] }>();
 </script>
 
@@ -34,4 +35,5 @@ defineEmits<{ cancel: []; confirm: [] }>();
 .cs-acts { display:flex; gap:10px; }
 .cs-cancel { flex:1; border:1px solid var(--hairline); background:#fff; color:var(--ink); border-radius:8px; padding:10px; font-size:13px; font-weight:500; cursor:pointer; }
 .cs-ok { flex:1; border:1px solid #f0c4b3; background:#fbe9e2; color:var(--coral); border-radius:8px; padding:10px; font-size:13px; font-weight:600; cursor:pointer; }
+.text-warning { color: #f59e0b; }
 </style>

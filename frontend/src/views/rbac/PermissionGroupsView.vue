@@ -12,7 +12,7 @@
       </div>
       <div class="hero-actions">
         <button class="btn-ghost" :disabled="seeding" @click="seedDefaults">
-          {{ seeding ? 'Đang seed...' : '⚙ Seed 7 nhóm mặc định' }}
+          {{ seeding ? 'Đang seed...' : 'Seed 7 nhóm mặc định' }}
         </button>
         <button class="btn-primary" @click="openCreate(null)">
           <span class="btn-icon">+</span> Thêm nhóm
@@ -44,11 +44,11 @@
     </div>
 
     <div v-else-if="store.permissionGroups.length === 0" class="empty-state">
-      <div class="empty-icon">🛡</div>
+      <div class="empty-icon"><Shield :size="48" /></div>
       <h3>Chưa có nhóm quyền nào</h3>
       <p>Bắt đầu bằng seed 7 nhóm mặc định (CEO, Trưởng phòng, Sale Senior, Sale, Marketing, Kế toán, Khách).</p>
       <button class="btn-primary" :disabled="seeding" @click="seedDefaults">
-        {{ seeding ? 'Đang seed...' : '⚙ Seed 7 nhóm mặc định' }}
+        {{ seeding ? 'Đang seed...' : 'Seed 7 nhóm mặc định' }}
       </button>
     </div>
 
@@ -58,7 +58,7 @@
       <aside class="pg-sidebar">
         <div class="pg-sidebar-head">
           <div class="search-box at-search">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><Search :size="13" /></span>
             <input v-model="searchQ" placeholder="Tìm nhóm..." />
             <button v-if="searchQ" class="search-clear" @click="searchQ = ''">×</button>
           </div>
@@ -77,9 +77,9 @@
                 <span v-if="g._depth > 0" class="pg-indent-arrow">└</span>{{ g.name }}
               </div>
               <div class="pg-group-meta">
-                <span v-if="g.isSystem" class="at-chip chip-system chip-xs">🛡 Hệ thống</span>
-                <span v-else class="at-chip chip-custom chip-xs">✎ Tùy chỉnh</span>
-                <span class="pg-count">👥 {{ memberCountsLive[g.id] ?? 0 }}</span>
+                <span v-if="g.isSystem" class="at-chip chip-system chip-xs"><Shield :size="11" class="inline-icon" /> Hệ thống</span>
+                <span v-else class="at-chip chip-custom chip-xs"><Edit2 :size="11" class="inline-icon" /> Tùy chỉnh</span>
+                <span class="pg-count"><Users :size="11" class="inline-icon" /> {{ memberCountsLive[g.id] ?? 0 }}</span>
                 <span class="pg-grants-mini" :style="{ color: grantsColor(grantsPct(g)) }">
                   {{ grantsActive(g) }}/{{ totalSlots }}
                 </span>
@@ -106,16 +106,16 @@
               <div>
                 <h2 class="pg-name-big">{{ selected.name }}</h2>
                 <div class="pg-name-meta">
-                  <span v-if="selected.isSystem" class="at-chip chip-system">🛡 Hệ thống</span>
-                  <span v-else class="at-chip chip-custom">✎ Tùy chỉnh</span>
-                  <span class="at-chip chip-dept">👥 {{ memberCountsLive[selected.id] ?? 0 }} user</span>
-                  <span class="at-chip chip-active">✓ {{ grantsActive(selected) }} / {{ totalSlots }} quyền</span>
+                  <span v-if="selected.isSystem" class="at-chip chip-system"><Shield :size="11" class="inline-icon" /> Hệ thống</span>
+                  <span v-else class="at-chip chip-custom"><Edit2 :size="11" class="inline-icon" /> Tùy chỉnh</span>
+                  <span class="at-chip chip-dept"><Users :size="11" class="inline-icon" /> {{ memberCountsLive[selected.id] ?? 0 }} user</span>
+                  <span class="at-chip chip-active"><Check :size="11" class="inline-icon text-success" /> {{ grantsActive(selected) }} / {{ totalSlots }} quyền</span>
                 </div>
               </div>
             </div>
             <div class="pg-matrix-actions">
               <select class="filter-select pg-copy-select" v-model="copyFromId">
-                <option value="">📋 Sao chép quyền từ...</option>
+                <option value="">Sao chép quyền từ...</option>
                 <option v-for="g in copyableGroups" :key="g.id" :value="g.id">
                   {{ '— '.repeat(g._depth) }}{{ g.name }} ({{ grantsActive(g) }}/{{ totalSlots }})
                 </option>
@@ -123,8 +123,8 @@
               <button class="btn-ghost btn-sm" :disabled="!copyFromId" @click="doCopyFrom">
                 ↓ Áp dụng
               </button>
-              <button class="btn-ghost btn-sm" @click="tickAll(true)">✓ Tick tất cả</button>
-              <button class="btn-ghost btn-sm" @click="tickAll(false)">✗ Bỏ tất cả</button>
+              <button class="btn-ghost btn-sm" @click="tickAll(true)"><Check :size="12" class="inline-icon" /> Tick tất cả</button>
+              <button class="btn-ghost btn-sm" @click="tickAll(false)"><X :size="12" class="inline-icon" /> Bỏ tất cả</button>
             </div>
           </div>
 
@@ -177,8 +177,8 @@
 
           <!-- Save indicator -->
           <div class="pg-save-bar" :class="{ 'is-saving': saving, 'is-saved': justSaved }">
-            <span v-if="saving">💾 Đang lưu...</span>
-            <span v-else-if="justSaved">✅ Đã lưu</span>
+            <span v-if="saving"><Loader2 :size="13" class="inline-icon animate-spin" /> Đang lưu...</span>
+            <span v-else-if="justSaved"><Check :size="13" class="inline-icon text-success" /> Đã lưu</span>
             <span v-else class="pg-save-hint">Mọi thay đổi được tự động lưu</span>
           </div>
 
@@ -188,7 +188,7 @@
               <strong>Xóa nhóm "{{ selected.name }}"</strong>
               <p class="pg-danger-hint">Chỉ xóa được khi nhóm rỗng (không user, không nhóm con).</p>
             </div>
-            <button class="btn-danger" @click="confirmArchive">🗑 Xóa nhóm</button>
+            <button class="btn-danger" @click="confirmArchive"><Trash2 :size="13" class="inline-icon" /> Xóa nhóm</button>
           </div>
         </template>
       </section>
@@ -912,4 +912,8 @@ async function seedDefaults() {
   white-space: nowrap;
 }
 .btn-danger:hover { background: #aa2d00; color: white; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

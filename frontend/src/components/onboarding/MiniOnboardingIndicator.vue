@@ -13,9 +13,9 @@
     @click="onClick"
     :title="percent === 100 ? 'Setup hoàn tất' : 'Mở lại checklist'"
   >
-    <span class="mini-icon">🎯</span>
+    <span class="mini-icon"><Target :size="14" /></span>
     <span class="mini-text">{{ completedCount }}/{{ totalCount }}</span>
-    <span v-if="percent === 100" class="mini-check">✓</span>
+    <Check v-if="percent === 100" :size="12" class="mini-check" />
   </button>
 </template>
 

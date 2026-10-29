@@ -19,16 +19,16 @@
         <button class="modal-close" @click="$emit('close')">×</button>
       </header>
 
-      <div v-if="loading" class="modal-loading">⏳ Đang tải…</div>
+      <div v-if="loading" class="modal-loading"><Loader2 :size="14" class="inline-icon animate-spin" /> Đang tải…</div>
 
       <div v-else-if="data" class="modal-body">
         <!-- 4 sub-scores -->
         <section class="dim-section">
-          <h4>📊 4 chiều chấm điểm</h4>
+          <h4><BarChart2 :size="15" class="inline-icon" /> 4 chiều chấm điểm</h4>
           <div class="dim-rows">
             <div class="dim-row">
               <div class="dim-label">
-                <span>🗨️ Tương tác</span>
+                <span><MessageSquare :size="13" class="inline-icon" /> Tương tác</span>
                 <span class="dim-value">{{ Math.round(breakdown.engagement) }} / 100</span>
               </div>
               <div class="dim-bar">
@@ -40,7 +40,7 @@
             </div>
             <div class="dim-row">
               <div class="dim-label">
-                <span>🎯 Ý định mua</span>
+                <span><Target :size="13" class="inline-icon" /> Ý định mua</span>
                 <span class="dim-value">{{ Math.round(breakdown.intent) }} / 100</span>
               </div>
               <div class="dim-bar">
@@ -49,7 +49,7 @@
             </div>
             <div class="dim-row">
               <div class="dim-label">
-                <span>🎯 Phù hợp</span>
+                <span><Award :size="13" class="inline-icon" /> Phù hợp</span>
                 <span class="dim-value">{{ Math.round(breakdown.fit) }} / 100</span>
               </div>
               <div class="dim-bar">
@@ -58,7 +58,7 @@
             </div>
             <div class="dim-row">
               <div class="dim-label">
-                <span>⚡ Đà tăng nhiệt</span>
+                <span><Zap :size="13" class="inline-icon" /> Đà tăng nhiệt</span>
                 <span class="dim-value">{{ Math.round(breakdown.velocity) }} / 100</span>
               </div>
               <div class="dim-bar">
@@ -73,7 +73,7 @@
 
         <!-- Auto tags -->
         <section v-if="data.autoTags && data.autoTags.length > 0" class="tags-section">
-          <h4>🏷️ Thẻ tự động</h4>
+          <h4><Tag :size="15" class="inline-icon" /> Thẻ tự động</h4>
           <div class="tags-list">
             <span v-for="tag in data.autoTags" :key="tag" class="auto-tag" :class="`tag-${tag}`">
               {{ tagIcon(tag) }} {{ tagLabel(tag) }}
@@ -83,7 +83,7 @@
 
         <!-- Recent signals -->
         <section v-if="recentSignals.length > 0" class="signals-section">
-          <h4>📜 Tín hiệu gần đây ({{ recentSignals.length }})</h4>
+          <h4><Clock :size="15" class="inline-icon" /> Tín hiệu gần đây ({{ recentSignals.length }})</h4>
           <div class="signals-list">
             <div v-for="(s, i) in recentSignals" :key="i" class="signal-item">
               <div class="signal-label">
@@ -100,14 +100,14 @@
         <!-- Stuck info -->
         <section v-if="data.stuckSince" class="stuck-section">
           <div class="stuck-banner-mini">
-            ⏰ <strong>Đang đình trệ</strong> từ {{ formatDate(data.stuckSince) }}
+            <AlertTriangle :size="13" class="inline-icon text-warning" /> <strong>Đang đình trệ</strong> từ {{ formatDate(data.stuckSince) }}
             ({{ daysSince(data.stuckSince) }} ngày)
           </div>
         </section>
 
         <!-- Contact-level info -->
         <section v-if="data.contact" class="contact-section">
-          <h4>👤 KH lớn (tổng hợp các nick)</h4>
+          <h4><User :size="15" class="inline-icon" /> KH lớn (tổng hợp các nick)</h4>
           <div class="contact-summary">
             <div>Điểm tổng hợp: <strong>{{ data.contact.leadScore }}</strong></div>
           </div>
@@ -119,7 +119,7 @@
         </p>
       </div>
 
-      <div v-else class="modal-error">⚠️ Không tải được dữ liệu</div>
+      <div v-else class="modal-error"><AlertTriangle :size="14" class="inline-icon text-warning" /> Không tải được dữ liệu</div>
 
       <footer class="modal-footer">
         <button class="btn-secondary" @click="$emit('close')">Đóng</button>
@@ -507,4 +507,8 @@ watch(
   color: #374151;
   border: 1px solid #E5E7EB;
 }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-warning { color: #f59e0b; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

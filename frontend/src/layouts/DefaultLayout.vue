@@ -120,13 +120,13 @@
 
     <!-- Phase Internal Contact 2-method 2026-05-23 — banner persistent nếu sale chưa setup -->
     <div v-if="showInternalContactBanner" class="ic-banner">
-      <span class="ic-banner-icon">⚠</span>
+      <AlertTriangle :size="16" class="ic-banner-icon text-warning" />
       <div class="ic-banner-text">
         <strong>Bạn đang BỎ LỠ thông báo quan trọng từ CRM!</strong>
         <span class="ic-banner-sub">Khách đồng ý kết bạn, cảnh báo silent 30 ngày, lịch hẹn, daily KPI...</span>
       </div>
-      <button class="ic-banner-cta" @click="goSetupInternalContact">⚙ Thiết lập ngay</button>
-      <button class="ic-banner-dismiss" @click="dismissInternalContactBanner" title="Ẩn 24h">✕</button>
+      <button class="ic-banner-cta" @click="goSetupInternalContact"><Settings :size="13" class="inline-icon" /> Thiết lập ngay</button>
+      <button class="ic-banner-dismiss" @click="dismissInternalContactBanner" title="Ẩn 24h"><X :size="14" /></button>
     </div>
 
     <!-- ════════ MAIN ════════ -->

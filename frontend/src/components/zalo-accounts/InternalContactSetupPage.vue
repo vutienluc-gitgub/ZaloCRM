@@ -21,7 +21,7 @@
     <!-- ════════════ STATE: ĐÃ SETUP XONG ════════════ -->
     <template v-else-if="state.status === 'ready'">
       <header class="ic-done-head">
-        <div class="ic-done-badge">✅</div>
+        <div class="ic-done-badge"><CheckCircle2 :size="24" class="text-success" /></div>
         <div>
           <h2>Đã thiết lập xong</h2>
           <p>Bạn đang nhận thông báo hệ thống qua kênh dưới đây.</p>
@@ -31,7 +31,7 @@
       <div class="ic-done-card">
         <div class="ic-done-method">
           <span class="ic-pill" :class="state.method === 'crm_nick' ? 'pill-crm' : 'pill-phone'">
-            {{ state.method === 'crm_nick' ? '📱 Cách 1 — Nick CRM' : '☎ Cách 2 — SĐT cá nhân' }}
+            {{ state.method === 'crm_nick' ? 'Cách 1 — Nick CRM' : 'Cách 2 — SĐT cá nhân' }}
           </span>
         </div>
         <div class="ic-done-detail">
@@ -62,31 +62,31 @@
       <div class="ic-channels">
         <h3>Bạn sẽ nhận thông báo về 6 loại sự kiện:</h3>
         <div class="ic-channel-grid">
-          <div class="ic-channel">🟢 Khách đồng ý kết bạn</div>
-          <div class="ic-channel">🟡 Cảnh báo KH silent 30 ngày</div>
-          <div class="ic-channel">🔵 Nhắc lịch hẹn 15 phút trước</div>
-          <div class="ic-channel">🟣 Daily KPI 7h sáng</div>
-          <div class="ic-channel">🟠 Bot tự động báo lỗi/hoàn thành</div>
-          <div class="ic-channel">🔴 Broadcast / chiến dịch mới</div>
+          <div class="ic-channel"><span class="sdot sdot-success"></span> Khách đồng ý kết bạn</div>
+          <div class="ic-channel"><span class="sdot sdot-warning"></span> Cảnh báo KH silent 30 ngày</div>
+          <div class="ic-channel"><span class="sdot sdot-info"></span> Nhắc lịch hẹn 15 phút trước</div>
+          <div class="ic-channel"><span class="sdot sdot-purple"></span> Daily KPI 7h sáng</div>
+          <div class="ic-channel"><span class="sdot sdot-orange"></span> Bot tự động báo lỗi/hoàn thành</div>
+          <div class="ic-channel"><span class="sdot sdot-danger"></span> Broadcast / chiến dịch mới</div>
         </div>
       </div>
 
       <div class="ic-actions">
-        <button class="ic-btn" @click="onReset">🔄 Đổi cách thiết lập</button>
+        <button class="ic-btn" @click="onReset"><RotateCw :size="13" class="inline-icon" /> Đổi cách thiết lập</button>
       </div>
 
-      <div v-if="resetError" class="ic-error">⚠ {{ resetError }}</div>
+      <div v-if="resetError" class="ic-error"><AlertTriangle :size="13" class="inline-icon text-warning" /> {{ resetError }}</div>
     </template>
 
     <!-- ════════════ STATE 0: CHƯA SETUP — CHỌN CÁCH ════════════ -->
     <template v-else-if="!wizardMethod && state.status !== 'pending_friend_request' && state.status !== 'pending_user_confirm'">
       <header class="ic-intro-head">
-        <h2>🏠 Thiết lập kênh nhận thông báo</h2>
+        <h2><Bell :size="20" class="inline-icon" /> Thiết lập kênh nhận thông báo</h2>
         <p>Chọn 1 trong 2 cách để hệ thống CRM gửi thông báo công việc cho bạn.</p>
       </header>
 
       <section class="ic-why">
-        <h3>💎 Tại sao bạn CẦN thiết lập</h3>
+        <h3><Award :size="18" class="inline-icon" /> Tại sao bạn CẦN thiết lập</h3>
         <p class="ic-why-sub">Mỗi ngày bạn bỏ lỡ những thông tin này = <strong>KHÁCH HÀNG MẤT TIỀN</strong>:</p>
         <ul class="ic-why-list">
           <li><span class="dot dot-green"></span> Khách đồng ý kết bạn — phải chốt trong 5 phút đầu</li>
@@ -96,7 +96,7 @@
           <li><span class="dot dot-orange"></span> Bot tự động báo lỗi/hoàn thành — sửa ngay hoặc bùng</li>
           <li><span class="dot dot-red"></span> Broadcast / chiến dịch mới — không bị bỏ qua</li>
         </ul>
-        <p class="ic-why-cta">✨ TẤT CẢ gửi thẳng vào Zalo của bạn — không cần mở CRM</p>
+        <p class="ic-why-cta"><Sparkles :size="14" class="inline-icon" /> TẤT CẢ gửi thẳng vào Zalo của bạn — không cần mở CRM</p>
       </section>
 
       <h3 class="ic-pick-title">Chọn cách thiết lập:</h3>
@@ -104,32 +104,32 @@
       <div class="ic-cards">
         <button class="ic-card" @click="wizardMethod = 'crm_nick'">
           <div class="ic-card-head">
-            <span class="ic-card-icon">📱</span>
+            <span class="ic-card-icon"><Smartphone :size="22" /></span>
             <h4>Cách 1 — Nick CRM của tôi</h4>
           </div>
           <p class="ic-card-desc">
             Chọn 1 nick bạn đã đăng nhập vào CRM ({{ state.ownedNicks.length }} nick có sẵn). Nhanh, không cần thêm SĐT.
           </p>
           <ul class="ic-card-pros">
-            <li>✅ Setup 1 phút</li>
-            <li>✅ Không tốn nick mới</li>
-            <li>✅ Thông báo + chat khách dùng chung 1 app Zalo</li>
+            <li><Check :size="13" class="inline-icon text-success" /> Setup 1 phút</li>
+            <li><Check :size="13" class="inline-icon text-success" /> Không tốn nick mới</li>
+            <li><Check :size="13" class="inline-icon text-success" /> Thông báo + chat khách dùng chung 1 app Zalo</li>
           </ul>
           <span class="ic-card-cta">Chọn cách này →</span>
         </button>
 
         <button class="ic-card" @click="wizardMethod = 'personal_phone'">
           <div class="ic-card-head">
-            <span class="ic-card-icon">☎</span>
+            <span class="ic-card-icon"><Phone :size="22" /></span>
             <h4>Cách 2 — SĐT Zalo cá nhân</h4>
           </div>
           <p class="ic-card-desc">
             Nhập SĐT Zalo cá nhân bạn KHÔNG đăng nhập vào CRM. Tách bạch chat khách hàng với thông báo công việc.
           </p>
           <ul class="ic-card-pros">
-            <li>✅ Riêng tư hơn</li>
-            <li>✅ Nick cá nhân không bị CRM động</li>
-            <li>⚠ Cần SĐT có Zalo</li>
+            <li><Check :size="13" class="inline-icon text-success" /> Riêng tư hơn</li>
+            <li><Check :size="13" class="inline-icon text-success" /> Nick cá nhân không bị CRM động</li>
+            <li><AlertTriangle :size="13" class="inline-icon text-warning" /> Cần SĐT có Zalo</li>
           </ul>
           <span class="ic-card-cta">Chọn cách này →</span>
         </button>
@@ -161,19 +161,19 @@
               <span v-if="n.status !== 'connected'" class="ic-nick-warn">offline</span>
             </div>
             <div class="ic-nick-meta">
-              👥 {{ n.friendCount || 0 }} bạn<template v-if="n.phone"> · {{ n.phone }}</template>
+              <Users :size="11" class="inline-icon" /> {{ n.friendCount || 0 }} bạn<template v-if="n.phone"> · {{ n.phone }}</template>
             </div>
           </div>
         </label>
       </div>
 
-      <p class="ic-tip">💡 Tip: chọn nick bạn check Zalo thường xuyên nhất</p>
+      <p class="ic-tip"><Lightbulb :size="13" class="inline-icon" /> Tip: chọn nick bạn check Zalo thường xuyên nhất</p>
 
-      <div v-if="initError" class="ic-error">⚠ {{ initError }}</div>
+      <div v-if="initError" class="ic-error"><AlertTriangle :size="13" class="inline-icon text-warning" /> {{ initError }}</div>
 
       <div class="ic-step-actions">
         <button class="ic-btn-primary" :disabled="!pickedNickId || initing" @click="onInitiateCrmNick">
-          <span v-if="initing">⏳ Đang gửi lời mời...</span>
+          <span v-if="initing"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang gửi lời mời...</span>
           <span v-else>Tiếp theo →</span>
         </button>
       </div>
@@ -197,20 +197,20 @@
       />
 
       <div class="ic-warn-box">
-        ⚠ <strong>Quan trọng:</strong> đây là SĐT nick Zalo bạn KHÔNG đăng nhập vào CRM.
+        <AlertTriangle :size="13" class="inline-icon text-warning" /> <strong>Quan trọng:</strong> đây là SĐT nick Zalo bạn KHÔNG đăng nhập vào CRM.
         Hệ thống sẽ gửi lời mời kết bạn từ "Nick Hệ Thống CRM" tới SĐT này.
         Bạn cần accept trên Zalo cá nhân để hoàn tất.
       </div>
 
       <div class="ic-info-box">
-        🔒 SĐT này CHỈ dùng cho thông báo hệ thống. CRM KHÔNG đọc tin nhắn cá nhân của bạn.
+        <Lock :size="13" class="inline-icon" /> SĐT này CHỈ dùng cho thông báo hệ thống. CRM KHÔNG đọc tin nhắn cá nhân của bạn.
       </div>
 
-      <div v-if="initError" class="ic-error">⚠ {{ initError }}</div>
+      <div v-if="initError" class="ic-error"><AlertTriangle :size="13" class="inline-icon text-warning" /> {{ initError }}</div>
 
       <div class="ic-step-actions">
         <button class="ic-btn-primary" :disabled="!pickedPhone || initing" @click="onInitiatePersonalPhone">
-          <span v-if="initing">⏳ Đang gửi lời mời...</span>
+          <span v-if="initing"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang gửi lời mời...</span>
           <span v-else>Gửi lời mời kết bạn →</span>
         </button>
       </div>
@@ -240,11 +240,11 @@
 
       <div class="ic-step-actions">
         <button class="ic-btn-primary" :disabled="checking" @click="onCheckHandshake">
-          <span v-if="checking">⏳ Đang kiểm tra...</span>
+          <span v-if="checking"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang kiểm tra...</span>
           <span v-else>Tôi đã chấp nhận — Kiểm tra ngay</span>
         </button>
         <button class="ic-btn" :disabled="resending" @click="onResendFriendRequest">
-          <span v-if="resending">⏳ Gửi lại...</span>
+          <span v-if="resending"><Loader2 :size="12" class="inline-icon animate-spin" /> Gửi lại...</span>
           <span v-else>Gửi lại lời mời</span>
         </button>
         <button class="ic-btn-text" @click="onReset">Đổi cách thiết lập</button>
@@ -258,7 +258,7 @@
       </header>
 
       <div class="ic-verify-intro">
-        📩 "<strong>{{ senderDisplayName }}</strong>" vừa gửi cho bạn tin nhắn chứa mã xác nhận 4 số. Mở Zalo
+        <Mail :size="14" class="inline-icon" /> "<strong>{{ senderDisplayName }}</strong>" vừa gửi cho bạn tin nhắn chứa mã xác nhận 4 số. Mở Zalo
         <template v-if="state.method === 'crm_nick'">
           (nick "<strong>{{ state.internalContactNick?.displayName }}</strong>")
         </template>
@@ -288,25 +288,25 @@
 
       <div class="ic-step-actions">
         <button class="ic-btn-primary" :disabled="!codeReady || confirming" @click="onConfirmCode">
-          <span v-if="confirming">⏳ Đang xác nhận...</span>
+          <span v-if="confirming"><Loader2 :size="12" class="inline-icon animate-spin" /> Đang xác nhận...</span>
           <span v-else>Xác nhận</span>
         </button>
         <button class="ic-btn" :disabled="resendingCode" @click="onResendVerifyCode">
-          <span v-if="resendingCode">⏳ Gửi lại mã...</span>
+          <span v-if="resendingCode"><Loader2 :size="12" class="inline-icon animate-spin" /> Gửi lại mã...</span>
           <span v-else>Chưa nhận tin? Gửi lại mã</span>
         </button>
         <button class="ic-btn-text" @click="onReset">Đổi cách thiết lập</button>
       </div>
 
       <div class="ic-note">
-        💡 Mã hết hạn sau 30 phút. Nếu sai 5 lần, bạn cần bấm "Gửi lại mã".
+        <Lightbulb :size="13" class="inline-icon" /> Mã hết hạn sau 30 phút. Nếu sai 5 lần, bạn cần bấm "Gửi lại mã".
       </div>
     </template>
 
     <!-- ════════════ STATE ERROR (uid_not_found, lookup_failed) ════════════ -->
     <template v-else-if="state.status === 'uid_not_found' || state.status === 'lookup_failed' || state.status === 'sender_disconnected'">
       <header class="ic-wizard-head">
-        <h2>⚠ Setup chưa thành công</h2>
+        <h2><AlertTriangle :size="20" class="inline-icon text-warning" /> Setup chưa thành công</h2>
       </header>
       <div class="ic-error-state">
         {{ state.recipient?.error || 'Không tìm được UID hoặc lookup lỗi' }}
@@ -701,4 +701,16 @@ code { font-family: ui-monospace, monospace; font-size: 12px; background: #F3F4F
 .ic-channel { font-size: 13px; color: #374151; padding: 4px 0; }
 
 .ic-actions { display: flex; gap: 10px; padding-top: 4px; }
+.inline-icon { display: inline-block; vertical-align: -1px; margin-right: 3px; }
+.text-success { color: #16a34a; }
+.text-warning { color: #f59e0b; }
+.sdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; vertical-align: middle; margin-right: 5px; }
+.sdot-success { background: #22c55e; }
+.sdot-warning { background: #f59e0b; }
+.sdot-info { background: #3b82f6; }
+.sdot-purple { background: #a855f7; }
+.sdot-orange { background: #f97316; }
+.sdot-danger { background: #ef4444; }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>

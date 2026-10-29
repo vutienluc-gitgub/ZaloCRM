@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { X } from 'lucide-vue-next';
 import { api } from '@/api/index';
 import type { FriendKindFilter } from '@/composables/use-friends-state';
 
