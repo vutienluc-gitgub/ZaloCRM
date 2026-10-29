@@ -126,8 +126,8 @@ Chi tiết từng assertion: [`assets/evidence.json`](assets/evidence.json).
 
 | Cổng | Lệnh | Kết quả | Log |
 |---|---|---|---|
-| Typecheck + build | `npm run build` (gồm `vue-tsc -b`) | PASS — built in 9.04s | [`assets/build.log`](assets/build.log) |
-| Unit test | `npm test` | PASS — 2 files, **26/26 tests** | [`assets/test.log`](assets/test.log) |
+| Typecheck + build | `npm run build` (gồm `vue-tsc -b`) | PASS — built in 9.04s | [`assets/build-output.txt`](assets/build-output.txt) |
+| Unit test | `npm test` | PASS — 2 files, **26/26 tests** | [`assets/test-output.txt`](assets/test-output.txt) |
 | Kiểm thử UI | Playwright, 5 ngữ cảnh | PASS — 39/39 | [`assets/evidence.json`](assets/evidence.json) |
 
 ---
@@ -137,8 +137,8 @@ Chi tiết từng assertion: [`assets/evidence.json`](assets/evidence.json).
 | Tệp | Nội dung |
 |---|---|
 | `assets/evidence.json` | Toàn bộ số đo + 39 assertion + lỗi console |
-| `assets/build.log` | Log build/typecheck |
-| `assets/test.log` | Log Vitest |
+| `assets/build-output.txt` | Log build/typecheck |
+| `assets/test-output.txt` | Log Vitest |
 | `assets/before-nav-390.png` | Nav trước khi sửa |
 | `assets/nav-390x844.png` | Nav sau khi sửa |
 | `assets/sheet-390x844.png` | Sheet tài khoản chuẩn |
