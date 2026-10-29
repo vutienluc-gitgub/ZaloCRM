@@ -23,9 +23,11 @@ app.use(vuetify);
 // /notifications… trong khi guard còn đang chuyển sang /login (flash shell mobile).
 void router.isReady().then(() => app.mount('#app'));
 
-// TODO: Re-enable PWA when vite-plugin-pwa supports vite 8
-// if ('serviceWorker' in navigator) {
-//   import('virtual:pwa-register').then(({ registerSW }) => {
-//     registerSW({ immediate: true });
-//   });
-// }
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator && !import.meta.env.DEV) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('[PWA] ServiceWorker registration failed:', err);
+    });
+  });
+}
