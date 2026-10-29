@@ -369,6 +369,29 @@ watch(routeKey, async () => {
 .m-chat__mt :deep(.editor-content .tiptap-input) {
   font-size: 16px;
 }
+/* Toolbar 10 icon không vừa 360px → trước đây wrap, icon AI rơi xuống dòng 2.
+   Mobile: 1 hàng cuộn ngang, bỏ nút "Danh thiếp" (chưa implement, chỉ toast). */
+.m-chat__mt :deep(.input-toolbar-top) {
+  flex-wrap: nowrap;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.m-chat__mt :deep(.input-toolbar-top::-webkit-scrollbar) {
+  display: none;
+}
+.m-chat__mt :deep(.input-toolbar-top .icon-tool[title='Gửi danh thiếp']) {
+  display: none;
+}
+.m-chat__mt :deep(.input-toolbar-top .toolbar-divider) {
+  margin: 0 2px;
+}
+/* Avatar nick đang gửi (trái ô soạn) trùng với nick switcher trên header →
+   ẩn để ô nhập rộng thêm ~50px trên màn 360px. */
+.m-chat__mt :deep(.input-row .nick-avatar-halo) {
+  display: none;
+}
 .m-chat__back {
   position: absolute;
   top: calc(env(safe-area-inset-top, 0px) + 9px);
