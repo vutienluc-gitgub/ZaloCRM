@@ -322,7 +322,8 @@ onUnmounted(() => clearTimeout(searchTimeout));
   border: 0;
   outline: 0;
   background: transparent;
-  font-size: 15px;
+  /* 16px: dưới ngưỡng này iOS Safari tự zoom khi focus input. */
+  font-size: 16px;
   color: var(--ink, #101e34);
   font-family: inherit;
 }

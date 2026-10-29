@@ -265,6 +265,26 @@ watch(routeKey, async () => {
   height: 100%;
 }
 
+/* ConversationList là component desktop → thu gọn header cho mobile:
+   nút "Tin nhắn mới" chỉ còn icon 42px, search 16px để iOS không auto-zoom. */
+.m-chat__body :deep(.cl-header) {
+  padding: 9px 12px;
+}
+.m-chat__body :deep(.cl-new-msg) {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+}
+.m-chat__body :deep(.cl-new-msg > span:not(.cl-new-msg-caret)) {
+  display: none;
+}
+.m-chat__body :deep(.cl-search) {
+  font-size: 16px;
+}
+
 /* ── Thread mode ─────────────────────────────────────────────────────── */
 .m-chat__thread {
   position: relative;
@@ -277,14 +297,81 @@ watch(routeKey, async () => {
   flex: 1 1 auto;
   min-height: 0;
 }
-/* Chừa chỗ cho nút Back + đẩy header xuống dưới tai thỏ. */
+/* Header của MessageThread là layout desktop 3 dòng (tên + gender + deal stage +
+   tag Zalo + nick + đếm tin + online + nút kết bạn) → trên 390px bị cắt nát.
+   Mobile thu về 2 dòng: tên KH + nick đang chat; các chip phụ ẩn hết. */
 .m-chat__mt :deep(.chat-header) {
-  padding-top: calc(8px + env(safe-area-inset-top, 0px));
-  padding-left: 46px;
+  align-items: center;
+  gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 8px 8px 48px;
+  min-height: 58px;
+}
+.m-chat__mt :deep(.ch-row-1) {
+  /* Chừa chỗ cho cụm actions absolute bên phải (kết bạn + menu ⋮). */
+  padding-right: 104px;
+  flex-wrap: nowrap;
+  gap: 0;
+}
+/* Ẩn gender chip / deal stage / tag Zalo — chỉ giữ tên KH. */
+.m-chat__mt :deep(.ch-row-1 > *:not(.ch-name)) {
+  display: none;
+}
+.m-chat__mt :deep(.ch-name) {
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+/* Dòng 2: chỉ giữ nick switcher (biết đang trả lời từ nick nào rất quan trọng). */
+.m-chat__mt :deep(.ch-row-chips) {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  gap: 4px;
+  padding: 0;
+}
+.m-chat__mt :deep(.ch-row-chips .ch-cung-cham-chip),
+.m-chat__mt :deep(.ch-row-chips .ch-sep),
+.m-chat__mt :deep(.ch-row-chips .msg-counts),
+.m-chat__mt :deep(.ch-row-chips .last-online),
+.m-chat__mt :deep(.ch-row-chips .nick-archived-chip) {
+  display: none;
+}
+.m-chat__mt :deep(.ch-row-chips .nick-name) {
+  max-width: 150px;
+  font-size: 12px;
+}
+.m-chat__mt :deep(.chat-header > .ch-actions) {
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  gap: 2px;
+}
+/* Nút kết bạn chỉ còn icon 34px — chữ "Kết bạn / Đã KB / Đã mời" không vừa. */
+.m-chat__mt :deep(.ch-actions .btn-action) {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+  border-radius: 50%;
+  font-size: 0;
+}
+.m-chat__mt :deep(.ch-actions .btn-action .sub-meta) {
+  display: none;
+}
+/* Hover-pop (Huỷ KB / Thu hồi) không dùng được trên touch. */
+.m-chat__mt :deep(.ch-actions .fr-hover-pop) {
+  display: none;
+}
+/* iOS Safari tự zoom khi focus input < 16px. */
+.m-chat__mt :deep(.editor-content .tiptap-input) {
+  font-size: 16px;
 }
 .m-chat__back {
   position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  top: calc(env(safe-area-inset-top, 0px) + 9px);
   left: 4px;
   z-index: 30;
   display: inline-flex;
@@ -294,9 +381,8 @@ watch(routeKey, async () => {
   height: 40px;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.86);
+  background: transparent;
   color: var(--ink, #101e34);
-  box-shadow: 0 1px 4px rgba(16, 30, 52, 0.12);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }

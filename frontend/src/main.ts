@@ -17,7 +17,11 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(vuetify);
-app.mount('#app');
+
+// Đợi router resolve route đầu tiên rồi mới mount. Trước đây mount ngay → App.vue
+// thấy route.meta rỗng nên chọn MobileLayout/DefaultLayout ở "/", gọi /dashboard/kpi,
+// /notifications… trong khi guard còn đang chuyển sang /login (flash shell mobile).
+void router.isReady().then(() => app.mount('#app'));
 
 // TODO: Re-enable PWA when vite-plugin-pwa supports vite 8
 // if ('serviceWorker' in navigator) {

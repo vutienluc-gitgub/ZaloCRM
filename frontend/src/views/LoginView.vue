@@ -156,9 +156,13 @@ async function handleLogin() {
 .login-card {
   display: flex;
   width: 100%;
-  max-width: 880px;
+  /* 2026-06-09 gốc dùng width:100% + margin 16px → flex item KHÔNG co được dưới
+     min-content (ô input), tràn ngang trên điện thoại 390px. Dùng max-width
+     theo % để card luôn vừa khung, kể cả khi bàn phím/zoom thu hẹp viewport. */
+  max-width: min(880px, calc(100% - 32px));
+  min-width: 0;
   min-height: 460px;
-  margin: 0 16px;
+  margin: 0;
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
@@ -188,14 +192,14 @@ async function handleLogin() {
 
 /* ══ Responsive: ≤900px xếp dọc (banner tự thu gọn trong component) ══ */
 @media (max-width: 900px) {
-  .login-card { flex-direction: column; max-width: 420px; min-height: 0; }
+  .login-card { flex-direction: column; max-width: min(420px, calc(100% - 32px)); min-height: 0; }
   .login-form-wrap { padding: 32px 28px; }
   .form-inner { max-width: 100%; }
 }
 
 /* Điện thoại nhỏ: giảm lề/padding, bo nhỏ lại cho vừa khung hẹp. */
 @media (max-width: 480px) {
-  .login-card { margin: 0 12px; border-radius: 16px; }
+  .login-card { max-width: calc(100% - 24px); border-radius: 16px; }
   .login-form-wrap { padding: 24px 20px; }
   .form-title { font-size: 21px; }
   .form-sub { margin-bottom: 20px; }
