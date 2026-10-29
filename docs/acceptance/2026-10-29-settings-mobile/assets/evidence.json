@@ -1,0 +1,126 @@
+{
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "Tài khoản → Cài đặt mở trang danh mục (không nhảy vào 1 mục)",
+      "pass": true,
+      "detail": {
+        "hubUrl": "/settings",
+        "hubVisible": 1
+      }
+    },
+    {
+      "name": "Mobile: bảng ẩn, card hiện, nội dung full chiều rộng",
+      "pass": true,
+      "detail": {
+        "cards": 2,
+        "tableVisible": false,
+        "bodyW": 390
+      }
+    },
+    {
+      "name": "Sheet: tìm kiếm + chọn mục điều hướng đúng, sheet đóng",
+      "pass": true,
+      "detail": {
+        "url": "/settings/rbac/permission-groups",
+        "results": [
+          "Phân quyền"
+        ],
+        "sheet": 0
+      }
+    },
+    {
+      "name": "Sheet: cuộn tới được mục cuối",
+      "pass": true,
+      "detail": {
+        "scrollTop": 521,
+        "scrollH": 1207,
+        "clientH": 686,
+        "lastLabel": "API & Webhook",
+        "lastBottomGap": 17.6,
+        "lastVisible": true
+      }
+    },
+    {
+      "name": "Nút back app bar ở trang con về /settings",
+      "pass": true,
+      "detail": {
+        "url": "/settings"
+      }
+    },
+    {
+      "name": "Card mở được panel chi tiết nhân viên",
+      "pass": true,
+      "detail": {
+        "open": true,
+        "w": 358.8,
+        "right": 390
+      }
+    },
+    {
+      "name": "360×640: không tràn ngang, card hiện, thống kê ẩn gọn",
+      "pass": true,
+      "detail": {
+        "vw": 360,
+        "overflowX": false,
+        "cards": 2,
+        "cardTop": 335,
+        "navTop": 588,
+        "statsVisible": false,
+        "tableVisible": false
+      }
+    },
+    {
+      "name": "360×640: danh mục cuộn tới mục cuối, không bị nav che",
+      "pass": true,
+      "detail": {
+        "items": 18,
+        "lastLabel": "API & Webhook",
+        "lastBottom": 554,
+        "navTop": 588,
+        "lastVisible": true,
+        "overflowX": false
+      }
+    },
+    {
+      "name": "Desktop: /settings redirect đúng, sidebar 260px, bảng hiện",
+      "pass": true,
+      "detail": {
+        "path": "/settings/rbac/users",
+        "sidebar": {
+          "w": 260,
+          "h": 844
+        },
+        "breadcrumb": true,
+        "tableVisible": true,
+        "cardsVisible": false,
+        "navItems": 18,
+        "overflowX": false,
+        "mobileNav": false
+      }
+    },
+    {
+      "name": "Desktop: không có mobile nav/shell",
+      "pass": true,
+      "detail": {
+        "path": "/settings/rbac/users",
+        "sidebar": {
+          "w": 260,
+          "h": 844
+        },
+        "breadcrumb": true,
+        "tableVisible": true,
+        "cardsVisible": false,
+        "navItems": 18,
+        "overflowX": false,
+        "mobileNav": false
+      }
+    }
+  ],
+  "errors": [],
+  "measuredAt": "2026-10-29T10:17:10.903Z"
+}

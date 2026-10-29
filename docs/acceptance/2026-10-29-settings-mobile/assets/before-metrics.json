@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "vw": 390,
+    "docScrollW": 390,
+    "bodyScrollW": 390,
+    "layout": {
+      "x": 0,
+      "y": 56,
+      "w": 390,
+      "h": 788,
+      "right": 390
+    },
+    "sidebar": {
+      "x": 0,
+      "y": 56,
+      "w": 260,
+      "h": 788,
+      "right": 260
+    },
+    "content": {
+      "x": 260,
+      "y": 56,
+      "w": 130,
+      "h": 788,
+      "right": 390
+    },
+    "breadcrumb": {
+      "x": 260,
+      "y": 56,
+      "w": 130,
+      "h": 61,
+      "right": 390
+    },
+    "breadcrumbText": "Cài đặt/Tổ chức/Nhân viên",
+    "contentBody": {
+      "x": 260,
+      "y": 117,
+      "w": 130,
+      "h": 727,
+      "right": 390
+    },
+    "hero": {
+      "x": 324,
+      "y": 169,
+      "w": 2,
+      "h": 487.5,
+      "right": 326
+    },
+    "heroTitle": {
+      "x": 324,
+      "y": 169,
+      "w": 0,
+      "h": 72,
+      "right": 324
+    },
+    "heroSub": {
+      "x": 324,
+      "y": 247,
+      "w": 0,
+      "h": 409.5,
+      "right": 324
+    },
+    "toolbar": {
+      "x": 324,
+      "y": 908.5,
+      "w": 2,
+      "h": 423.3,
+      "right": 326
+    },
+    "tableWrap": {
+      "x": 324,
+      "y": 1347.8,
+      "w": 2,
+      "h": 167.6,
+      "right": 326
+    },
+    "table": {
+      "w": 1332.5,
+      "scrollW": 1332
+    },
+    "wrapScrollW": 1332,
+    "wrapClientW": 0,
+    "tableOverflowX": "hidden",
+    "contentScrollW": 324,
+    "contentClientW": 130,
+    "rows": 2
+  },
+  "errors": []
+}

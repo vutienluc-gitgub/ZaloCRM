@@ -1,0 +1,421 @@
+{
+  "measuredAt": "2026-10-29T10:18:44.767Z",
+  "routes": 18,
+  "overflowPages": [],
+  "pageErrors": [],
+  "results": [
+    {
+      "url": "/settings/personal/profile",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1220
+      },
+      "body": {
+        "w": 390,
+        "h": 1167
+      },
+      "head": "Tài khoản của tôi",
+      "h1": "",
+      "wide": []
+    },
+    {
+      "url": "/settings/org/profile",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 781
+      },
+      "body": {
+        "w": 390,
+        "h": 728
+      },
+      "head": "Hồ sơ tổ chức",
+      "h1": "Vĩnh Phát",
+      "wide": [
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 720
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 652
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 652
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 652
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 652
+        }
+      ]
+    },
+    {
+      "url": "/settings/rbac/users",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 418
+      },
+      "body": {
+        "w": 390,
+        "h": 365
+      },
+      "head": "Nhân viên",
+      "h1": "Nhân viên",
+      "wide": []
+    },
+    {
+      "url": "/settings/rbac/departments",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 769
+      },
+      "body": {
+        "w": 390,
+        "h": 716
+      },
+      "head": "Sơ đồ tổ chức",
+      "h1": "Sơ đồ tổ chức",
+      "wide": []
+    },
+    {
+      "url": "/settings/rbac/permission-groups",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1017
+      },
+      "body": {
+        "w": 390,
+        "h": 964
+      },
+      "head": "Phân quyền",
+      "h1": "Phân quyền",
+      "wide": []
+    },
+    {
+      "url": "/settings/org/audit",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 527
+      },
+      "body": {
+        "w": 390,
+        "h": 474
+      },
+      "head": "Audit log",
+      "h1": "Nhật ký quản trị",
+      "wide": []
+    },
+    {
+      "url": "/settings/crm/statuses",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 367
+      },
+      "body": {
+        "w": 390,
+        "h": 314
+      },
+      "head": "Trạng thái KH",
+      "h1": "",
+      "wide": [
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 724
+        },
+        {
+          "tag": "table",
+          "cls": "",
+          "w": 426
+        },
+        {
+          "tag": "thead",
+          "cls": "",
+          "w": 426
+        },
+        {
+          "tag": "tr",
+          "cls": "",
+          "w": 426
+        },
+        {
+          "tag": "tbody",
+          "cls": "",
+          "w": 426
+        }
+      ]
+    },
+    {
+      "url": "/settings/crm/tags-v2",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 649
+      },
+      "body": {
+        "w": 390,
+        "h": 596
+      },
+      "head": "Nhãn KH",
+      "h1": "Tag Taxonomy v2 — 2 Nhóm",
+      "wide": []
+    },
+    {
+      "url": "/settings/crm/zalo-labels",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 264
+      },
+      "body": {
+        "w": 390,
+        "h": 211
+      },
+      "head": "Tag Zalo native",
+      "h1": "",
+      "wide": []
+    },
+    {
+      "url": "/settings/crm/scoring",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1534
+      },
+      "body": {
+        "w": 390,
+        "h": 1481
+      },
+      "head": "Lead scoring",
+      "h1": "Cài đặt chấm điểm khách hàng",
+      "wide": []
+    },
+    {
+      "url": "/settings/crm/appointments",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1201
+      },
+      "body": {
+        "w": 390,
+        "h": 1148
+      },
+      "head": "Lịch hẹn & Nhắc hẹn",
+      "h1": "Lịch hẹn & Nhắc hẹn Zalo",
+      "wide": []
+    },
+    {
+      "url": "/settings/channels/zalo",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 821
+      },
+      "body": {
+        "w": 390,
+        "h": 768
+      },
+      "head": "Tài khoản Zalo",
+      "h1": "Quản lý tài khoản Zalo",
+      "wide": []
+    },
+    {
+      "url": "/settings/channels/sdk-limits",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 212
+      },
+      "body": {
+        "w": 390,
+        "h": 159
+      },
+      "head": "Trần an toàn SDK Zalo",
+      "h1": "Trần an toàn SDK Zalo",
+      "wide": []
+    },
+    {
+      "url": "/settings/channels/integrations",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 434
+      },
+      "body": {
+        "w": 390,
+        "h": 381
+      },
+      "head": "Tích hợp 3rd party",
+      "h1": "Tích hợp",
+      "wide": [
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 724
+        }
+      ]
+    },
+    {
+      "url": "/settings/org/system-notifications",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 696
+      },
+      "body": {
+        "w": 390,
+        "h": 643
+      },
+      "head": "Thông báo hệ thống",
+      "h1": "",
+      "wide": [
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 668
+        },
+        {
+          "tag": "table",
+          "cls": "sn-rtable",
+          "w": 920
+        },
+        {
+          "tag": "thead",
+          "cls": "",
+          "w": 920
+        },
+        {
+          "tag": "tr",
+          "cls": "",
+          "w": 920
+        },
+        {
+          "tag": "tbody",
+          "cls": "",
+          "w": 920
+        }
+      ]
+    },
+    {
+      "url": "/settings/crm/ai-assistant",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1276
+      },
+      "body": {
+        "w": 390,
+        "h": 1223
+      },
+      "head": "Trợ lý AI",
+      "h1": "🤖 Trợ lý AI cho Chat nội bộ",
+      "wide": []
+    },
+    {
+      "url": "/settings/dev/api",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1081
+      },
+      "body": {
+        "w": 390,
+        "h": 1028
+      },
+      "head": "API & Webhook",
+      "h1": "API & Webhook",
+      "wide": [
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 724
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 663
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 724
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 663
+        },
+        {
+          "tag": "div",
+          "cls": "v-progress-linear__indeterminate short",
+          "w": 663
+        }
+      ]
+    },
+    {
+      "url": "/settings",
+      "vw": 390,
+      "docW": 390,
+      "overflowX": false,
+      "content": {
+        "w": 390,
+        "h": 1229
+      },
+      "body": null,
+      "head": "",
+      "h1": "",
+      "wide": []
+    }
+  ]
+}
