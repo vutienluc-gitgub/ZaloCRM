@@ -25,19 +25,16 @@
 
         <div class="m-bar__actions">
           <NotificationBell />
-          <v-menu location="bottom end" offset="6">
-            <template #activator="{ props: menuProps }">
-              <button type="button" class="m-bar__btn" aria-label="Menu" v-bind="menuProps">
-                <v-icon icon="mdi-dots-vertical" size="22" />
-              </button>
-            </template>
-            <v-list density="compact" min-width="190">
-              <v-list-item prepend-icon="mdi-account-outline" title="Hồ sơ của tôi" to="/profile" />
-              <v-list-item prepend-icon="mdi-cog-outline" title="Cài đặt" to="/settings" />
-              <v-divider class="my-1" />
-              <v-list-item prepend-icon="mdi-logout" title="Đăng xuất" @click="onLogout" />
-            </v-list>
-          </v-menu>
+          <button
+            type="button"
+            class="m-bar__btn"
+            aria-label="Tài khoản và tùy chọn"
+            aria-haspopup="dialog"
+            :aria-expanded="menuOpen"
+            @click="menuOpen = true"
+          >
+            <v-icon icon="mdi-dots-vertical" size="22" />
+          </button>
         </div>
       </header>
 
@@ -53,6 +50,33 @@
       <BottomNav v-show="!isKeyboardOpen" />
       <ToastContainer placement="bottom-mobile" />
     </div>
+
+    <!-- Header actions sheet (P1 2026-10-29): thay v-menu desktop bằng bottom
+         sheet — ngón cái với tới, có danh tính tài khoản, an toàn khi đóng. -->
+    <MobileSheet v-model="menuOpen" title="Tài khoản">
+      <div class="m-acct">
+        <Avatar :src="user?.avatarUrl || null" :name="user?.fullName || '?'" :size="44" />
+        <div class="m-acct__txt">
+          <div class="m-acct__name">{{ user?.fullName || 'Người dùng' }}</div>
+          <div class="m-acct__sub">{{ user?.email || 'Chưa cập nhật email' }}</div>
+        </div>
+      </div>
+
+      <nav class="m-menu" aria-label="Tùy chọn tài khoản">
+        <button
+          v-for="item in menuItems"
+          :key="item.key"
+          type="button"
+          class="m-menu__item"
+          :class="{ 'is-danger': item.danger }"
+          @click="onMenuSelect(item.key)"
+        >
+          <span class="m-menu__ic"><v-icon :icon="item.icon" size="21" /></span>
+          <span class="m-menu__lb">{{ item.label }}</span>
+          <v-icon icon="mdi-chevron-right" size="18" class="m-menu__ch" />
+        </button>
+      </nav>
+    </MobileSheet>
   </v-app>
 </template>
 
@@ -66,6 +90,8 @@ import { fetchPublicBranding } from '@/api/public-branding';
 import NotificationBell from '@/components/NotificationBell.vue';
 import BottomNav from '@/components/BottomNav.vue';
 import ToastContainer from '@/components/ui/ToastContainer.vue';
+import MobileSheet from '@/components/mobile/MobileSheet.vue';
+import Avatar from '@/components/ui/Avatar.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -77,6 +103,42 @@ const DEFAULT_LOGO = '/brand/vp-monogram.png';
 const brandLogo = ref(DEFAULT_LOGO);
 function onLogoError() {
   if (brandLogo.value !== DEFAULT_LOGO) brandLogo.value = DEFAULT_LOGO;
+}
+
+// ── Header actions sheet ────────────────────────────────────────────────
+const menuOpen = ref(false);
+const user = computed(() => authStore.user);
+
+type MenuKey = 'profile' | 'settings' | 'reports' | 'logout';
+interface MenuItem {
+  key: MenuKey;
+  label: string;
+  icon: string;
+  danger?: boolean;
+}
+
+const menuItems = computed<MenuItem[]>(() => {
+  const items: MenuItem[] = [
+    { key: 'profile', label: 'Hồ sơ của tôi', icon: 'mdi-account-outline' },
+    { key: 'settings', label: 'Cài đặt', icon: 'mdi-cog-outline' },
+  ];
+  // Giữ parity với quyền route: không có engagement_score thì ẩn Báo cáo.
+  if (authStore.canAccess('engagement_score')) {
+    items.push({ key: 'reports', label: 'Báo cáo', icon: 'mdi-chart-box-outline' });
+  }
+  items.push({ key: 'logout', label: 'Đăng xuất', icon: 'mdi-logout', danger: true });
+  return items;
+});
+
+function onMenuSelect(key: MenuKey) {
+  menuOpen.value = false;
+  if (key === 'logout') {
+    void onLogout();
+    return;
+  }
+  router.push(
+    key === 'profile' ? '/profile' : key === 'settings' ? '/settings' : '/reports',
+  );
 }
 
 // Chat tự render header riêng (MessageThread) → shell ẩn app bar để tiết kiệm 56px.
@@ -205,6 +267,98 @@ onMounted(() => {
 }
 .m-bar__btn:active {
   background: var(--surface-3, #f4f6f8);
+}
+
+/* ── Account sheet ───────────────────────────────────────────────────── */
+.m-acct {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 14px;
+  background: var(--surface-2, #f8f9fa);
+}
+.m-acct__txt {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.m-acct__name {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink, #101e34);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m-acct__sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink-4, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m-menu {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 14px;
+  background: var(--surface, #fff);
+}
+.m-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line-2, #eef1f6);
+  background: transparent;
+  color: var(--ink, #101e34);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.m-menu__item:last-child {
+  border-bottom: 0;
+}
+.m-menu__item:active {
+  background: var(--surface-3, #f4f6f8);
+}
+.m-menu__ic {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--brand-soft, #e8eef8);
+  color: var(--brand, #2151a1);
+}
+.m-menu__lb {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.m-menu__ch {
+  flex: 0 0 auto;
+  color: var(--ink-4, #64748b);
+}
+.m-menu__item.is-danger {
+  color: #b91c1c;
+}
+.m-menu__item.is-danger .m-menu__ic {
+  background: #fdeceb;
+  color: #b91c1c;
+}
+.m-menu__item.is-danger .m-menu__ch {
+  color: #dc8a86;
 }
 
 /* ── Offline strip ───────────────────────────────────────────────────── */
