@@ -359,7 +359,23 @@
 
       <!-- ════════ Messages ════════ -->
       <div ref="messagesContainer" class="messages chat-messages-area" :class="{ 'is-virtual-mode': isVirtualConv }">
-        <v-progress-linear v-if="loading" indeterminate color="primary" class="mb-2" />
+        <v-progress-linear v-if="loading && messages.length > 0" indeterminate color="primary" class="mb-2" />
+
+        <!-- Impeccable Skeleton Loading for Chat Area -->
+        <div v-if="loading && messages.length === 0" class="msg-skeletons pa-4" aria-busy="true">
+          <div class="msg-skel msg-skel--incoming mb-3">
+            <div class="msg-skel__bubble" style="width: 58%; height: 42px;"></div>
+          </div>
+          <div class="msg-skel msg-skel--outgoing mb-3">
+            <div class="msg-skel__bubble" style="width: 48%; height: 38px;"></div>
+          </div>
+          <div class="msg-skel msg-skel--incoming mb-3">
+            <div class="msg-skel__bubble" style="width: 72%; height: 54px;"></div>
+          </div>
+          <div class="msg-skel msg-skel--outgoing mb-3">
+            <div class="msg-skel__bubble" style="width: 40%; height: 36px;"></div>
+          </div>
+        </div>
 
         <template v-for="item in displayItems" :key="item.key">
           <!-- Date divider -->
@@ -504,7 +520,11 @@
           </div>
         </template>
 
-        <div v-if="!loading && messages.length === 0" class="text-center pa-8 text-grey">Chưa có tin nhắn</div>
+        <div v-if="!loading && messages.length === 0" class="msg-empty-thread">
+          <v-icon icon="mdi-message-text-outline" size="44" color="grey-lighten-1" />
+          <p class="msg-empty-title">Chưa có tin nhắn nào</p>
+          <p class="msg-empty-sub">Hãy gửi tin nhắn đầu tiên để bắt đầu cuộc trò chuyện với khách hàng.</p>
+        </div>
       </div>
 
       <!-- Typing indicator -->
@@ -3492,6 +3512,54 @@ watch(() => props.editingMessage?.id, async (id) => {
 }
 
 /* M53 2026-05-30: virtual mode — bubble self border đứt nét */
+/* Impeccable Chat Skeletons & Empty State */
+.msg-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.msg-skel {
+  display: flex;
+  width: 100%;
+}
+.msg-skel--incoming {
+  justify-content: flex-start;
+}
+.msg-skel--outgoing {
+  justify-content: flex-end;
+}
+.msg-skel__bubble {
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: msg-skel-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes msg-skel-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.msg-empty-thread {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+}
+.msg-empty-title {
+  margin: 12px 0 4px;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink, #101e34);
+}
+.msg-empty-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-4, #64748b);
+  max-width: 280px;
+  line-height: 1.45;
+}
+
 .chat-messages-area.is-virtual-mode :deep(.bubble.self) {
   border: 1px dashed #94a3b8 !important;
   background: #f3f4f6 !important;

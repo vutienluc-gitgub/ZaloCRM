@@ -64,6 +64,23 @@ export function appointmentOwnerName(a: AppointmentEx): string {
   );
 }
 
+/**
+ * Standard MDI icon thay the cho raw emoji theo Impeccable Design Standard.
+ */
+export function typeMdiIcon(type: string): string {
+  switch (type) {
+    case 'call':         return 'mdi-phone-outline';
+    case 'message':      return 'mdi-message-text-outline';
+    case 'meeting':      return 'mdi-handshake-outline';
+    case 'follow_up':    return 'mdi-eye-outline';
+    case 'consultation': return 'mdi-message-text-outline';
+    case 'new_visit':    return 'mdi-handshake-outline';
+    case 'reminder':     return 'mdi-bell-outline';
+    case 'tai_kham':     return 'mdi-calendar-sync-outline';
+    default:             return 'mdi-pin-outline';
+  }
+}
+
 export function typeIcon(type: string): string {
   switch (type) {
     case 'call':      return '📞';

@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-10-31T05:49:57.185Z",
+  "suite": "Impeccable Mobile Verification",
+  "base": "http://localhost:4173",
+  "metrics": {
+    "nav-360x640": {
+      "height": 52,
+      "bottom": 640,
+      "activeTabWidth": 72,
+      "activeTabHeight": 52,
+      "labelFontSize": "11px",
+      "hasTopIndicator": true,
+      "indicatorWidth": "22px"
+    },
+    "nav-390x844": {
+      "height": 52,
+      "bottom": 844,
+      "activeTabWidth": 78,
+      "activeTabHeight": 52,
+      "labelFontSize": "11px",
+      "hasTopIndicator": true,
+      "indicatorWidth": "22px"
+    }
+  },
+  "tests": []
+}

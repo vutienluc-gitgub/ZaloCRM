@@ -86,7 +86,7 @@ import { useAttribution } from '@/composables/use-attribution';
 import { useConfirm } from '@/composables/use-confirm';
 import Avatar from '@/components/ui/Avatar.vue';
 
-const APP_VERSION = '3.4.0';
+const APP_VERSION = '3.4.1';
 
 const auth = useAuthStore();
 const router = useRouter();

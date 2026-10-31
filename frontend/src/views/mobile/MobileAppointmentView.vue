@@ -131,7 +131,7 @@
             </span>
             <span class="ma-card__title">{{ a.title || 'Nhắc hẹn' }}</span>
             <span class="ma-card__meta">
-              <span class="ma-type" :style="typeStyle(a)">{{ typeIcon(a.type) }} {{ typeLabel(a.type) }}</span>
+              <span class="ma-type" :style="typeStyle(a)"><v-icon :icon="typeMdiIcon(a.type)" size="14" class="mr-1" />{{ typeLabel(a.type) }}</span>
               <span v-if="a.location" class="ma-loc">
                 <v-icon icon="mdi-map-marker-outline" size="12" />{{ a.location }}
               </span>
@@ -162,7 +162,7 @@
       <template v-if="selected">
         <div class="ma-when">
           <div class="ma-when__ic" :style="{ background: typeStyle(selected).background, color: typeStyle(selected).color }">
-            {{ typeIcon(selected.type) }}
+            <v-icon :icon="typeMdiIcon(selected.type)" size="22" />
           </div>
           <div class="ma-when__txt">
             <div class="ma-when__d">{{ longDay(selected) }}</div>
@@ -186,7 +186,7 @@
           <div class="ma-block__lb">Chi tiết</div>
           <div class="ma-kv">
             <span>Loại</span>
-            <b>{{ typeIcon(selected.type) }} {{ typeLabel(selected.type) }}</b>
+            <b class="inline-flex items-center gap-1"><v-icon :icon="typeMdiIcon(selected.type)" size="16" />{{ typeLabel(selected.type) }}</b>
           </div>
           <div class="ma-kv">
             <span>Phụ trách</span>
@@ -317,7 +317,7 @@ import {
   statusLabel,
   type AppointmentEx as Appointment,
   typeBgColor,
-  typeIcon,
+  typeMdiIcon,
   typeLabel,
   typeTint,
 } from '@/composables/appointment-helpers';

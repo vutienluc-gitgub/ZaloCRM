@@ -383,9 +383,9 @@ const modules = computed(() => {
   background: var(--brand-soft, #e8eef8);
   color: var(--brand, #2151a1);
 }
-.mr-kpi__ic.is-ok { background: #e6f5ef; color: #0a805c; }
-.mr-kpi__ic.is-warn { background: #fff4e5; color: #b45309; }
-.mr-kpi__ic.is-info { background: #e8f0fe; color: #1d4ed8; }
+.mr-kpi__ic.is-ok { background: var(--success-soft, #d1f2e6); color: var(--success, #0a805c); }
+.mr-kpi__ic.is-warn { background: var(--warning-soft, #fef3c7); color: var(--warning, #b45309); }
+.mr-kpi__ic.is-info { background: var(--brand-soft, #e8eef8); color: var(--brand, #2151a1); }
 .mr-kpi__val {
   font-size: 23px;
   font-weight: 700;

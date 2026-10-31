@@ -127,17 +127,30 @@ function onInbound() {
   justify-content: flex-end;
   gap: 2px;
   padding-bottom: 4px;
+  position: relative;
   min-width: 0;
   height: 52px;
   color: var(--ink-4, #64748b);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease;
 }
 .m-tab:active {
   background: var(--surface-3, #f4f6f8);
 }
 .m-tab.is-active {
   color: var(--brand, #2151a1);
+}
+.m-tab.is-active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand, #2151a1);
 }
 .m-tab__ic {
   position: relative;
@@ -147,7 +160,7 @@ function onInbound() {
   height: 24px;
 }
 .m-tab__lb {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.01em;
