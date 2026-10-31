@@ -5,7 +5,7 @@
     <div class="cs-icon">{{ icon }}</div>
     <h2 class="cs-title">{{ title }}</h2>
     <p class="cs-desc">{{ description }}</p>
-    <div class="cs-tag">🔒 Sắp ra mắt</div>
+    <div class="cs-tag"><v-icon icon="mdi-lock-outline" size="14" class="mr-1" />Sắp ra mắt</div>
 
     <div v-if="bullets.length > 0" class="cs-roadmap">
       <div class="cs-roadmap-label">Tính năng dự kiến:</div>
@@ -221,20 +221,21 @@ const bullets = computed(() => meta.value.bullets);
   line-height: 1.55;
 }
 .cs-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 4px 12px;
-  background: linear-gradient(135deg, #EEF0FF 0%, #F4F4FE 100%);
-  border: 1px solid rgba(94, 106, 210, 0.3);
+  background: var(--brand-soft, #e8eef8);
+  border: 1px solid rgba(33, 81, 161, 0.25);
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  color: #5E6AD2;
+  color: var(--brand, #2151a1);
   margin-bottom: 24px;
 }
 .cs-roadmap {
   text-align: left;
-  background: #FAFAFC;
-  border: 1px solid #E4E5E9;
+  background: var(--surface-2, #f8f9fa);
+  border: 1px solid var(--line, #e2e8f0);
   border-radius: 8px;
   padding: 16px 20px;
   margin-bottom: 20px;
@@ -242,7 +243,7 @@ const bullets = computed(() => meta.value.bullets);
 .cs-roadmap-label {
   font-size: 11px;
   font-weight: 700;
-  color: #6B7785;
+  color: var(--ink-4, #64748b);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 10px;
@@ -256,7 +257,7 @@ const bullets = computed(() => meta.value.bullets);
   padding: 4px 0 4px 22px;
   position: relative;
   font-size: 12.5px;
-  color: #1F2D3D;
+  color: var(--ink, #101e34);
   line-height: 1.55;
 }
 .cs-roadmap li::before {
@@ -264,7 +265,7 @@ const bullets = computed(() => meta.value.bullets);
   position: absolute;
   left: 0;
   top: 4px;
-  color: #5E6AD2;
+  color: var(--brand, #2151a1);
   font-weight: 700;
 }
 .cs-actions {
@@ -273,7 +274,7 @@ const bullets = computed(() => meta.value.bullets);
 .cs-link {
   display: inline-block;
   font-size: 12.5px;
-  color: #5E6AD2;
+  color: var(--brand, #2151a1);
   text-decoration: none;
   font-weight: 600;
 }

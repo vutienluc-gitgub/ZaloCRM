@@ -220,37 +220,37 @@ onMounted(load);
 </script>
 
 <style scoped>
-.ap-settings { max-width: 720px; font-family: 'Inter', -apple-system, sans-serif; color: #1F2D3D; }
+.ap-settings { max-width: 720px; font-family: 'Inter', -apple-system, sans-serif; color: var(--ink, #101e34); }
 .ap-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px; }
-.ap-ico { width: 44px; height: 44px; border-radius: 12px; background: #EEF0FF; display: grid; place-items: center; font-size: 22px; flex: none; }
-.ap-h1 { font-size: 19px; font-weight: 700; margin: 0 0 4px; }
-.ap-sub { font-size: 13px; color: #6B7785; margin: 0; line-height: 1.55; }
-.ap-loading { padding: 28px; text-align: center; color: #97A0AC; }
+.ap-ico { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-soft, #e8eef8); color: var(--brand, #2151a1); display: grid; place-items: center; font-size: 22px; flex: none; }
+.ap-h1 { font-size: 19px; font-weight: 700; margin: 0 0 4px; color: var(--ink, #101e34); }
+.ap-sub { font-size: 13px; color: var(--ink-4, #64748b); margin: 0; line-height: 1.55; }
+.ap-loading { padding: 28px; text-align: center; color: var(--ink-4, #64748b); }
 
 .ap-warn { display: flex; gap: 10px; align-items: flex-start; background: #FFFBEB; border: 1px solid #FDE68A;
   color: #92400E; border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 18px; }
-.ap-link { color: #5E6AD2; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.ap-link { color: var(--brand, #2151a1); font-weight: 600; text-decoration: none; white-space: nowrap; }
 .ap-link:hover { text-decoration: underline; }
 
-.ap-card { background: #fff; border: 1px solid #E4E5E9; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
+.ap-card { background: var(--surface, #fff); border: 1px solid var(--line, #e2e8f0); border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
 .ap-card.ap-disabled { opacity: 0.6; }
 .ap-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.ap-row-title { font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
-.ap-row-desc { font-size: 12.5px; color: #6B7785; line-height: 1.5; }
+.ap-row-title { font-size: 14.5px; font-weight: 600; margin-bottom: 3px; color: var(--ink, #101e34); }
+.ap-row-desc { font-size: 12.5px; color: var(--ink-4, #64748b); line-height: 1.5; }
 
 .ap-delay { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .ap-quick { display: flex; gap: 6px; }
-.ap-chip { border: 1px solid #D4D6DB; background: #fff; border-radius: 999px; padding: 5px 13px; font-size: 12.5px;
-  font-weight: 600; color: #475066; cursor: pointer; font-family: inherit; transition: all .12s; }
-.ap-chip:hover:not(:disabled) { border-color: #5E6AD2; color: #5E6AD2; }
-.ap-chip.active { background: #EEF0FF; border-color: #5E6AD2; color: #5E6AD2; }
+.ap-chip { border: 1px solid var(--line, #e2e8f0); background: var(--surface, #fff); border-radius: 999px; padding: 5px 13px; font-size: 12.5px;
+  font-weight: 600; color: var(--ink-2, #334155); cursor: pointer; font-family: inherit; transition: all .12s; }
+.ap-chip:hover:not(:disabled) { border-color: var(--brand, #2151a1); color: var(--brand, #2151a1); }
+.ap-chip.active { background: var(--brand-soft, #e8eef8); border-color: var(--brand, #2151a1); color: var(--brand-700, #163870); }
 .ap-chip:disabled { opacity: .5; cursor: default; }
-.ap-hint { font-size: 12px; color: #97A0AC; margin: 10px 0 0; }
+.ap-hint { font-size: 12px; color: var(--ink-4, #64748b); margin: 10px 0 0; }
 
 .ap-offsets { display: flex; gap: 14px; flex-wrap: wrap; }
 .ap-off { display: flex; flex-direction: column; gap: 5px; }
-.ap-off > span { font-size: 12px; font-weight: 600; color: #475066; }
+.ap-off > span { font-size: 12px; font-weight: 600; color: var(--ink-2, #334155); }
 
 .ap-actions { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 8px; }
-.ap-noperm { font-size: 12.5px; color: #97A0AC; }
+.ap-noperm { font-size: 12.5px; color: var(--ink-4, #64748b); }
 </style>

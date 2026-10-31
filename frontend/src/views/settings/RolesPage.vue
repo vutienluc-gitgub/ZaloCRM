@@ -316,7 +316,7 @@ onMounted(fetchUsers);
   gap: 10px;
 }
 .role-card.role-owner { border-left: 3px solid #F59E0B; }
-.role-card.role-admin { border-left: 3px solid #5E6AD2; }
+.role-card.role-admin { border-left: 3px solid var(--brand, #2151a1); }
 .role-card.role-member { border-left: 3px solid #10B981; }
 .rc-head {
   display: flex;
@@ -386,12 +386,12 @@ onMounted(fetchUsers);
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #5E6AD2;
+  color: var(--brand, #2151a1);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
 }
-.rc-detail-btn:hover { background: #EEF0FF; border-color: #5E6AD2; }
+.rc-detail-btn:hover { background: var(--brand-soft, #e8eef8); border-color: var(--brand, #2151a1); }
 
 /* Permission matrix */
 .perm-table-wrap {
@@ -504,8 +504,8 @@ onMounted(fetchUsers);
   align-items: flex-start;
   gap: 16px;
   padding: 18px 20px;
-  background: linear-gradient(135deg, #FAFAFC 0%, #EEF0FF 100%);
-  border: 1px dashed rgba(94, 106, 210, 0.4);
+  background: linear-gradient(135deg, var(--surface-2, #f8f9fa) 0%, var(--brand-soft, #e8eef8) 100%);
+  border: 1px dashed rgba(33, 81, 161, 0.35);
   border-radius: 12px;
 }
 .cs-icon {

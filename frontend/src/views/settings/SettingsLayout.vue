@@ -95,10 +95,10 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 260px 1fr;
   height: calc(100vh - 56px);
-  background: #fafafc;
+  background: var(--surface-2, #f8f9fa);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13.5px;
-  color: #1f2d3d;
+  color: var(--ink, #101e34);
   letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
 }
@@ -108,8 +108,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #fff;
-  border-right: 1px solid #e4e5e9;
+  background: var(--surface, #ffffff);
+  border-right: 1px solid var(--line, #e2e8f0);
 }
 
 /* ── Content ── */
@@ -117,35 +117,37 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #fafafc;
+  background: var(--surface-2, #f8f9fa);
 }
 .sl-breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #fff;
-  border-bottom: 1px solid #e4e5e9;
-  color: #6b7785;
+  background: var(--surface, #ffffff);
+  border-bottom: 1px solid var(--line, #e2e8f0);
+  color: var(--ink-4, #64748b);
   font-size: 12px;
   flex-shrink: 0;
 }
 .bc-root {
-  color: #5e6ad2;
+  color: var(--brand, #2151a1);
   font-weight: 500;
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 .bc-root:hover {
+  color: var(--brand-600, #1a4284);
   text-decoration: underline;
 }
 .bc-sep {
-  color: #d4d6db;
+  color: var(--line, #e2e8f0);
 }
 .bc-group {
-  color: #6b7785;
+  color: var(--ink-3, #475569);
 }
 .bc-current {
-  color: #1f2d3d;
+  color: var(--ink, #101e34);
   font-weight: 600;
 }
 .sl-content-body {
@@ -157,7 +159,7 @@ onMounted(() => {
   width: 8px;
 }
 .sl-content-body::-webkit-scrollbar-thumb {
-  background: #d4d6db;
+  background: var(--line, #e2e8f0);
   border-radius: 4px;
 }
 
@@ -168,12 +170,12 @@ onMounted(() => {
   display: block;
   height: auto;
   min-height: 100%;
-  background: #f8f9fa;
+  background: var(--surface-2, #f8f9fa);
 }
 .is-mobile .sl-content {
   overflow: visible;
   min-height: 100%;
-  background: #f8f9fa;
+  background: var(--surface-2, #f8f9fa);
 }
 .is-mobile .sl-content-body {
   overflow: visible;
@@ -188,47 +190,49 @@ onMounted(() => {
 .sl-mobile-home {
   min-height: 100%;
   padding: 6px 14px calc(16px + env(safe-area-inset-bottom, 0px));
-  background: #fff;
+  background: var(--surface, #ffffff);
 }
 
 .sl-mobile-head {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: #fff;
-  border-bottom: 1px solid #e4e5e9;
+  background: var(--surface, #ffffff);
+  border-bottom: 1px solid var(--line, #e2e8f0);
+  box-shadow: 0 1px 3px rgba(16, 30, 52, 0.05);
   flex-shrink: 0;
 }
 .sl-mobile-head__btn {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   width: 100%;
   min-height: 52px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border: 0;
   background: transparent;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
 }
 .sl-mobile-head__btn:active {
-  background: #f4f6f8;
+  background: var(--surface-3, #f4f6f8);
 }
 .sl-mobile-head__group {
-  color: #6b7785;
-  font-size: 12.5px;
+  color: var(--ink-4, #64748b);
+  font-size: 13px;
   white-space: nowrap;
 }
 .sl-mobile-head__sep {
-  color: #d4d6db;
+  color: var(--line, #e2e8f0);
 }
 .sl-mobile-head__title {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  color: #1f2d3d;
+  color: var(--ink, #101e34);
   font-size: 15px;
   font-weight: 650;
   text-overflow: ellipsis;
@@ -236,7 +240,7 @@ onMounted(() => {
 }
 .sl-mobile-head__btn :deep(.v-icon) {
   flex: none;
-  color: #6b7785;
+  color: var(--brand, #2151a1);
 }
 
 @media (max-width: 767px) {

@@ -24,7 +24,7 @@
 
     <div v-if="loading" class="al-loading">Đang tải nhật ký…</div>
     <div v-else-if="logs.length === 0" class="al-empty">
-      <span class="al-empty-icon">📋</span>
+      <v-icon icon="mdi-clipboard-text-outline" size="40" class="al-empty-icon" />
       <p>Chưa có thao tác nào được ghi lại.</p>
     </div>
     <table v-else class="al-table">
@@ -71,9 +71,9 @@ interface AuditLog {
 
 const ACTION_FILTERS = [
   { value: '', label: 'Tất cả' },
-  { value: 'user.handoff', label: '🔄 Bàn giao' },
-  { value: 'user.reset_password', label: '🔑 Reset mật khẩu' },
-  { value: 'user.deactivate', label: '🚫 Vô hiệu' },
+  { value: 'user.handoff', label: 'Bàn giao' },
+  { value: 'user.reset_password', label: 'Reset mật khẩu' },
+  { value: 'user.deactivate', label: 'Vô hiệu' },
 ];
 const ACTION_LABELS: Record<string, string> = {
   'user.handoff': 'Bàn giao khách hàng',

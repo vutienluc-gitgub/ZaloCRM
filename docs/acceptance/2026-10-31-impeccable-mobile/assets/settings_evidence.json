@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-10-31T08:23:18.134Z",
+  "tests": [
+    {
+      "viewport": "360x640",
+      "page": "/settings",
+      "screenshot": "09-settings-mobile-360x640.png",
+      "metrics": {
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "isOverflow": false,
+        "searchFontSize": "16px",
+        "searchHeight": 46,
+        "itemCount": 18,
+        "minItemHeight": 48,
+        "foundEmojis": []
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "/settings",
+      "screenshot": "10-settings-mobile-390x844.png",
+      "metrics": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "isOverflow": false,
+        "searchFontSize": "16px",
+        "searchHeight": 46,
+        "itemCount": 18,
+        "minItemHeight": 48,
+        "foundEmojis": []
+      }
+    }
+  ]
+}

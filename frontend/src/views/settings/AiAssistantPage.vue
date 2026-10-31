@@ -6,12 +6,12 @@
   <div class="ai-page">
     <header class="ai-page-header">
       <div>
-        <h1 class="ai-page-title">🤖 Trợ lý AI cho Chat nội bộ</h1>
+        <h1 class="ai-page-title"><v-icon icon="mdi-robot-outline" size="24" class="mr-2" />Trợ lý AI cho Chat nội bộ</h1>
         <p class="ai-page-sub">
           Cấu hình prompt và quy tắc cho trợ lý gợi ý sale khai thác thông tin + tự động trích xuất dữ liệu KH.
         </p>
       </div>
-      <div v-if="loading" class="loading-pill">⏳ Đang tải...</div>
+      <div v-if="loading" class="loading-pill"><v-progress-circular indeterminate size="16" width="2" class="mr-1" />Đang tải...</div>
     </header>
 
     <div v-if="config" class="ai-page-body">

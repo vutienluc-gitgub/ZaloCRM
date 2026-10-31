@@ -109,7 +109,7 @@
             <span class="zalo-locked" title="Tag Zalo Real — chỉ đổi/gỡ trên app Zalo, hệ thống tự sync về CRM">
               <ZaloBrandIcon :size="14" />
               <span class="zalo-locked-name">{{ displayName(tag) }}</span>
-              <span class="lock-icon" aria-hidden="true">🔒</span>
+              <v-icon icon="mdi-lock-outline" size="13" class="lock-icon" aria-hidden="true" />
             </span>
           </template>
           <template v-else>

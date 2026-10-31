@@ -51,11 +51,11 @@
           </div>
           <div class="frow">
             <div class="flabel">Email</div>
-            <div class="fval">{{ authStore.user.email || '—' }} <span class="locked">🔒 do quản trị quản lý</span></div>
+            <div class="fval">{{ authStore.user.email || '—' }} <span class="locked"><v-icon icon="mdi-lock-outline" size="13" class="mr-1" />do quản trị quản lý</span></div>
           </div>
           <div class="frow">
             <div class="flabel">Số điện thoại</div>
-            <div class="fval">{{ authStore.user.phone || '—' }} <span class="locked">🔒 do quản trị quản lý</span></div>
+            <div class="fval">{{ authStore.user.phone || '—' }} <span class="locked"><v-icon icon="mdi-lock-outline" size="13" class="mr-1" />do quản trị quản lý</span></div>
           </div>
           <div class="frow">
             <div class="flabel">Vai trò</div>
@@ -65,7 +65,7 @@
         <div v-if="editing" class="card-pad row-end">
           <button class="btn" @click="cancelEdit" :disabled="saving">Huỷ</button>
           <button class="btn btn-primary" @click="saveName" :disabled="saving || !nameValid">
-            <span v-if="saving">Đang lưu...</span><span v-else>💾 Lưu thay đổi</span>
+            <span v-if="saving">Đang lưu...</span><span v-else><v-icon icon="mdi-content-save-outline" size="16" class="mr-1" />Lưu thay đổi</span>
           </button>
         </div>
       </div>
@@ -78,7 +78,7 @@
             <div class="sec-lbl">Mật khẩu</div>
             <div class="sec-sub">••••••••</div>
           </div>
-          <button class="btn btn-primary" @click="showPwModal = true">🔑 Đổi mật khẩu</button>
+          <button class="btn btn-primary" @click="showPwModal = true"><v-icon icon="mdi-key-outline" size="16" class="mr-1" />Đổi mật khẩu</button>
         </div>
       </div>
 
@@ -88,12 +88,12 @@
         <div class="card-pad">
           <div class="shortcuts">
             <RouterLink to="/settings/channels/zalo?tab=privacy" class="sc">
-              <div class="sc-ic">🔒</div>
+              <div class="sc-ic"><v-icon icon="mdi-shield-lock-outline" size="20" /></div>
               <div class="sc-txt"><div class="sc-t">Riêng tư</div><div class="sc-d">Khoá/mở nội dung chat nhạy cảm</div></div>
               <div class="sc-arrow">›</div>
             </RouterLink>
             <RouterLink to="/settings/channels/zalo?tab=internal-contact" class="sc">
-              <div class="sc-ic">🔔</div>
+              <div class="sc-ic"><v-icon icon="mdi-bell-outline" size="20" /></div>
               <div class="sc-txt"><div class="sc-t">Thông báo của tôi</div><div class="sc-d">Nhận thông báo qua Zalo nội bộ</div></div>
               <div class="sc-arrow">›</div>
             </RouterLink>

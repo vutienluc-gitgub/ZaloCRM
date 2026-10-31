@@ -181,8 +181,8 @@ async function onSubmit() {
   background: white;
 }
 .form-row input:focus {
-  border-color: #5E6AD2;
-  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.12);
+  border-color: var(--brand, #2151a1);
+  box-shadow: 0 0 0 3px rgba(33, 81, 161, 0.12);
 }
 
 .pw-wrap { position: relative; }
@@ -237,34 +237,34 @@ async function onSubmit() {
   font-size: 13px;
   font-weight: 500;
   border-radius: 8px;
-  border: 1px solid #E4E5E9;
+  border: 1px solid var(--line, #e2e8f0);
   background: white;
-  color: #1F2D3D;
+  color: var(--ink, #101e34);
   cursor: pointer;
   font-family: inherit;
   text-decoration: none;
 }
 .btn-primary {
-  background: #5E6AD2;
-  border-color: #5E6AD2;
+  background: var(--brand, #2151a1);
+  border-color: var(--brand, #2151a1);
   color: white;
 }
-.btn-primary:hover:not(:disabled) { background: #4E5AB8; }
+.btn-primary:hover:not(:disabled) { background: var(--brand-600, #1a4284); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-ghost:hover { background: #F4F4F7; }
+.btn-ghost:hover { background: var(--surface-3, #f4f6f8); }
 
 .note {
   margin-top: 16px;
   padding: 12px 16px;
-  background: #FAFAFC;
-  border-left: 3px solid #5E6AD2;
+  background: var(--surface-2, #f8f9fa);
+  border-left: 3px solid var(--brand, #2151a1);
   border-radius: 6px;
   font-size: 12.5px;
-  color: #6B7785;
+  color: var(--ink-4, #64748b);
   line-height: 1.55;
 }
 .note a {
-  color: #5E6AD2;
+  color: var(--brand, #2151a1);
   text-decoration: none;
   font-weight: 500;
 }

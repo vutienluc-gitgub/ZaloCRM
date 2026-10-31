@@ -165,7 +165,7 @@
     <div class="sn-sender-bar">
       <!-- Avatar nick hệ thống đang chọn (load từ danh sách nick Zalo) -->
       <img v-if="selectedSender?.avatarUrl" :src="selectedSender.avatarUrl" class="sn-nick-ava sn-nick-ava-lg" :alt="selectedSender.displayName || 'Nick'" />
-      <span v-else-if="selectedSender" class="sn-nick-ava sn-nick-ava-lg sn-nick-ava-ph">🔔</span>
+      <span v-else-if="selectedSender" class="sn-nick-ava sn-nick-ava-lg sn-nick-ava-ph"><v-icon icon="mdi-bell-outline" size="18" /></span>
       <v-select
         v-model="senderId"
         :items="senderOptions"
@@ -185,7 +185,7 @@
           <v-list-item v-bind="itemProps">
             <template #prepend>
               <img v-if="nickAvatar(item.value)" :src="nickAvatar(item.value)!" class="sn-nick-ava" alt="nick avatar" />
-              <span v-else class="sn-nick-ava sn-nick-ava-ph">🔔</span>
+              <span v-else class="sn-nick-ava sn-nick-ava-ph"><v-icon icon="mdi-bell-outline" size="14" /></span>
             </template>
           </v-list-item>
         </template>

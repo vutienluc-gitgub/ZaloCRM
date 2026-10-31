@@ -24,7 +24,7 @@
         aria-label="Xoá tìm kiếm"
         @click="searchQuery = ''"
       >
-        ✕
+        <v-icon icon="mdi-close" size="14" />
       </button>
     </div>
 
@@ -43,7 +43,9 @@
         >
           <v-icon class="snp-item__icon" :icon="item.icon" size="18" />
           <span class="snp-item__label">{{ item.label }}</span>
-          <span v-if="item.comingSoon" class="snp-lock" title="Sắp ra mắt">🔒</span>
+          <span v-if="item.comingSoon" class="snp-lock" title="Sắp ra mắt">
+            <v-icon icon="mdi-lock-outline" size="14" />
+          </span>
         </RouterLink>
       </div>
 
@@ -57,7 +59,7 @@
           >
             <v-icon class="snp-group__icon" :icon="group.icon" size="17" />
             <span class="snp-group__label">{{ group.label }}</span>
-            <span class="snp-chevron">▾</span>
+            <v-icon class="snp-chevron" icon="mdi-chevron-down" size="16" />
           </button>
           <div v-if="openGroups[group.id]" class="snp-group__body">
             <RouterLink
@@ -70,7 +72,9 @@
             >
               <v-icon class="snp-item__icon" :icon="item.icon" size="18" />
               <span class="snp-item__label">{{ item.label }}</span>
-              <span v-if="item.comingSoon" class="snp-lock" title="Sắp ra mắt">🔒</span>
+              <span v-if="item.comingSoon" class="snp-lock" title="Sắp ra mắt">
+            <v-icon icon="mdi-lock-outline" size="14" />
+          </span>
             </RouterLink>
           </div>
         </div>
@@ -158,12 +162,12 @@ watch(visibleGroups, (groups) => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: #fff;
+  background: var(--surface, #ffffff);
 }
 
 .snp-header {
   padding: 16px 18px 12px;
-  border-bottom: 1px solid #e4e5e9;
+  border-bottom: 1px solid var(--line, #e2e8f0);
   flex-shrink: 0;
 }
 .snp-title {
@@ -173,10 +177,11 @@ watch(visibleGroups, (groups) => {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #1f2d3d;
+  color: var(--ink, #101e34);
 }
 .snp-title__icon {
-  font-size: 16px;
+  font-size: 18px;
+  color: var(--brand, #2151a1);
 }
 
 .snp-search {
@@ -184,44 +189,48 @@ watch(visibleGroups, (groups) => {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-bottom: 1px solid #e4e5e9;
-  background: #fff;
+  border-bottom: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
   flex-shrink: 0;
 }
 .snp-search__ic {
-  color: #97a0ac;
-  font-size: 13px;
+  color: var(--ink-4, #64748b);
+  font-size: 16px;
 }
 .snp-search input {
   flex: 1;
   min-width: 0;
-  padding: 6px 10px;
-  border: 1px solid transparent;
+  padding: 7px 10px;
+  border: 1px solid var(--line, #e2e8f0);
   border-radius: 6px;
   outline: none;
-  background: #f4f4f7;
-  color: #1f2d3d;
+  background: var(--surface-2, #f8f9fa);
+  color: var(--ink, #101e34);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
+  transition: all 0.15s ease;
 }
 .snp-search input:focus {
-  background: #fff;
-  border-color: #5e6ad2;
-  box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.12);
+  background: var(--surface, #ffffff);
+  border-color: var(--brand, #2151a1);
+  box-shadow: 0 0 0 2px rgba(33, 81, 161, 0.12);
 }
 .snp-search__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 6px;
   border: none;
   border-radius: 4px;
   background: transparent;
-  color: #97a0ac;
+  color: var(--ink-4, #64748b);
   font-family: inherit;
-  font-size: 10px;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 .snp-search__clear:hover {
-  color: #ef4444;
-  background: #fef2f2;
+  color: var(--error, #c0392b);
+  background: var(--error-soft, #fadbdb);
 }
 
 .snp-nav {
@@ -234,7 +243,7 @@ watch(visibleGroups, (groups) => {
   width: 5px;
 }
 .snp-nav::-webkit-scrollbar-thumb {
-  background: #d4d6db;
+  background: var(--line, #e2e8f0);
   border-radius: 2px;
 }
 
@@ -254,26 +263,28 @@ watch(visibleGroups, (groups) => {
   text-align: left;
   cursor: pointer;
   user-select: none;
+  transition: background 0.15s ease;
 }
 .snp-group__header:hover {
-  background: #f4f4f7;
+  background: var(--surface-3, #f4f6f8);
 }
 .snp-group__icon {
-  font-size: 13px;
+  font-size: 14px;
   flex-shrink: 0;
+  color: var(--ink-4, #64748b);
 }
 .snp-group__label {
   flex: 1;
   font-size: 11px;
   font-weight: 700;
-  color: #6b7785;
+  color: var(--ink-4, #64748b);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .snp-chevron {
-  color: #97a0ac;
-  font-size: 10px;
-  transition: transform 0.15s;
+  color: var(--ink-4, #64748b);
+  font-size: 14px;
+  transition: transform 0.15s ease;
 }
 .snp-group__header.collapsed .snp-chevron {
   transform: rotate(-90deg);
@@ -296,26 +307,32 @@ watch(visibleGroups, (groups) => {
   gap: 9px;
   padding: 7px 10px;
   border-radius: 6px;
-  color: #1f2d3d;
-  font-size: 12.5px;
+  color: var(--ink-2, #334155);
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.12s;
+  transition: all 0.12s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .snp-item:hover {
-  background: #f4f4f7;
+  background: var(--surface-3, #f4f6f8);
+  color: var(--ink, #101e34);
 }
 .snp-item.active,
 .snp-item.router-link-exact-active {
-  background: #eef0ff;
-  color: #5e6ad2;
+  background: var(--brand-soft, #e8eef8);
+  color: var(--brand-700, #163870);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 #5e6ad2;
+  box-shadow: inset 3px 0 0 var(--brand, #2151a1);
+}
+.snp-item.active .snp-item__icon,
+.snp-item.router-link-exact-active .snp-item__icon {
+  color: var(--brand, #2151a1);
 }
 .snp-item__icon {
-  font-size: 14px;
+  font-size: 16px;
   flex-shrink: 0;
+  color: var(--ink-4, #64748b);
 }
 .snp-item__label {
   flex: 1;
@@ -324,13 +341,15 @@ watch(visibleGroups, (groups) => {
   white-space: nowrap;
 }
 .snp-lock {
+  display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
-  font-size: 11px;
-  opacity: 0.6;
+  color: var(--ink-4, #64748b);
+  opacity: 0.7;
 }
 .snp-empty {
   padding: 20px 14px;
-  color: #97a0ac;
+  color: var(--ink-4, #64748b);
   font-size: 12px;
   font-style: italic;
   text-align: center;
@@ -343,18 +362,18 @@ watch(visibleGroups, (groups) => {
 }
 .snp.is-mobile .snp-search {
   padding: 4px 0 10px;
-  border-bottom: 1px solid #eef1f6;
+  border-bottom: 1px solid var(--line-2, #eef1f6);
   background: transparent;
 }
 .snp.is-mobile .snp-search input {
   min-height: 44px;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: 16px; /* Chặn Safari iOS tự zoom màn hình khi focus */
 }
 .snp.is-mobile .snp-search__clear {
   width: 44px;
   height: 44px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .snp.is-mobile .snp-nav {
   overflow: visible;
@@ -383,7 +402,7 @@ watch(visibleGroups, (groups) => {
 }
 .snp.is-mobile .snp-item.active,
 .snp.is-mobile .snp-item.router-link-exact-active {
-  box-shadow: inset 3px 0 0 #5e6ad2;
+  box-shadow: inset 3px 0 0 var(--brand, #2151a1);
 }
 .snp.is-mobile .snp-search-results {
   gap: 0;
