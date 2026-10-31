@@ -57,6 +57,19 @@
       </div>
     </section>
 
+    <!-- ── Ứng dụng di động ──────────────────────────────────────── -->
+    <section class="more-group">
+      <h2 class="more-group__t">Ứng dụng di động</h2>
+      <div class="more-list">
+        <button type="button" class="more-row" @click="showInstallGuide = true">
+          <v-icon icon="mdi-cellphone-arrow-down" size="21" />
+          <span class="more-row__lb">Hướng dẫn ghim ra Màn hình chính</span>
+          <span v-if="isStandalone" class="more-badge-installed">Đã ghim</span>
+          <v-icon icon="mdi-chevron-right" size="18" class="more-row__ch" />
+        </button>
+      </div>
+    </section>
+
     <!-- ── Footer ────────────────────────────────────────────────────── -->
     <footer class="more-foot">
       <div class="more-foot__ver">Vĩnh Phát CRM v{{ APP_VERSION }}</div>
@@ -75,16 +88,67 @@
         rel="noopener noreferrer"
       >Mã nguồn AGPL-3.0</a>
     </footer>
+
+    <!-- ── Sheet hướng dẫn ghim màn hình chính ──────────────────────── -->
+    <MobileSheet v-model="showInstallGuide" title="Thêm vào Màn hình chính">
+      <div class="pwa-guide">
+        <div v-if="isStandalone" class="pwa-status-box is-active">
+          <v-icon icon="mdi-check-decagram" size="24" color="var(--success, #0a805c)" />
+          <div>
+            <div class="pwa-status-title">Đang chạy ở chế độ Màn hình chính</div>
+            <div class="pwa-status-desc">Toàn màn hình, không thanh URL, tốc độ phản hồi tối ưu.</div>
+          </div>
+        </div>
+        <div v-else class="pwa-status-box is-browser">
+          <v-icon icon="mdi-information-outline" size="24" color="var(--brand, #2151a1)" />
+          <div>
+            <div class="pwa-status-title">Đang mở trong trình duyệt</div>
+            <div class="pwa-status-desc">Hãy ghim ra Màn hình chính để dùng như App độc lập, 1 chạm vào ngay!</div>
+          </div>
+        </div>
+
+        <div class="pwa-steps">
+          <div class="pwa-step-card">
+            <div class="pwa-step-head">
+              <v-icon icon="mdi-apple" size="20" />
+              <span>Dành cho iPhone (Safari)</span>
+            </div>
+            <ol class="pwa-step-list">
+              <li>Chạm vào nút <b>Chia sẻ</b> (biểu tượng ô vuông mũi tên hướng lên <b>⎋</b> ở thanh dưới cùng Safari).</li>
+              <li>Cuộn danh sách menu và chọn <b>"Thêm vào MH chính" (Add to Home Screen)</b>.</li>
+              <li>Chạm <b>"Thêm"</b> ở góc phải trên. Biểu tượng VPCRM sẽ xuất hiện ngoài màn hình.</li>
+            </ol>
+          </div>
+
+          <div class="pwa-step-card">
+            <div class="pwa-step-head">
+              <v-icon icon="mdi-google-chrome" size="20" />
+              <span>Dành cho Android (Chrome)</span>
+            </div>
+            <ol class="pwa-step-list">
+              <li>Chạm vào biểu tượng <b>3 chấm đứng ⋮</b> ở góc phải trên cùng trình duyệt Chrome.</li>
+              <li>Chọn <b>"Cài đặt ứng dụng"</b> hoặc <b>"Thêm vào Màn hình chính"</b>.</li>
+              <li>Xác nhận <b>"Cài đặt"</b>. Ứng dụng sẽ hiển thị trên màn hình ứng dụng điện thoại.</li>
+            </ol>
+          </div>
+        </div>
+
+        <button type="button" class="btn-pwa-close" @click="showInstallGuide = false">
+          Đã hiểu
+        </button>
+      </div>
+    </MobileSheet>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useAttribution } from '@/composables/use-attribution';
 import { useConfirm } from '@/composables/use-confirm';
 import Avatar from '@/components/ui/Avatar.vue';
+import MobileSheet from '@/components/mobile/MobileSheet.vue';
 
 const APP_VERSION = '3.4.1';
 
@@ -94,6 +158,15 @@ const attribution = useAttribution();
 const { confirm } = useConfirm();
 
 const user = computed(() => auth.user);
+const showInstallGuide = ref(false);
+
+const isStandalone = computed(() => {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone === true
+  );
+});
 
 const ROLE_LABELS: Record<string, string> = {
   owner: 'Chủ tổ chức',
@@ -247,5 +320,98 @@ async function onLogout() {
 .more-foot__src {
   color: var(--brand-700, #163870);
   text-decoration: underline;
+}
+
+.more-badge-installed {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--success, #0a805c);
+  background: var(--success-soft, #d1f2e6);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+
+/* ── PWA Guide Sheet ── */
+.pwa-guide {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pwa-status-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+.pwa-status-box.is-active {
+  background: var(--success-soft, #d1f2e6);
+  border: 1px solid rgba(10, 128, 92, 0.2);
+}
+.pwa-status-box.is-browser {
+  background: var(--brand-soft, #e8eef8);
+  border: 1px solid rgba(33, 81, 161, 0.2);
+}
+.pwa-status-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #101e34);
+}
+.pwa-status-desc {
+  font-size: 12px;
+  color: var(--ink-3, #475569);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.pwa-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pwa-step-card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.pwa-step-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #101e34);
+  margin-bottom: 10px;
+}
+.pwa-step-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+  line-height: 1.5;
+}
+.pwa-step-list b {
+  color: var(--brand-700, #163870);
+}
+.btn-pwa-close {
+  width: 100%;
+  min-height: 46px;
+  background: var(--brand, #2151a1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 650;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.15s ease;
+}
+.btn-pwa-close:active {
+  background: var(--brand-600, #1a4284);
 }
 </style>

@@ -68,6 +68,10 @@
 | `frontend/src/views/settings/PersonalPasswordPage.vue` | Cải tiến | Đồng bộ brand token xanh `#2151a1`, viền semantic |
 | `frontend/src/views/settings/PersonalProfilePage.vue` | Cải tiến | Avatar gradient & role chip đồng bộ brand token |
 | `frontend/src/views/settings/RolesPage.vue` | Cải tiến | Role card admin & banner sử dụng semantic brand tokens |
+| `frontend/src/views/MoreView.vue` | Cải tiến | Thêm mục Ứng dụng di động + Sheet hướng dẫn ghim ra màn hình chính (PWA) |
+| `frontend/src/components/contacts/CustomerProfileDialog.vue` | Cải tiến | Responsive 94vh Bottom Sheet sát đáy trên Mobile, touch targets ≥ 44px |
+| `frontend/src/components/settings/ChangePasswordModal.vue` | Cải tiến | Đổi mật khẩu thành dạng Bottom Sheet trên Mobile, nút bấm cao 44px |
+| `frontend/src/views/ContactProfileView.vue` | Cải tiến | Thay thế toàn bộ raw emojis bằng icon vector MDI, chuẩn hóa design tokens |
 | `frontend/src/views/settings/SettingsComingSoon.vue` | Cải tiến | Vector MDI lock icon, brand token tag và link |
 | `frontend/src/views/settings/SystemNotificationsPage.vue` | Cải tiến | Bell vector icon thay raw emoji |
 | `frontend/src/views/settings/AiAssistantPage.vue` | Cải tiến | Robot vector icon & progress indicator thay emoji |
@@ -122,17 +126,29 @@
 - **Tài khoản của tôi Mobile (390×844)**: `assets/12-settings-account-390x844.png`
 - **MobileSheet Chuyển Mục Cài Đặt (360×640 & 390×844)**: `assets/13-settings-sheet-360x640.png`, `assets/13-settings-sheet-390x844.png`
 
+### 4.5 Ứng Dụng Di Động & Hướng Dẫn Ghim PWA Ra Màn Hình Chính
+- **Tab Thêm có mục Ứng dụng di động (360×640 & 390×844)**: `assets/14-more-pwa-mobile-360x640.png`, `assets/14-more-pwa-mobile-390x844.png`
+- **Bottom Sheet Hướng dẫn Ghim PWA cho iOS / Android (360×640 & 390×844)**: `assets/15-more-pwa-sheet-360x640.png`, `assets/15-more-pwa-sheet-390x844.png`
+
+### 4.6 Modal Đổi Mật Khẩu & Hồ Sơ Khách Hàng Chuẩn Mobile
+- **Đổi mật khẩu dạng Bottom Sheet trên Mobile (360×640 & 390×844)**: `assets/16-change-password-sheet-360x640.png`, `assets/16-change-password-sheet-390x844.png`
+- **Hồ sơ Khách hàng Tổng hợp Mobile (360×640 & 390×844)**: `assets/17-contact-profile-mobile-360x640.png`, `assets/17-contact-profile-mobile-390x844.png`
+
 ---
 
 ## 5. Hướng Dẫn Bàn Giao Cho Người Dùng
 
-1. **Kiểm tra trên trình duyệt di động**:
-   - Truy cập vào ứng dụng trên điện thoại hoặc bật F12 responsive mode (360px - 390px).
-   - Quan sát thanh Bottom Nav ở đáy: tab đang chọn có thanh gạch xanh nhỏ xinh xắn trên đầu icon, nhãn chữ sắc nét 11px.
+1. **Kiểm tra trên trình duyệt di động hoặc Chế độ Ghim Màn Hình Chính (PWA)**:
+   - Truy cập vào ứng dụng trên điện thoại (Safari trên iOS hoặc Chrome trên Android).
+   - Vào tab **Thêm** -> chọn **Hướng dẫn ghim ra Màn hình chính**: làm theo hướng dẫn 3 bước để ghim icon app ra màn hình chính, mở app toàn màn hình không bị vướng thanh URL của trình duyệt.
+   - Quan sát thanh Bottom Nav ở đáy:
+     - Tab đang chọn có thanh gạch xanh nhỏ xinh xắn trên đầu icon, nhãn chữ sắc nét 11px.
+     - Đáy thanh điều hướng tự động co giãn theo khoảng đệm an toàn (`env(safe-area-inset-bottom)`) bảo vệ các nút bấm không bị thanh Home ảo của iPhone đè lên.
    - Vào mục **Lịch hẹn**: các loại lịch hẹn (gọi điện, gặp mặt, nhắn tin) hiển thị bằng icon vector hiện đại, không còn emoji.
    - Vào mục **Cài đặt** (`/settings` hoặc qua tab Thêm):
      - Ô tìm kiếm hiển thị cỡ chữ 16px chống nhảy khung nhìn trên iPhone, touch target lớn (46px).
      - Danh sách nhóm cài đặt dạng accordion trực quan, các mục con có chiều cao tối thiểu 48px bấm rất dễ dàng.
      - Không còn bất kỳ biểu tượng emoji máy tính nào, tất cả sử dụng icon vector MDI tinh tế.
      - Khi vào trang con (ví dụ *Tài khoản của tôi*): thanh tiêu đề dính đầu màn hình (sticky header) cho phép nhấn vào để mở Bottom Sheet chuyển đổi mục cài đặt bất kỳ lúc nào mà không cần bấm quay lại trang danh mục.
+     - Bấm nút **Đổi mật khẩu**: modal tự động trượt từ đáy màn hình lên thành dạng Bottom Sheet với nút bấm cao 44px tối ưu hoàn toàn cho ngón tay cái.
    - Vào mục **Thêm**: kiểm tra phiên bản hiển thị là `Vĩnh Phát CRM v3.4.1`.

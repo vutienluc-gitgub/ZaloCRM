@@ -956,9 +956,47 @@ async function copyAttr(code: string) {
   display: flex; flex-direction: column; overflow: hidden;
   font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-/* Responsive: FHD/2K cho rộng hơn, HD co lại */
+/* Responsive: FHD/2K cho rộng hơn, HD co lại, Mobile chuyển sang Flush Bottom Sheet */
 @media (min-width: 1920px) { .cpd-modal { width: 1080px; } }
 @media (min-width: 2560px) { .cpd-modal { width: 1200px; } }
+@media (max-width: 767px) {
+  .cpd-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .cpd-modal {
+    width: 100vw;
+    max-width: 100vw;
+    height: 94vh;
+    max-height: 94vh;
+    border-radius: 16px 16px 0 0;
+  }
+  .cpd-head {
+    padding: 14px 16px;
+  }
+  .cpd-tabs {
+    padding: 0 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cpd-tab {
+    padding: 10px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cpd-body {
+    padding: 14px 16px;
+  }
+  .cpd-foot {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .cpd-foot .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 
 .cpd-loading, .cpd-error { padding: 60px; text-align: center; color: var(--smax-grey-700); }
 .cpd-error { color: var(--smax-error); }
