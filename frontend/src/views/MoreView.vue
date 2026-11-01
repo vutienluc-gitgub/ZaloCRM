@@ -150,7 +150,7 @@ import { useConfirm } from '@/composables/use-confirm';
 import Avatar from '@/components/ui/Avatar.vue';
 import MobileSheet from '@/components/mobile/MobileSheet.vue';
 
-const APP_VERSION = '3.4.1';
+const APP_VERSION = '3.4.2';
 
 const auth = useAuthStore();
 const router = useRouter();

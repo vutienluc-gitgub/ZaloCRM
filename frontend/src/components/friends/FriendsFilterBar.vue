@@ -24,7 +24,10 @@
       <button class="chip" :class="{ on: !!careStatus }" @click="toggleCareDropdown">
         <span v-if="selectedStatus" class="dot" :style="{ background: selectedStatus.color || 'var(--ink-4)' }" />
         <span>{{ selectedStatus ? selectedStatus.name : 'Trạng thái KH' }}</span>
-        <span class="caret" :class="{ clear: !!careStatus }" @click.stop="careStatus ? onCarePick('') : toggleCareDropdown()">{{ careStatus ? '✕' : '▾' }}</span>
+        <span class="caret" :class="{ clear: !!careStatus }" @click.stop="careStatus ? onCarePick('') : toggleCareDropdown()">
+          <X v-if="careStatus" :size="12" />
+          <ChevronDown v-else :size="12" />
+        </span>
       </button>
       <div v-if="careDropdown" class="dropdown care-dd">
         <button :class="{ active: !careStatus }" @click="onCarePick('')">Tất cả trạng thái</button>
@@ -42,6 +45,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { X, ChevronDown } from 'lucide-vue-next';
 import { api } from '@/api/index';
 import type { FriendKindFilter } from '@/composables/use-friends-state';
 

@@ -97,7 +97,7 @@
                 :key="l.name"
                 class="tag-chip"
                 :style="l.color ? { background: l.color + '22', color: l.color, borderColor: 'transparent' } : undefined"
-              >🔵 {{ l.name }}</span>
+              ><span class="label-dot" :style="l.color ? { background: l.color } : undefined" />{{ l.name }}</span>
             </div>
           </div>
         </div>
@@ -312,6 +312,15 @@ function formatRelative(iso: string): string {
 .tag-chip.blue { background: #dbeafe; color: #1e40af; border-color: transparent; }
 .tag-chip.yellow { background: #fef9c3; color: #854d0e; border-color: transparent; }
 .tag-chip.purple { background: #ede9fe; color: #5b21b6; border-color: transparent; }
+.label-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 5px;
+  vertical-align: 1px;
+}
 
 .panel-foot {
   padding: 10px 16px;

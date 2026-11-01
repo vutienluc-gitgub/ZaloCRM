@@ -10,22 +10,24 @@
         :class="h.kind"
         @click="$emit('apply', h)"
       >
-        {{ h.icon }} {{ h.label }}
-        <span class="x">→</span>
+        <component :is="h.iconComponent" :size="13" class="hint-icon" />
+        <span>{{ h.label }}</span>
+        <ArrowRight :size="12" class="arrow-icon" />
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type Component } from 'vue';
+import { AlertTriangle, CheckCircle2, Flame, Lightbulb, ArrowRight } from 'lucide-vue-next';
 import type { DbFriend } from '@/composables/use-friends';
 
 export type HintKey = 'silent7d' | 'newThisWeek' | 'hotPending' | 'aliasDup';
 export interface SmartHint {
   key: HintKey;
   label: string;
-  icon: string;
+  iconComponent: Component;
   kind: 'warn' | 'success' | 'danger' | 'info';
 }
 
@@ -38,7 +40,6 @@ defineEmits<{
 }>();
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-const ONE_WEEK_AGO = () => Date.now() - SEVEN_DAYS_MS;
 
 const hints = computed<SmartHint[]>(() => {
   if (!props.friends.length) return [];
@@ -53,7 +54,7 @@ const hints = computed<SmartHint[]>(() => {
     list.push({
       key: 'silent7d',
       label: `${silent} KH chưa nhắn ≥7 ngày — risk lạnh`,
-      icon: '⚠',
+      iconComponent: AlertTriangle,
       kind: 'warn',
     });
   }
@@ -66,7 +67,7 @@ const hints = computed<SmartHint[]>(() => {
     list.push({
       key: 'newThisWeek',
       label: `${newKB} KH mới kết bạn tuần này`,
-      icon: '✓',
+      iconComponent: CheckCircle2,
       kind: 'success',
     });
   }
@@ -76,7 +77,7 @@ const hints = computed<SmartHint[]>(() => {
     list.push({
       key: 'hotPending',
       label: `${hot} KH đang "Nóng" cần follow gấp`,
-      icon: '🔥',
+      iconComponent: Flame,
       kind: 'danger',
     });
   }
@@ -91,15 +92,13 @@ const hints = computed<SmartHint[]>(() => {
     list.push({
       key: 'aliasDup',
       label: `${dupAlias} alias trùng — gợi ý merge`,
-      icon: '💡',
+      iconComponent: Lightbulb,
       kind: 'info',
     });
   }
 
   return list;
 });
-
-void ONE_WEEK_AGO;
 </script>
 
 <style scoped>
@@ -115,19 +114,44 @@ void ONE_WEEK_AGO;
   flex-wrap: wrap;
 }
 .hint-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--warning-soft); color: #78350f;
-  border: 1px solid #fbbf24;
-  padding: 4px 10px; border-radius: var(--r-pill);
-  font-size: 11.5px; font-weight: 600;
-  cursor: pointer; font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--warning-soft);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .12s;
 }
-.hint-chip:hover { background: #fde68a; }
-.hint-chip.success { background: var(--success-soft); color: #166534; border-color: #4ade80; }
-.hint-chip.success:hover { background: #bbf7d0; }
-.hint-chip.danger { background: var(--error-soft); color: #991b1b; border-color: #f87171; }
-.hint-chip.danger:hover { background: #fecaca; }
-.hint-chip.info { background: #dbeafe; color: #1e40af; border-color: #60a5fa; }
-.hint-chip.info:hover { background: #bfdbfe; }
-.hint-chip .x { opacity: .5; margin-left: 2px; }
+.hint-chip:hover {
+  filter: brightness(0.96);
+}
+.hint-chip.success {
+  background: var(--success-soft);
+  color: var(--success);
+  border-color: var(--success);
+}
+.hint-chip.danger {
+  background: var(--error-soft);
+  color: var(--error);
+  border-color: var(--error);
+}
+.hint-chip.info {
+  background: var(--brand-soft);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.hint-icon {
+  flex-shrink: 0;
+}
+.arrow-icon {
+  opacity: .6;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
 </style>

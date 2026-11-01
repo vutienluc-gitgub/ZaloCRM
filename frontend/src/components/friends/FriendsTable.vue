@@ -734,8 +734,10 @@ function healthTooltip(f: DbFriend): string {
   display: block;
 }
 .cell-customer .av::after {
-  content: "🔵"; position: absolute; bottom: -3px; right: -3px;
-  font-size: 10px; line-height: 1;
+  content: ""; position: absolute; bottom: 0px; right: 0px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--brand, #2151a1);
+  border: 1.5px solid var(--surface, #fff);
   z-index: 1;
 }
 .cell-customer .info { min-width: 0; }

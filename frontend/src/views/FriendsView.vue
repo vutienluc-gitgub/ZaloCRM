@@ -5,6 +5,7 @@
     <!-- 2-col layout: sidebar (nicks) + main -->
     <div class="page-grid">
       <NickSidebar
+        class="desktop-sidebar"
         :accounts="accounts"
         :selected-nick-id="effectiveNickId"
         :count-by-nick="countByNick"
@@ -14,15 +15,28 @@
 
       <main class="main">
         <header class="page-head">
-          <h1>👥 Bạn bè</h1>
+          <div class="head-title">
+            <v-icon icon="mdi-account-group-outline" size="22" class="title-icon text-brand" />
+            <h1>Bạn bè</h1>
+          </div>
 
-          <span v-if="activeAccount" class="active-nick">
+          <!-- Mobile Nick Selector Trigger (visible only on mobile) -->
+          <button v-if="isMobile" class="mobile-nick-btn" @click="showMobileNickSheet = true">
+            <span class="av" :class="activeAccount ? nickAvatarClass(activeAccount.id) : 'all'">
+              {{ activeAccount ? nickInitials(activeAccount.displayName) : '∑' }}
+            </span>
+            <span class="nick-name">{{ activeAccount ? activeAccount.displayName : 'Tất cả nick' }}</span>
+            <v-icon icon="mdi-chevron-down" size="16" class="chevron-icon" />
+          </button>
+
+          <!-- Desktop active nick badge -->
+          <span v-if="activeAccount && !isMobile" class="active-nick desktop-only">
             <span class="av" :class="nickAvatarClass(activeAccount.id)">{{ nickInitials(activeAccount.displayName) }}</span>
             <span class="nick-name">{{ activeAccount.displayName || 'Nick' }}</span>
             <span class="dot-sep">·</span>
             <span>{{ friendsDbTotal }} bạn</span>
           </span>
-          <span v-else-if="effectiveNickId === 'all'" class="active-nick all">
+          <span v-else-if="effectiveNickId === 'all' && !isMobile" class="active-nick all desktop-only">
             <span class="av">∑</span>
             <span class="nick-name">Tất cả nick</span>
             <span class="dot-sep">·</span>
@@ -30,22 +44,40 @@
           </span>
 
           <div class="spacer" />
-          <input
-            v-model="searchInput"
-            class="head-search"
-            placeholder="🔍 Tìm KH theo tên / SĐT / nick Zalo..."
-            @input="debouncedFetch"
-          />
-          <button class="btn" title="Xuất CSV (chưa làm)" @click="onExportCsv">⬇ Xuất CSV</button>
+
+          <!-- Search with icon & clear -->
+          <div class="head-search-wrap">
+            <v-icon icon="mdi-magnify" size="16" class="search-icon" />
+            <input
+              v-model="searchInput"
+              class="head-search"
+              placeholder="Tìm theo tên, SĐT, nick..."
+              @input="debouncedFetch"
+            />
+            <button v-if="searchInput" class="search-clear" @click="searchInput = ''; debouncedFetch()">
+              <v-icon icon="mdi-close-circle" size="14" />
+            </button>
+          </div>
+
+          <button class="btn desktop-only" title="Xuất CSV danh sách" @click="onExportCsv">
+            <v-icon icon="mdi-download-outline" size="15" />
+            <span>Xuất CSV</span>
+          </button>
+
+          <!-- Column configuration menu (Desktop) -->
           <v-menu :close-on-content-click="false">
             <template #activator="{ props: act }">
-              <button v-bind="act" class="btn" title="Bật/tắt cột tuỳ chọn">⚙ Cột</button>
+              <button v-bind="act" class="btn desktop-only" title="Bật/tắt cột tuỳ chọn">
+                <v-icon icon="mdi-view-column-outline" size="15" />
+                <span>Cột</span>
+              </button>
             </template>
             <v-list density="compact" min-width="280">
               <v-list-subheader>Cột mặc định (luôn hiện)</v-list-subheader>
               <v-list-item v-for="c in DEFAULT_COLUMNS" :key="c.key" disabled>
                 <template #prepend>
                   <v-icon size="18" color="primary">mdi-checkbox-marked</v-icon>
+                  <v-icon size="16" class="ml-1 mr-2 text-muted">{{ c.icon }}</v-icon>
                 </template>
                 <v-list-item-title>{{ c.label }}</v-list-item-title>
                 <v-list-item-subtitle v-if="c.hint" class="text-caption">{{ c.hint }}</v-list-item-subtitle>
@@ -61,19 +93,24 @@
                   <v-icon size="18" :color="visibleCols[c.key] ? 'primary' : ''">
                     {{ visibleCols[c.key] ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
                   </v-icon>
+                  <v-icon size="16" class="ml-1 mr-2 text-muted">{{ c.icon }}</v-icon>
                 </template>
                 <v-list-item-title>{{ c.label }}</v-list-item-title>
                 <v-list-item-subtitle v-if="c.hint" class="text-caption">{{ c.hint }}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-menu>
+
           <button
             v-if="activeAccount"
             class="btn primary"
             :disabled="syncing"
             title="Auto-sync mỗi 15 phút. Click để refresh ngay lập tức."
             @click="onSync"
-          >{{ syncing ? '↻ Đang làm mới…' : '↻ Làm mới ngay' }}</button>
+          >
+            <v-icon icon="mdi-sync" size="15" :class="{ 'spin-anim': syncing }" />
+            <span>{{ syncing ? 'Đang làm mới…' : 'Làm mới ngay' }}</span>
+          </button>
         </header>
 
         <FriendsSmartHints :friends="friendsDb" @apply="onApplyHint" />
@@ -92,9 +129,9 @@
           <div class="stat"><span class="sdot info"></span>Đang nhắn lạ: <strong>{{ friendCounts.chatting_stranger ?? 0 }}</strong></div>
           <div class="stat"><span class="sdot mut"></span>Đã ngắt: <strong>{{ friendCounts.ghost ?? 0 }}</strong></div>
           <div v-if="silentCount > 0" class="stat bad"><span class="sdot err"></span>Im lặng &gt; 7d: <strong>{{ silentCount }}</strong></div>
-          <div class="spacer-flex" />
-          <span class="density-label">Hiển thị:</span>
-          <div class="density-toggle">
+          <div class="spacer-flex desktop-only" />
+          <span class="density-label desktop-only">Hiển thị:</span>
+          <div class="density-toggle desktop-only">
             <button
               v-for="d in DENSITY_OPTIONS"
               :key="d.value"
@@ -113,7 +150,20 @@
           @export="onBulkExport"
         />
 
+        <!-- Smart Cards view for Mobile, High-density Table for Desktop -->
+        <FriendsCards
+          v-if="isMobile"
+          :friends="friendsDb"
+          :loading="loadingDb"
+          :selected="selected"
+          @update:selected="selected = $event"
+          @open-detail="onOpenDetail"
+          @open-chat="onOpenChat"
+          @call="onCall"
+          @open-contact="onOpenContact"
+        />
         <FriendsTable
+          v-else
           :friends="friendsDb"
           :loading="loadingDb"
           :density="state.density.value"
@@ -130,7 +180,7 @@
         <div class="pag">
           <span>{{ pagFrom }}–{{ pagTo }} / {{ friendsDbTotal }}</span>
           <div class="spacer-flex" />
-          <span>Trang:</span>
+          <span class="desktop-only">Trang:</span>
           <button :disabled="pagination.page === 1" @click="goPage(pagination.page - 1)">« Trước</button>
           <button
             v-for="p in visiblePages"
@@ -143,6 +193,47 @@
       </main>
     </div>
 
+    <!-- Mobile Nick Selector Sheet -->
+    <MobileSheet
+      v-model="showMobileNickSheet"
+      title="Chọn Nick Zalo"
+      flush
+    >
+      <div class="mobile-nick-sheet-list">
+        <div
+          class="sheet-nick-item"
+          :class="{ active: effectiveNickId === 'all' }"
+          @click="onSelectNick('all'); showMobileNickSheet = false"
+        >
+          <div class="av all">∑</div>
+          <div class="info">
+            <div class="name">Tất cả nick</div>
+            <div class="sub">Tổng hợp {{ accounts.length }} nick</div>
+          </div>
+          <span class="count">{{ totalAcrossAllNicks }}</span>
+          <v-icon v-if="effectiveNickId === 'all'" icon="mdi-check" size="18" color="primary" />
+        </div>
+        <div
+          v-for="acc in accounts"
+          :key="acc.id"
+          class="sheet-nick-item"
+          :class="{ active: effectiveNickId === acc.id }"
+          @click="onSelectNick(acc.id); showMobileNickSheet = false"
+        >
+          <div class="av" :class="nickAvatarClass(acc.id)">
+            <img v-if="acc.avatarUrl" :src="acc.avatarUrl" :alt="acc.displayName || 'Nick'" />
+            <span v-else>{{ nickInitials(acc.displayName) }}</span>
+          </div>
+          <div class="info">
+            <div class="name">{{ acc.displayName || 'Nick chưa đặt tên' }}</div>
+            <div class="sub">{{ acc.phone || acc.zaloUid || '—' }}</div>
+          </div>
+          <span class="count">{{ countByNick[acc.id] ?? 0 }}</span>
+          <v-icon v-if="effectiveNickId === acc.id" icon="mdi-check" size="18" color="primary" />
+        </div>
+      </div>
+    </MobileSheet>
+
     <FriendDetailPanel
       :friend="detailFriend"
       :active-nick-name="activeAccount?.displayName || 'Nick'"
@@ -152,16 +243,13 @@
       @open-contact="onOpenContact"
     />
 
-    <!-- Hồ sơ KH tổng (tái dùng) — mở từ nút 👤 Hồ sơ, vào thẳng tab Nick chăm đúng nick. -->
+    <!-- Hồ sơ KH tổng (tái dùng) -->
     <CustomerProfileDialog
       v-model="showProfileDialog"
       :contact-id="profileContactId"
       :friend-id="profileFriendId"
       initial-tab="nicks"
     />
-
-    <!-- 2026-06-17 (anh chốt): bỏ toast khôi phục — vẫn nhớ view gần nhất qua localStorage/URL,
-         chỉ không thông báo ra UI. -->
   </div>
 </template>
 
@@ -172,18 +260,22 @@ import { useFriends, type DbFriend } from '@/composables/use-friends';
 import { useZaloAccounts } from '@/composables/use-zalo-accounts';
 import { useFriendsState, type DensityMode, type FriendKindFilter } from '@/composables/use-friends-state';
 import { useFriendSocket, type FriendUpdatedPayload } from '@/composables/use-friend-socket';
+import { useMobile } from '@/composables/use-mobile';
 import NickSidebar from '@/components/friends/NickSidebar.vue';
 import FriendsFilterBar from '@/components/friends/FriendsFilterBar.vue';
 import FriendsSmartHints from '@/components/friends/FriendsSmartHints.vue';
 import FriendsTable from '@/components/friends/FriendsTable.vue';
+import FriendsCards from '@/components/friends/FriendsCards.vue';
 import FriendsBulkBar from '@/components/friends/FriendsBulkBar.vue';
 import FriendDetailPanel from '@/components/friends/FriendDetailPanel.vue';
 import CustomerProfileDialog from '@/components/contacts/CustomerProfileDialog.vue';
+import MobileSheet from '@/components/mobile/MobileSheet.vue';
 import { useToast } from '@/composables/use-toast';
 import type { SmartHint } from '@/components/friends/FriendsSmartHints.vue';
 
 const router = useRouter();
 const toast = useToast();
+const { isMobile } = useMobile();
 const { accounts, fetchAccounts } = useZaloAccounts();
 const {
   friendsDb,
@@ -197,7 +289,6 @@ const {
 } = useFriends();
 
 const stateRaw = useFriendsState();
-// Expose .value refs together to template via shorthand
 const state = {
   kindFilter: stateRaw.kindFilter,
   careStatus: stateRaw.careStatus,
@@ -212,26 +303,25 @@ const DENSITY_OPTIONS: { value: DensityMode; label: string }[] = [
   { value: 'detailed', label: 'Rộng' },
 ];
 
+const showMobileNickSheet = ref(false);
+
 // ─── Column toggle (Tier 1 default vs Tier 2 optional) ───
-// Tier 1: KB từ ngày, Đình trệ, Auto tag — luôn hiện, không toggle được (subheader disable)
 const DEFAULT_COLUMNS = [
-  { key: 'becameFriendAt', label: '🕒 KB từ ngày',  hint: 'Ngày trở thành bạn bè trên Zalo' },
-  { key: 'stuckSince',     label: '⚠ Đình trệ',    hint: 'KH bị cron flag stuck do không tương tác' },
-  { key: 'autoTags',       label: '🤖 Auto tag',    hint: 'System auto: active / stuck / cold / ready ...' },
+  { key: 'becameFriendAt', label: 'KB từ ngày',  hint: 'Ngày trở thành bạn bè trên Zalo', icon: 'mdi-clock-outline' },
+  { key: 'stuckSince',     label: 'Đình trệ',    hint: 'KH bị cron flag stuck do không tương tác', icon: 'mdi-alert-circle-outline' },
+  { key: 'autoTags',       label: 'Auto tag',    hint: 'System auto: active / stuck / cold / ready ...', icon: 'mdi-robot-outline' },
 ] as const;
 
-// Tier 2: optional, toggle qua menu, persist localStorage
 const OPTIONAL_COLUMNS = [
-  { key: 'zaloGlobalId',  label: '🌐 Global ID',         hint: 'Zalo global identity, cross-nick' },
-  { key: 'zaloUsername',  label: '@ Username',           hint: 'Zalo handle (@t_abc...)' },
-  { key: 'lastInboundAt', label: '📥 KH nhắn cuối',      hint: 'Tách riêng inbound (tin từ KH)' },
-  { key: 'lastOutboundAt',label: '📤 Sale nhắn cuối',    hint: 'Tách riêng outbound (tin từ sale)' },
-  { key: 'firstMessageAt',label: '💬 First message',     hint: 'Mở chat 1-1 lần đầu' },
-  { key: 'stageEnteredAt',label: '⏱ Stage từ',           hint: 'Vào trạng thái KH hiện tại lúc nào' },
-  // Phase 2 — Derived cols (tính từ field có sẵn)
-  { key: 'silent',        label: '🔇 Silent',            hint: 'Số ngày KH không nhắn (KH cold tail)' },
-  { key: 'replyRate',     label: '📨 Reply rate',        hint: 'Tỷ lệ outbound/inbound — sale có chăm đủ không' },
-  { key: 'healthBars',    label: '🌡 Health bars',       hint: 'Score breakdown 4-dim mini bars (engagement/intent/fit/velocity)' },
+  { key: 'zaloGlobalId',  label: 'Global ID',         hint: 'Zalo global identity, cross-nick', icon: 'mdi-web' },
+  { key: 'zaloUsername',  label: 'Username',          hint: 'Zalo handle (@t_abc...)', icon: 'mdi-at' },
+  { key: 'lastInboundAt', label: 'KH nhắn cuối',      hint: 'Tách riêng inbound (tin từ KH)', icon: 'mdi-inbox-arrow-down-outline' },
+  { key: 'lastOutboundAt',label: 'Sale nhắn cuối',    hint: 'Tách riêng outbound (tin từ sale)', icon: 'mdi-send-outline' },
+  { key: 'firstMessageAt',label: 'First message',     hint: 'Mở chat 1-1 lần đầu', icon: 'mdi-message-text-outline' },
+  { key: 'stageEnteredAt',label: 'Stage từ',           hint: 'Vào trạng thái KH hiện tại lúc nào', icon: 'mdi-timer-outline' },
+  { key: 'silent',        label: 'Silent',            hint: 'Số ngày KH không nhắn (KH cold tail)', icon: 'mdi-volume-off' },
+  { key: 'replyRate',     label: 'Reply rate',        hint: 'Tỷ lệ outbound/inbound — sale có chăm đủ không', icon: 'mdi-email-sync-outline' },
+  { key: 'healthBars',    label: 'Health bars',       hint: 'Score breakdown 4-dim mini bars (engagement/intent/fit/velocity)', icon: 'mdi-chart-timeline-variant-shimmer' },
 ] as const;
 
 type OptionalColKey = (typeof OPTIONAL_COLUMNS)[number]['key'];
@@ -257,8 +347,7 @@ function toggleColumn(key: OptionalColKey) {
 }
 
 function onExportCsv() {
-  // Placeholder: chưa làm. Defer phase sau, tránh button placeholder không phản hồi.
-  console.warn('[FriendsView] CSV export chưa implement');
+  toast.push('Tính năng xuất CSV đang được chuẩn hóa.');
 }
 
 const searchInput = ref('');
@@ -266,14 +355,11 @@ const pagination = reactive({ page: 1, limit: 25 });
 const selected = ref<Set<string>>(new Set());
 const detailFriend = ref<DbFriend | null>(null);
 
-// ─── Active nick resolution ───
-// effectiveNickId: 'all' | account.id | null (loading)
 const effectiveNickId = computed<string | null>(() => stateRaw.selectedNickId.value);
 const activeAccount = computed(() =>
   accounts.value.find(a => a.id === effectiveNickId.value) || null,
 );
 
-// Counts (TODO khi backend cho aggregate). Tạm derive từ list hiện tại.
 const countByNick = ref<Record<string, number>>({});
 const totalAcrossAllNicks = computed(() => {
   return Object.values(countByNick.value).reduce((s, v) => s + v, 0);
@@ -294,8 +380,6 @@ const silentCount = computed(() => {
   return friendsDb.value.filter(f => f.lastInteractionAt && now - new Date(f.lastInteractionAt).getTime() >= SEVEN).length;
 });
 
-
-// ─── Pagination derived ───
 const totalPages = computed(() => Math.max(1, Math.ceil(friendsDbTotal.value / pagination.limit)));
 const pagFrom = computed(() => {
   if (friendsDbTotal.value === 0) return 0;
@@ -309,7 +393,6 @@ const visiblePages = computed<number[]>(() => {
   return [...out].filter(p => p >= 1 && p <= total).sort((a, b) => a - b);
 });
 
-// ─── Fetch wiring ───
 let searchTimeout: ReturnType<typeof setTimeout>;
 function debouncedFetch() {
   clearTimeout(searchTimeout);
@@ -323,7 +406,6 @@ async function fetch() {
   const id = effectiveNickId.value;
   if (!id) return;
   if (id === 'all') {
-    // Cross-nick aggregate: gọi /friends-db/all-nicks (Phase 4)
     await fetchFriendsDbAllNicks({
       kind: state.kindFilter.value === 'all' ? undefined : state.kindFilter.value,
       page: pagination.page,
@@ -344,7 +426,6 @@ async function fetch() {
   });
 }
 
-// Phase 6 polish — sort theo Score header click. Persist localStorage.
 type SortBy = 'recent' | 'score-desc' | 'score-asc' | 'stuck';
 const SORT_LS_KEY = 'friendsview.sortBy.v1';
 const sortBy = ref<SortBy>((localStorage.getItem(SORT_LS_KEY) as SortBy) || 'recent');
@@ -376,36 +457,30 @@ function onKindChange(v: FriendKindFilter) {
 function onCareChange(v: string) {
   state.careStatus.value = v;
   pagination.page = 1;
-  fetch();  // statusId truyền trong fetch() (backend filter theo Friend.statusId)
+  fetch();
 }
 
 async function onSync() {
   if (!effectiveNickId.value || effectiveNickId.value === 'all') return;
   const result = await syncFriendsDb(effectiveNickId.value);
   if (result?.cooldown) {
-    // Backend từ chối do 5s cooldown — hiện hint nhẹ không cần fetch lại
     console.warn('[FriendsView] sync cooldown:', result.message);
     return;
   }
   await fetch();
 }
 
-// ─── Live socket subscribe: friend:updated → merge patch vào row trong cache
-// Không refetch list, chỉ mutate trực tiếp row để tránh flicker + tiết kiệm HTTP.
 useFriendSocket((payload: FriendUpdatedPayload) => {
   const row = friendsDb.value.find((f) => f.id === payload.friendId);
-  if (!row) return; // row không có trong page hiện tại, skip
+  if (!row) return;
   Object.assign(row as Record<string, unknown>, payload.patch);
 });
 
-// ─── Detail panel + actions ───
 function onOpenDetail(f: DbFriend) {
   detailFriend.value = f;
 }
 
 async function onOpenChat(f: DbFriend) {
-  // Best-effort: ensure conversation tồn tại trước, rồi điều hướng tới Chat.
-  // Reuse logic của FriendsView cũ — backend đảm bảo idempotent.
   try {
     const { api } = await import('@/api/index');
     const res = await api.post<{ conversationId: string }>(`/friends/${f.id}/ensure-conversation`, {});
@@ -419,8 +494,6 @@ async function onOpenChat(f: DbFriend) {
   if (f.contact?.id) router.push({ path: '/chat', query: { contactId: f.contact.id } });
 }
 
-// Hồ sơ KH tổng — mở POPUP CustomerProfileDialog ngay trên /friends (không rời màn).
-// Mở thẳng tab "Nick chăm" + highlight đúng nick đang xem (anh chốt 2026-06-13).
 const showProfileDialog = ref(false);
 const profileContactId = ref<string | null>(null);
 const profileFriendId = ref<string | null>(null);
@@ -440,7 +513,6 @@ function onCall(f: DbFriend) {
   }
 }
 
-// ─── Bulk actions (stubs — backend wiring lần kế) ───
 function onBulkMessage() {
   console.log('[bulk] message to', [...selected.value]);
 }
@@ -454,22 +526,19 @@ function onBulkExport() {
   console.log('[bulk] export', [...selected.value]);
 }
 
-// ─── Smart hints ───
 function onApplyHint(h: SmartHint) {
   if (h.key === 'silent7d') {
-    // Filter client-side cho session này — backend cần thêm param sau
-    console.log('[hint] silent7d — TODO wire backend filter');
+    console.log('[hint] silent7d');
   } else if (h.key === 'newThisWeek') {
     console.log('[hint] newThisWeek');
   } else if (h.key === 'hotPending') {
     state.careStatus.value = 'hot';
     fetch();
   } else if (h.key === 'aliasDup') {
-    console.log('[hint] aliasDup — show merge dialog');
+    console.log('[hint] aliasDup');
   }
 }
 
-// ─── Avatar helpers cho header ───
 const NICK_PALETTE = ['av-c1', 'av-c2', 'av-c3', 'av-c4', 'av-c5', 'av-c6', 'av-c7'];
 function nickAvatarClass(id: string): string {
   let h = 0;
@@ -483,13 +552,6 @@ function nickInitials(name?: string | null): string {
   return (parts[parts.length - 2][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-
-// ─── Watchers ───
-watch(() => stateRaw.density.value, () => {
-  // density chỉ là UI, không cần refetch
-});
-
-// Khi accounts đã load, nếu state đang null thì pick first.
 watch(accounts, (list) => {
   if (!stateRaw.selectedNickId.value && list.length) {
     stateRaw.selectedNickId.value = list[0].id;
@@ -499,8 +561,6 @@ watch(accounts, (list) => {
 
 onMounted(async () => {
   await fetchAccounts();
-
-  // Validate restored nick — nếu nick id từ storage không còn tồn tại → fallback
   const persisted = stateRaw.selectedNickId.value;
   if (persisted && persisted !== 'all') {
     const exists = accounts.value.some(a => a.id === persisted);
@@ -512,7 +572,6 @@ onMounted(async () => {
   }
   fetch();
 
-  // Auto-dismiss restore toast sau 5s
   if (stateRaw.restoredFromStorage.value) {
     setTimeout(() => stateRaw.dismissRestoreToast(), 5000);
   }
@@ -521,9 +580,10 @@ onMounted(async () => {
 
 <style scoped>
 .friends-page {
-  height: calc(100vh - var(--smax-topnav-h, 52px));
-  background: var(--surface-2);
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface);
   overflow: hidden;
 }
 
@@ -539,34 +599,101 @@ onMounted(async () => {
 }
 @media (max-width: 800px) {
   .page-grid { grid-template-columns: 1fr; }
-  .page-grid > :first-child { display: none; }
+  .desktop-sidebar { display: none !important; }
+  .desktop-only { display: none !important; }
 }
 
 .main {
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   min-width: 0;
+  flex: 1;
 }
 
 .page-head {
-  padding: 12px 22px 8px;
+  padding: 12px 18px 10px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
-.page-head h1 { margin: 0; font-size: 18px; font-weight: 800; color: var(--ink); }
+
+.head-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.head-title h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.title-icon {
+  color: var(--brand);
+}
+
+/* Mobile Nick Selector Button */
+.mobile-nick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  border-radius: var(--r-pill, 20px);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+}
+.mobile-nick-btn .av {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+.mobile-nick-btn .av.all {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+.mobile-nick-btn .nick-name {
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chevron-icon {
+  opacity: .6;
+}
 
 .active-nick {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--brand-soft); color: var(--brand-700);
-  padding: 3px 10px; border-radius: var(--r-pill);
-  font-weight: 600; font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 12px;
 }
 .active-nick .av {
-  width: 18px; height: 18px; border-radius: 50%;
-  color: #fff; display: grid; place-items: center;
-  font-size: 9px; font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  font-weight: 700;
 }
 .active-nick.all .av {
   background: linear-gradient(135deg, #94a3b8, #64748b);
@@ -575,45 +702,104 @@ onMounted(async () => {
 
 .spacer { flex: 1; }
 
+/* Head search box with vector icons */
+.head-search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.head-search-wrap .search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--ink-4);
+  pointer-events: none;
+}
 .head-search {
-  padding: 8px 12px;
-  border: 1px solid var(--line); border-radius: var(--r-sm);
-  width: 280px; font-size: 13px;
+  padding: 7px 30px 7px 32px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  width: 240px;
+  font-size: 13px;
   color: var(--ink);
+  background: var(--surface);
   font-family: inherit;
   transition: border-color .12s, box-shadow .12s;
 }
-.head-search:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.head-search:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+@media (max-width: 600px) {
+  .head-search { width: 100%; min-width: 160px; }
+  .head-search-wrap { flex: 1; width: 100%; order: 3; }
+}
+.search-clear {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ink-4);
+  cursor: pointer;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+.search-clear:hover { color: var(--ink); }
 
 .btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 13px; border-radius: var(--r-sm); border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink-2);
-  font-weight: 600; font-size: 12.5px;
-  cursor: pointer; font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: inherit;
   transition: all .12s;
 }
 .btn:hover { background: var(--surface-3); color: var(--ink); }
-.btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); box-shadow: var(--sh-xs); }
+.btn.primary {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+  box-shadow: var(--sh-xs);
+}
 .btn.primary:hover:not(:disabled) { background: var(--brand-600); }
 .btn:disabled { opacity: .6; cursor: not-allowed; }
 
+.spin-anim {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .stats {
-  padding: 9px 22px;
+  padding: 8px 18px;
   background: var(--surface-2);
   border-bottom: 1px solid var(--line);
-  display: flex; gap: 16px; align-items: center;
-  font-size: 12.5px; color: var(--ink-2);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink-2);
+  flex-wrap: wrap;
 }
-.stats .stat { display: inline-flex; align-items: center; gap: 6px; }
+.stats .stat { display: inline-flex; align-items: center; gap: 5px; }
 .stats .stat strong { color: var(--ink); font-weight: 700; }
 .stats .stat.good strong { color: var(--success); }
 .stats .stat.warn strong { color: var(--warning); }
 .stats .stat.bad strong { color: var(--error); }
-.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+.sdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: none; }
 .sdot.ok { background: var(--success); }
 .sdot.warn { background: var(--warning); }
-.sdot.info { background: var(--info); }
+.sdot.info { background: var(--brand); }
 .sdot.mut { background: var(--ink-4); }
 .sdot.err { background: var(--error); }
 .spacer-flex { flex: 1; }
@@ -621,31 +807,48 @@ onMounted(async () => {
 .density-label { font-size: 11px; color: var(--ink-3); }
 .density-toggle {
   display: inline-flex;
-  background: var(--surface-3); border: 1px solid var(--line);
-  border-radius: var(--r-sm); padding: 2px;
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 2px;
 }
 .density-toggle button {
   padding: 4px 9px;
-  background: transparent; border: none;
+  background: transparent;
+  border: none;
   border-radius: 6px;
-  font-size: 11.5px; font-weight: 600; color: var(--ink-3);
-  cursor: pointer; font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  cursor: pointer;
+  font-family: inherit;
 }
 .density-toggle button.active {
-  background: var(--surface); color: var(--brand-700); box-shadow: var(--sh-xs);
+  background: var(--surface);
+  color: var(--brand);
+  box-shadow: var(--sh-xs);
 }
 
 .pag {
-  padding: 9px 22px;
+  padding: 8px 18px;
   background: var(--surface);
   border-top: 1px solid var(--line);
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12.5px; color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+  flex-wrap: wrap;
 }
 .pag button {
-  padding: 5px 11px;
-  border: 1px solid var(--line); background: var(--surface);
-  border-radius: var(--r-sm); cursor: pointer; font-size: 12.5px; font-weight: 600;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--ink-2);
   font-family: inherit;
   transition: all .12s;
@@ -654,27 +857,73 @@ onMounted(async () => {
 .pag button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
 .pag button:disabled { opacity: .4; cursor: not-allowed; }
 
-.toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: #1a2433; color: #fff;
-  padding: 10px 16px; border-radius: 8px;
-  font-size: 12px; max-width: 360px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-  z-index: 60;
-  display: flex; align-items: center; gap: 8px;
-  animation: slideUp .25s;
+/* Mobile Nick Sheet List */
+.mobile-nick-sheet-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  max-height: 60vh;
+  overflow-y: auto;
 }
-.toast a { color: #93c5fd; text-decoration: none; margin-left: 4px; }
-.toast a:hover { text-decoration: underline; }
-.toast-close {
-  background: transparent; border: none;
-  color: #fff; opacity: .6; cursor: pointer;
-  margin-left: 4px; font-family: inherit; font-size: 12px;
+.sheet-nick-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition: background .12s;
 }
-.toast-close:hover { opacity: 1; }
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
+.sheet-nick-item:hover, .sheet-nick-item.active {
+  background: var(--brand-soft);
+}
+.sheet-nick-item .av {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.sheet-nick-item .av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sheet-nick-item .av.all {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+.sheet-nick-item .info {
+  flex: 1;
+  min-width: 0;
+}
+.sheet-nick-item .name {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sheet-nick-item .sub {
+  font-size: 11px;
+  color: var(--ink-4);
+}
+.sheet-nick-item .count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  color: var(--ink-2);
+}
+.sheet-nick-item.active .count {
+  background: var(--brand);
+  color: #fff;
 }
 
 .av-c1 { background: linear-gradient(135deg, #2f6ee5, #1d4ed8); }

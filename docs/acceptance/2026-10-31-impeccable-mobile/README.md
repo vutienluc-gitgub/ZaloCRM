@@ -55,6 +55,14 @@
      - *Bên phải*: Chuông thông báo (`NotificationBell`) và nút bấm Avatar người dùng (32px), loại bỏ nút 3 chấm (`⋮`) dư thừa. Bấm vào Avatar mở thẳng Bottom Sheet tài khoản.
    - **Cử chỉ Kéo để làm mới (Pull-to-refresh)**: Tích hợp hiệu ứng kéo vuốt native mượt mà từ trên xuống để làm mới dữ liệu trang chủ, kèm spinner chỉ thị phản hồi xúc giác công thái học.
 
+7. **Chuẩn Hóa Màn Hình Bạn Bè (`/friends`) theo Tiêu Chuẩn UI/UX Pro Max & Impeccable**:
+   - **Xóa sổ 100% Raw Emoji (Anti AI-Slop)**: Chuyển toàn bộ emoji (👥, 🔍, ⚙, 🕒, ⚠, 🤖, 🌐, 📥, 📤, 💬, ⏱, 🔇, 📨, 🌡, 🔵) sang vector icons chuẩn hóa (Lucide & Material Design Icons).
+   - **Bố cục thích ứng kép (Adaptive Dual-Mode)**:
+     - *Desktop/Tablet (≥800px)*: Giữ nguyên bảng dữ liệu 20 cột mật độ cao với header dính, toggle cột sạch đẹp, và sidebar chọn Nick.
+     - *Mobile (<800px)*: Tự động kích hoạt **Thẻ danh bạ thông minh (`FriendsCards.vue`)**, phân cấp 3 lớp thông tin trực quan, 0px tràn ngang trên viewport 360px & 390px.
+     - *Thanh chọn Nick Mobile*: Tích hợp nút chọn Nick nhanh trên Header, mở `MobileSheet` trượt sát đáy để chuyển đổi Nick Zalo thay vì bị ẩn mất như phiên bản cũ.
+   - **Thao tác một chạm (1-Tap Actions)**: Mỗi thẻ KH trên điện thoại đều có sẵn 3 nút hành động lớn (Nhắn tin Zalo, Gọi điện thoại, Mở hồ sơ tổng hợp) đạt touch target chuẩn công thái học.
+
 ---
 
 ## 2. Danh Mục Tệp Thay Đổi
@@ -86,7 +94,13 @@
 | `frontend/src/components/settings/CrmTagManagement.vue` | Cải tiến | MDI lock icon thay emoji 🔒 |
 | `frontend/src/layouts/MobileLayout.vue` | Cải tiến | Header gộp 1 tầng Dashboard (Logo + Chào tên/ngày + Chuông + Avatar), bỏ 3 chấm thừa |
 | `frontend/src/views/mobile/MobileDashboard.vue` | Cải tiến | Bỏ header phụ .md-hello (tiết kiệm 66px), tích hợp Pull-to-refresh native mượt mà |
-| `frontend/package.json` | Cập nhật | Nâng phiên bản `3.4.0` → `3.4.1` |
+| `frontend/src/views/FriendsView.vue` | Cải tiến | Bố cục thích ứng kép (Table desktop / Cards mobile), xóa emoji, MobileSheet chọn Nick |
+| `frontend/src/components/friends/FriendsCards.vue` | Mới | Thẻ danh bạ thông minh chuẩn UI/UX Pro Max cho Mobile, 1-tap touch actions |
+| `frontend/src/components/friends/FriendsBulkBar.vue` | Cải tiến | Thay thế toàn bộ emoji thành icon Lucide vector |
+| `frontend/src/components/friends/FriendsSmartHints.vue` | Cải tiến | Thay thế emoji bằng Lucide vector icons và semantic design tokens |
+| `frontend/src/components/friends/FriendDetailPanel.vue` | Cải tiến | Thay thế emoji 🔵 bằng dot semantic indicator |
+| `frontend/src/components/friends/FriendsTable.vue` | Cải tiến | Thay thế content: "🔵" bằng CSS dot indicator chuẩn |
+| `frontend/package.json` | Cập nhật | Nâng phiên bản `3.4.1` → `3.4.2` |
 
 ---
 
@@ -99,6 +113,10 @@
 | Tràn ngang màn hình (Contacts) | 0px overflow | 0px overflow | `scrollWidth <= innerWidth` | **PASS** |
 | Tràn ngang màn hình (Cài đặt `/settings`) | 0px overflow | 0px overflow | `scrollWidth <= innerWidth` | **PASS** |
 | Tràn ngang màn hình (Tài khoản `/settings/personal/profile`) | 0px overflow | 0px overflow | `scrollWidth <= innerWidth` | **PASS** |
+| Tràn ngang màn hình (Bạn bè `/friends` - Thẻ Mobile) | 0px overflow (360px) | 0px overflow (390px) | `scrollWidth <= innerWidth` | **PASS** |
+| Kiểm tra Raw Emoji trong module Bạn bè | 0 emoji | 0 emoji | 0 emoji trong DOM | **PASS** |
+| Thẻ danh bạ thông minh (`FriendsCards.vue`) | Tự động kích hoạt | Tự động kích hoạt | Chuẩn UI/UX Pro Max | **PASS** |
+| MobileSheet chọn Nick Zalo | Hoạt động mượt mà | Hoạt động mượt mà | Thay thế sidebar bị ẩn | **PASS** |
 | Cỡ chữ ô tìm kiếm Cài đặt | 16.0px | 16.0px | ≥ 16px (chống iOS zoom) | **PASS** |
 | Chiều cao ô tìm kiếm Cài đặt | 46.0px | 46.0px | ≥ 44px touch target | **PASS** |
 | Chiều cao hàng danh mục Cài đặt | 48.0px | 48.0px | ≥ 44px touch target | **PASS** |
@@ -150,12 +168,22 @@
 - **Dashboard Header 1 tầng tinh gọn (360×640 & 390×844)**: `assets/18-header-p1-dashboard-360x640.png`, `assets/18-header-p1-dashboard-390x844.png`
 - **Chạm Avatar mở Bottom Sheet Tài khoản (360×640 & 390×844)**: `assets/19-header-p1-account-sheet-360x640.png`, `assets/19-header-p1-account-sheet-390x844.png`
 
+### 4.8 Màn Hình Bạn Bè Chuẩn UI/UX Pro Max (Bảng Desktop & Thẻ Mobile)
+- **Bảng dữ liệu Bạn bè Desktop sạch emoji (1280×800)**: `assets/20-friends-desktop-1280x800.png`
+- **Thẻ danh bạ thông minh Mobile Smart Cards (360×640)**: `assets/20-friends-mobile-360x640.png`
+
 ---
 
 ## 5. Hướng Dẫn Bàn Giao Cho Người Dùng
 
 1. **Kiểm tra trên trình duyệt di động hoặc Chế độ Ghim Màn Hình Chính (PWA)**:
    - Truy cập vào ứng dụng trên điện thoại (Safari trên iOS hoặc Chrome trên Android).
+   - **Màn hình Bạn bè (`/friends` hoặc vào qua tab Thêm -> Bạn bè)**:
+     - Trên điện thoại: Tự động chuyển đổi thành danh sách **Thẻ danh bạ thông minh** (`FriendsCards.vue`), không còn bị tràn màn hình hay ép cuộn ngang bảng 20 cột như trước.
+     - Mỗi thẻ hiển thị rõ ràng: Avatar, Tên KH, Nick Zalo đang phụ trách, trạng thái quan hệ, điểm tương tác và các tag phân loại.
+     - Có sẵn 3 nút chạm ngón tay: **Nhắn Zalo** (vào thẳng khung chat), **Gọi** (kết nối cuộc gọi nhanh), **Hồ sơ** (mở hồ sơ khách hàng hợp nhất).
+     - Nút chọn Nick Zalo nằm ngay trên thanh tiêu đề: chạm vào để mở Bottom Sheet trượt từ đáy lên, dễ dàng lọc danh bạ theo từng Nick cá nhân hoặc xem tất cả Nick.
+     - Toàn bộ các biểu tượng rườm rà trước đây đã được thay thế 100% bằng icon vector sắc nét, tinh tế.
    - **Header Dashboard mới (Phương Án 1)**:
      - Thanh App Bar trên cùng tinh gọn chỉ 56px, hiển thị logo Vĩnh Phát bên cạnh lời chào cá nhân hóa (ví dụ: *Chào Lực* và *Thứ Bảy, 31/10*).
      - Không còn khối chào 2 tầng cồng kềnh, mục **Việc hôm nay** và toàn bộ 4 thẻ **Hiệu suất của tôi** hiện ngay trên màn hình đầu tiên không cần cuộn.
