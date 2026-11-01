@@ -52,24 +52,62 @@
         />
       </div>
 
-      <!-- Label chip bar (filter theo tag CRM) — SINGLE-SELECT.
-           Khi 1 tag active → ẩn tag khác. Click lại để clear (show all). -->
-      <div v-if="visibleTags.length" class="cl-label-bar">
-        <span
-          v-for="tag in visibleTags"
-          :key="tag"
-          class="cl-label-chip"
-          :class="{ active: filters.tags.includes(tag), 'is-zalo': isZaloManaged(tag) }"
-          :style="{ '--tag-color': tagColor(tag) || '#6B7280' }"
-          @click="toggleTag(tag)"
-        >{{ normalizeTagName(tag) }}</span>
+      <!-- Label chip bar (filter theo tag CRM) — Phương án 1 (Collapse / Expand + Quick Search).
+           Bình thường gọn 1 hàng (7 tag), click "+N tag" mở rộng kèm ô tìm kiếm nhanh. -->
+      <div v-if="availableTags.length" class="cl-label-wrapper" :class="{ 'is-expanded': isTagBarExpanded }">
+        <!-- Ô tìm kiếm nhanh khi mở rộng -->
+        <div v-if="isTagBarExpanded" class="cl-tag-search-box">
+          <SearchIcon :size="13" class="cl-tag-search-ic" />
+          <input
+            v-model="tagFilterQuery"
+            type="text"
+            placeholder="Tìm nhanh nhãn khách hàng..."
+            class="cl-tag-search-input"
+            @click.stop
+          />
+          <button
+            v-if="tagFilterQuery"
+            type="button"
+            class="cl-tag-search-clear"
+            title="Xóa tìm kiếm"
+            @click.stop="tagFilterQuery = ''"
+          >
+            <XIcon :size="11" />
+          </button>
+        </div>
 
-        <button
-          v-if="filters.tags.length"
-          class="clear-tags"
-          @click="filters.tags = []"
-          title="Bỏ lọc tag · hiển thị lại tất cả"
-        ><XIcon :size="13" :stroke-width="2" /></button>
+        <div class="cl-label-bar">
+          <span
+            v-for="tag in visibleTags"
+            :key="tag"
+            class="cl-label-chip"
+            :class="{ active: filters.tags.includes(tag), 'is-zalo': isZaloManaged(tag) }"
+            :style="{ '--tag-color': tagColor(tag) || '#6B7280' }"
+            @click="toggleTag(tag)"
+          >{{ normalizeTagName(tag) }}</span>
+
+          <!-- Nút Mở rộng / Thu gọn (hiển thị khi không active tag và có > TAG_LIMIT tag) -->
+          <button
+            v-if="availableTags.length > TAG_LIMIT && !filters.tags.length"
+            type="button"
+            class="cl-tag-expand-btn"
+            :class="{ 'is-active': isTagBarExpanded }"
+            :title="isTagBarExpanded ? 'Thu gọn danh sách nhãn' : 'Xem toàn bộ nhãn'"
+            @click="toggleExpandTags"
+          >
+            <span>{{ isTagBarExpanded ? 'Thu gọn' : `+${hiddenTagsCount} tag` }}</span>
+            <ChevronUpIcon v-if="isTagBarExpanded" :size="12" />
+            <ChevronDownIcon v-else :size="12" />
+          </button>
+
+          <!-- Nút xóa bộ lọc khi đang chọn 1 tag -->
+          <button
+            v-if="filters.tags.length"
+            class="clear-tags"
+            @click="filters.tags = []"
+            title="Bỏ lọc tag · hiển thị lại tất cả"
+          ><XIcon :size="13" :stroke-width="2" /></button>
+        </div>
       </div>
 
       <!-- Phase 6+ Inbox Triage Filter Bar (Pills + 4 tabs + Mini counter) -->
@@ -310,7 +348,7 @@ import type { Conversation, AiSentiment } from '@/composables/use-chat';
 import { api } from '@/api/index';
 // Icon chrome — Lucide line (anh chốt 2026-06-08, bỏ ký tự thô).
 import {
-  ChevronUp as ChevronUpIcon, X as XIcon,
+  ChevronUp as ChevronUpIcon, ChevronDown as ChevronDownIcon, Search as SearchIcon, X as XIcon,
   Users, Lock, Flame, Award, TrendingUp, AlertTriangle, Snowflake,
 } from 'lucide-vue-next';
 import AiSentimentBadge from '@/components/ai/ai-sentiment-badge.vue';
@@ -497,12 +535,36 @@ function toggleTag(tag: string) {
   }
 }
 
-// visibleTags: nếu có tag active → chỉ hiện tag đó. Còn lại → show all.
+// Phương án 1 — Quản lý hiển thị thanh tag (Compact 7 tag + Expand all + Quick Search)
+const TAG_LIMIT = 7;
+const isTagBarExpanded = ref(false);
+const tagFilterQuery = ref('');
+
+function toggleExpandTags() {
+  isTagBarExpanded.value = !isTagBarExpanded.value;
+  if (!isTagBarExpanded.value) {
+    tagFilterQuery.value = '';
+  }
+}
+
+const hiddenTagsCount = computed(() => {
+  return Math.max(0, availableTags.value.length - TAG_LIMIT);
+});
+
+// visibleTags: tính toán danh sách tag hiển thị theo trạng thái Compact/Expanded/Filter
 const visibleTags = computed(() => {
   if (filters.tags.length > 0) {
     return availableTags.value.filter((t: string) => filters.tags.includes(t));
   }
-  return availableTags.value;
+  if (isTagBarExpanded.value) {
+    const q = tagFilterQuery.value.trim().toLowerCase();
+    if (!q) return availableTags.value;
+    return availableTags.value.filter((t: string) => {
+      const normalized = normalizeTagName(t).toLowerCase();
+      return normalized.includes(q) || t.toLowerCase().includes(q);
+    });
+  }
+  return availableTags.value.slice(0, TAG_LIMIT);
 });
 
 function buildFilterParams(): Record<string, string> {
@@ -1256,13 +1318,97 @@ function onPatternLeave() {
   color: white;
 }
 
+.cl-label-wrapper {
+  margin-top: 7px;
+  position: relative;
+  transition: all 0.2s ease;
+}
 .cl-label-bar {
-  display: flex; gap: 4px; margin-top: 7px;
+  display: flex; gap: 4px;
   overflow-x: auto;
   padding-bottom: 3px;
   align-items: center;
 }
 .cl-label-bar::-webkit-scrollbar { height: 4px; }
+
+/* Phương án 1 — Expanded View & Quick Search */
+.cl-label-wrapper.is-expanded {
+  background: var(--smax-bg-subtle, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--smax-border, #E5E7EB);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+.cl-label-wrapper.is-expanded .cl-label-bar {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  max-height: 160px;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+.cl-tag-search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--smax-bg, #fff);
+  border: 1px solid var(--smax-border, #D1D5DB);
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.cl-tag-search-ic {
+  color: var(--smax-text-muted, #9CA3AF);
+  flex-shrink: 0;
+}
+.cl-tag-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 11px;
+  background: transparent;
+  color: var(--smax-text, #111827);
+  font-family: inherit;
+}
+.cl-tag-search-clear {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--smax-text-muted, #9CA3AF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+.cl-tag-search-clear:hover {
+  color: var(--smax-text, #111827);
+}
+.cl-tag-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: 11px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px dashed var(--smax-border, #9CA3AF);
+  color: var(--smax-text-muted, #6B7280);
+  background: var(--smax-bg, transparent);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+.cl-tag-expand-btn:hover {
+  border-color: var(--smax-primary, #0068FF);
+  color: var(--smax-primary, #0068FF);
+  background: var(--smax-primary-soft, rgba(0, 104, 255, 0.05));
+}
+.cl-tag-expand-btn.is-active {
+  border-style: solid;
+  border-color: var(--smax-primary, #0068FF);
+  color: var(--smax-primary, #0068FF);
+  background: var(--smax-primary-soft, rgba(0, 104, 255, 0.08));
+}
 /* Chip tag CRM — dùng --tag-color từ tagColor() lookup (sync system color).
    Text + border ăn theo --tag-color, active state fill background. */
 .cl-label-chip {
