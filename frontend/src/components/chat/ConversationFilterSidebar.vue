@@ -783,23 +783,78 @@
         </section>
 
         <!-- TIER 3: BUSINESS -->
-        <section class="section">
-          <header class="section-header" tabindex="0" role="button" aria-expanded="true">
+        <section class="section" :class="{ collapsed: !sectionsOpen.business }">
+          <header class="section-header" :title="TIPS.business" tabindex="0" role="button" :aria-expanded="sectionsOpen.business" @click="toggleSection('business')" @keydown.enter.prevent="toggleSection('business')" @keydown.space.prevent="toggleSection('business')">
             <div class="left"><span class="emoji"><BriefcaseIcon :size="14" :stroke-width="2" /></span>Giá trị kinh doanh</div>
             <div class="right">
+              <span v-if="businessActiveCount > 0" class="count-badge">{{ businessActiveCount }}</span>
+              <span v-else class="count-badge zero">0</span>
               <span class="chevron"><ChevronDownIcon :size="14" :stroke-width="2" /></span>
             </div>
           </header>
+          <div class="section-body">
+            <div class="subsection-label">Phân khúc doanh thu</div>
+            <div
+              v-for="b in BUSINESS_TIER_OPTIONS"
+              :key="b.key"
+              class="event-row"
+              :class="{ checked: filters.state.businessTier === b.key }"
+              :title="b.tip"
+              @click="selectBusinessTier(b.key)"
+            >
+              <div class="left">
+                <span class="lbl">{{ b.label }}</span>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- TIER 3: AI SIGNAL -->
-        <section class="section">
-          <header class="section-header" tabindex="0" role="button" aria-expanded="true">
+        <section class="section" :class="{ collapsed: !sectionsOpen.aiSignal }">
+          <header class="section-header" :title="TIPS.aiSignal" tabindex="0" role="button" :aria-expanded="sectionsOpen.aiSignal" @click="toggleSection('aiSignal')" @keydown.enter.prevent="toggleSection('aiSignal')" @keydown.space.prevent="toggleSection('aiSignal')">
             <div class="left"><span class="emoji"><BotIcon :size="14" :stroke-width="2" /></span>Tín hiệu AI</div>
             <div class="right">
+              <span v-if="aiSignalActiveCount > 0" class="count-badge">{{ aiSignalActiveCount }}</span>
+              <span v-else class="count-badge zero">0</span>
               <span class="chevron"><ChevronDownIcon :size="14" :stroke-width="2" /></span>
             </div>
           </header>
+          <div class="section-body">
+            <div class="subsection-label">Cảm xúc hội thoại</div>
+            <div
+              v-for="s in AI_SENTIMENT_OPTIONS"
+              :key="s.key"
+              class="event-row"
+              :class="{ checked: filters.state.aiSentiment === s.key }"
+              :title="s.tip"
+              @click="selectAiSentiment(s.key)"
+            >
+              <div class="left">
+                <span class="lbl">{{ s.label }}</span>
+              </div>
+            </div>
+            <div class="subsection-label mt-2">Dữ liệu AI đã trích xuất</div>
+            <div
+              class="event-row"
+              :class="{ checked: filters.state.hasAiSummary }"
+              title="Chỉ hiển thị các hội thoại đã được AI tạo tóm tắt nội dung"
+              @click="filters.state.hasAiSummary = !filters.state.hasAiSummary"
+            >
+              <div class="left">
+                <span class="lbl">Đã có tóm tắt AI</span>
+              </div>
+            </div>
+            <div
+              class="event-row"
+              :class="{ checked: filters.state.hasAiAppointment }"
+              title="Chỉ hiển thị các hội thoại mà AI phát hiện ý định lập lịch hẹn"
+              @click="filters.state.hasAiAppointment = !filters.state.hasAiAppointment"
+            >
+              <div class="left">
+                <span class="lbl">Có gợi ý lịch hẹn</span>
+              </div>
+            </div>
+          </div>
         </section>
 
       </div>
@@ -830,7 +885,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue';
-import type { AccountFolder, AutoTagKey, ScoreTier, StuckDuration, LastMessageWithin, EngagementPatternKey, MessageReplyState } from '@/composables/use-inbox-filters';
+import type { AccountFolder, AutoTagKey, ScoreTier, StuckDuration, LastMessageWithin, EngagementPatternKey, MessageReplyState, BusinessTier, AiSentimentFilter } from '@/composables/use-inbox-filters';
 import { cleanTagName } from '@/composables/use-crm-tag-defs';
 import PrivacyLockBadge from '@/components/privacy/PrivacyLockBadge.vue';
 // Open-core: Lead Pool floating button → extension bundle (no-op stub in Community).
@@ -997,8 +1052,8 @@ async function onCreatePresetFromPopover() {
 }
 
 // ─── Section expand state (persist) ──────────────────────
-type SectionKey = 'tag' | 'message' | 'score' | 'time' | 'event' | 'sale' | 'engagement';
-const SECTION_KEYS: SectionKey[] = ['tag', 'message', 'score', 'time', 'event', 'sale', 'engagement'];
+type SectionKey = 'tag' | 'message' | 'score' | 'time' | 'event' | 'sale' | 'engagement' | 'business' | 'aiSignal';
+const SECTION_KEYS: SectionKey[] = ['tag', 'message', 'score', 'time', 'event', 'sale', 'engagement', 'business', 'aiSignal'];
 
 // Anh chốt 2026-05-22: default chỉ 'event' (Sự kiện sắp tới) + 'sale' (Sale phụ trách)
 // expand. Các section khác (tag/score/time/engagement) collapse → user click chevron để mở.
@@ -1012,6 +1067,8 @@ const DEFAULT_OPEN: Record<SectionKey, boolean> = {
   event: true,
   sale: true,
   engagement: false,
+  business: false,
+  aiSignal: false,
 };
 const SECTION_DEFAULT_MIGRATION_KEY = 'chat-sidebar.section.v2-default-applied';
 function loadSectionState(): Record<SectionKey, boolean> {
@@ -1258,6 +1315,8 @@ const TIPS = {
   sale: 'Lọc theo nhân viên sale đang phụ trách KH.',
   engagement: 'Lọc theo xu hướng tương tác của KH qua nhiều tuần.',
   message: 'Lọc theo ai trả lời tin nhắn cuối: chưa ai / chỉ bot / sale đã vào.',
+  business: 'Lọc KH theo phân khúc giá trị kinh doanh, doanh số và quy mô.',
+  aiSignal: 'Lọc theo tín hiệu phân tích thông minh của AI: cảm xúc, tóm tắt, lịch hẹn.',
   preset: 'Bộ lọc đã lưu — bấm để áp nhanh tổ hợp lọc dùng thường xuyên.',
   // Nhãn con / nút lẻ
   leadScore: 'Điểm hệ thống chấm mức độ tiềm năng của KH (0–100).',
@@ -1316,6 +1375,52 @@ function selectMessageReplyState(key: NonNullable<MessageReplyState>) {
   // Radio: bấm lại nút đang chọn → bỏ chọn (về null).
   props.filters.state.messageReplyState =
     props.filters.state.messageReplyState === key ? null : key;
+  props.filters.activePresetId.value = null;
+}
+
+// ─── 2026-06-25 — Nhóm "Giá trị kinh doanh" & "Tín hiệu AI" ─────────
+const BUSINESS_TIER_OPTIONS: Array<{
+  key: NonNullable<BusinessTier>;
+  label: string;
+  tip: string;
+}> = [
+  { key: 'vip', label: 'Khách hàng VIP', tip: 'Khách hàng có giá trị vòng đời (LTV) và doanh số cao nhất' },
+  { key: 'potential', label: 'Tiềm năng cao', tip: 'Khách hàng quy mô lớn, có tiềm năng chốt đơn giá trị cao' },
+  { key: 'wholesale', label: 'Khách mua sỉ', tip: 'Đại lý, xưởng may hoặc khách đặt may số lượng lớn' },
+  { key: 'standard', label: 'Khách tiêu chuẩn', tip: 'Khách hàng đơn lẻ hoặc quy mô thông thường' },
+];
+
+const AI_SENTIMENT_OPTIONS: Array<{
+  key: NonNullable<AiSentimentFilter>;
+  label: string;
+  tip: string;
+}> = [
+  { key: 'positive', label: 'Tích cực / Hài lòng', tip: 'AI phân tích khách hàng đang hào hứng, phản hồi tích cực' },
+  { key: 'neutral', label: 'Trung tính / Tham khảo', tip: 'Khách hàng hỏi giá, tiến độ bình thường, chưa biểu lộ cảm xúc rõ' },
+  { key: 'negative', label: 'Tiêu cực / Phàn nàn', tip: 'Khách hàng bực bội, khiếu nại hoặc giục đơn — cần xử lý ưu tiên' },
+];
+
+const businessActiveCount = computed(() =>
+  props.filters.state.businessTier !== null ? 1 : 0
+);
+
+function selectBusinessTier(key: NonNullable<BusinessTier>) {
+  props.filters.state.businessTier =
+    props.filters.state.businessTier === key ? null : key;
+  props.filters.activePresetId.value = null;
+}
+
+const aiSignalActiveCount = computed(() => {
+  let n = 0;
+  if (props.filters.state.aiSentiment !== null) n++;
+  if (props.filters.state.hasAiSummary) n++;
+  if (props.filters.state.hasAiAppointment) n++;
+  return n;
+});
+
+function selectAiSentiment(key: NonNullable<AiSentimentFilter>) {
+  props.filters.state.aiSentiment =
+    props.filters.state.aiSentiment === key ? null : key;
   props.filters.activePresetId.value = null;
 }
 

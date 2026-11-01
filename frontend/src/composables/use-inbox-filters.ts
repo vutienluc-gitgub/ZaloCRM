@@ -84,6 +84,8 @@ export type SaleAssigneeFilter = string | null | 'all' | 'unassigned';
 //   sale_replied= có tin sale thật sau lượt khách cuối
 export type MessageReplyState = 'unanswered' | 'bot_no_sale' | 'sale_replied' | null;
 
+export type BusinessTier = 'vip' | 'potential' | 'wholesale' | 'standard' | null;
+export type AiSentimentFilter = 'positive' | 'negative' | 'neutral' | null;
 export interface FilterState {
   folderId: string | null;
   saleAssigneeId: SaleAssigneeFilter;
@@ -115,6 +117,11 @@ export interface FilterState {
   engagementPatterns: EngagementPatternKey[];
   // 2026-06-09 — Nhóm lọc "Tin nhắn" (user vs bot), radio 1-of-3
   messageReplyState: MessageReplyState;
+  // 2026-06-25 — Bổ sung Giá trị kinh doanh & Tín hiệu AI
+  businessTier: BusinessTier;
+  aiSentiment: AiSentimentFilter;
+  hasAiSummary: boolean;
+  hasAiAppointment: boolean;
 }
 
 // ─── Default state ──────────────────────────────────────────────────────
@@ -148,6 +155,10 @@ export function defaultFilterState(): FilterState {
     appointmentOverdue: false,
     engagementPatterns: [],
     messageReplyState: null,
+    businessTier: null,
+    aiSentiment: null,
+    hasAiSummary: false,
+    hasAiAppointment: false,
   };
 }
 
@@ -353,6 +364,12 @@ export function useInboxFilters() {
     // 2026-06-09 — Nhóm lọc "Tin nhắn" (user vs bot)
     if (state.messageReplyState) params.messageReplyState = state.messageReplyState;
 
+    // Business Tier & AI Signals
+    if (state.businessTier) params.businessTier = state.businessTier;
+    if (state.aiSentiment) params.aiSentiment = state.aiSentiment;
+    if (state.hasAiSummary) params.hasAiSummary = 'true';
+    if (state.hasAiAppointment) params.hasAiAppointment = 'true';
+
     return params;
   }
 
@@ -381,7 +398,11 @@ export function useInboxFilters() {
       state.appointmentWithin24h ||
       state.appointmentOverdue ||
       state.engagementPatterns.length > 0 ||
-      state.messageReplyState !== null
+      state.messageReplyState !== null ||
+      state.businessTier !== null ||
+      state.aiSentiment !== null ||
+      state.hasAiSummary ||
+      state.hasAiAppointment
     );
   });
 
@@ -528,6 +549,45 @@ export function useInboxFilters() {
         key: 'msg-reply',
         label: MSG_REPLY_LABELS[state.messageReplyState],
         remove: () => { state.messageReplyState = null; activePresetId.value = null; },
+      });
+    }
+    if (state.businessTier) {
+      const BIZ_LABELS: Record<NonNullable<BusinessTier>, string> = {
+        vip: 'Khách VIP (Doanh số cao)',
+        potential: 'Tiềm năng lớn',
+        wholesale: 'Khách sỉ / Đại lý',
+        standard: 'Khách lẻ tiêu chuẩn',
+      };
+      chips.push({
+        key: 'biz-tier',
+        label: BIZ_LABELS[state.businessTier],
+        remove: () => { state.businessTier = null; activePresetId.value = null; },
+      });
+    }
+    if (state.aiSentiment) {
+      const AI_SENTIMENT_LABELS: Record<NonNullable<AiSentimentFilter>, string> = {
+        positive: 'AI: Cảm xúc tích cực',
+        negative: 'AI: Cảm xúc tiêu cực / Khiếu nại',
+        neutral: 'AI: Cảm xúc trung tính',
+      };
+      chips.push({
+        key: 'ai-sentiment',
+        label: AI_SENTIMENT_LABELS[state.aiSentiment],
+        remove: () => { state.aiSentiment = null; activePresetId.value = null; },
+      });
+    }
+    if (state.hasAiSummary) {
+      chips.push({
+        key: 'ai-summary',
+        label: 'AI: Đã có tóm tắt',
+        remove: () => { state.hasAiSummary = false; activePresetId.value = null; },
+      });
+    }
+    if (state.hasAiAppointment) {
+      chips.push({
+        key: 'ai-appt',
+        label: 'AI: Gợi ý lịch hẹn',
+        remove: () => { state.hasAiAppointment = false; activePresetId.value = null; },
       });
     }
     return chips;
