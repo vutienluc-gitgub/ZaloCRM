@@ -21,19 +21,25 @@
           <img :src="brandLogo" alt="" @error="onLogoError" />
         </RouterLink>
 
-        <h1 class="m-bar__title">{{ pageTitle }}</h1>
+        <!-- Dashboard mode: Lời chào cá nhân hóa 1 tầng tinh gọn (Phương án 1) -->
+        <div v-if="isDashboard" class="m-bar__greeting">
+          <div class="m-bar__hi">{{ greeting }}, {{ firstName }}</div>
+          <div class="m-bar__date">{{ todayLabel }}</div>
+        </div>
+        <!-- Các trang khác: Tiêu đề trang chuẩn -->
+        <h1 v-else class="m-bar__title">{{ pageTitle }}</h1>
 
         <div class="m-bar__actions">
           <NotificationBell />
           <button
             type="button"
-            class="m-bar__btn"
+            class="m-bar__avatar-btn"
             aria-label="Tài khoản và tùy chọn"
             aria-haspopup="dialog"
             :aria-expanded="menuOpen"
             @click="menuOpen = true"
           >
-            <v-icon icon="mdi-dots-vertical" size="22" />
+            <Avatar :src="user?.avatarUrl || null" :name="user?.fullName || '?'" :size="32" />
           </button>
         </div>
       </header>
@@ -144,6 +150,33 @@ function onMenuSelect(key: MenuKey) {
 // Chat tự render header riêng (MessageThread) → shell ẩn app bar để tiết kiệm 56px.
 const isImmersive = computed(() => route.path === '/chat' || route.path.startsWith('/chat/'));
 
+// Dashboard mode 2026-11-01 (Phương án 1 tinh gọn): Lời chào + ngày thay cho chữ "Tổng quan"
+const isDashboard = computed(() => route.path === '/');
+
+const firstName = computed(() => {
+  const full = authStore.user?.fullName?.trim() || '';
+  if (!full) return 'bạn';
+  const parts = full.split(/\s+/);
+  return parts[parts.length - 1];
+});
+
+const greeting = computed(() => {
+  const h = new Date().getHours();
+  if (h < 11) return 'Chào buổi sáng';
+  if (h < 14) return 'Chào buổi trưa';
+  if (h < 18) return 'Chào buổi chiều';
+  return 'Chào buổi tối';
+});
+
+const todayLabel = computed(() => {
+  const s = new Date().toLocaleDateString('vi-VN', {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+  });
+  return s.charAt(0).toUpperCase() + s.slice(1);
+});
+
 const ROOT_PATHS = ['/', '/chat', '/contacts', '/appointments', '/more'];
 const isRootTab = computed(() => ROOT_PATHS.includes(route.path));
 const showBack = computed(() => !isRootTab.value);
@@ -240,6 +273,33 @@ onMounted(() => {
   object-fit: contain;
   padding: 3px;
 }
+.m-bar__greeting {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.m-bar__hi {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink, #101e34);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.015em;
+}
+.m-bar__date {
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink-4, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
 .m-bar__title {
   flex: 1 1 auto;
   min-width: 0;
@@ -255,7 +315,7 @@ onMounted(() => {
 .m-bar__actions {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 2px;
   flex: 0 0 auto;
 }
 .m-bar__btn {
@@ -273,6 +333,24 @@ onMounted(() => {
 }
 .m-bar__btn:active {
   background: var(--surface-3, #f4f6f8);
+}
+.m-bar__avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.m-bar__avatar-btn:active {
+  transform: scale(0.92);
+  opacity: 0.8;
 }
 
 /* ── Account sheet ───────────────────────────────────────────────────── */

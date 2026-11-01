@@ -1,25 +1,30 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Nguyễn Tiến Lộc -->
 <template>
-  <!-- Mobile dashboard 2026-10-29 (P0).
-       "Việc hôm nay" = 3 deep-link đã lọc sẵn + 4 KPI card 2×2. Không chart. -->
-  <div class="md">
-    <!-- ── Greeting ──────────────────────────────────────────────────── -->
-    <header class="md-hello">
-      <div class="md-hello__txt">
-        <div class="md-hello__hi">{{ greeting }}, {{ firstName }}</div>
-        <div class="md-hello__date">{{ todayLabel }}</div>
+  <!-- Mobile dashboard 2026-11-01 (Phương án 1 tinh gọn):
+       Header gộp lên MobileLayout 1 tầng duy nhất. "Việc hôm nay" + KPI hiển thị ngay trên nếp gấp màn hình.
+       Hỗ trợ vuốt kéo (Pull-to-refresh) trực quan. -->
+  <div
+    class="md"
+    @touchstart.passive="onTouchStart"
+    @touchmove.passive="onTouchMove"
+    @touchend="onTouchEnd"
+  >
+    <!-- ── Pull-to-refresh indicator ─────────────────────────────────── -->
+    <div
+      v-if="pullDistance > 0 || isRefreshing"
+      class="md-pull"
+      :style="{ height: `${Math.max(pullDistance, isRefreshing ? 42 : 0)}px` }"
+    >
+      <div class="md-pull__inner">
+        <v-icon
+          icon="mdi-refresh"
+          size="18"
+          :class="{ 'spin-icon': isRefreshing, 'rotate-180': pullDistance >= PULL_THRESHOLD && !isRefreshing }"
+        />
+        <span>{{ isRefreshing ? 'Đang cập nhật số liệu…' : pullDistance >= PULL_THRESHOLD ? 'Thả ra để làm mới' : 'Kéo xuống để làm mới' }}</span>
       </div>
-      <button
-        type="button"
-        class="md-refresh"
-        aria-label="Làm mới"
-        :class="{ 'is-loading': loading }"
-        @click="load"
-      >
-        <v-icon icon="mdi-refresh" size="20" />
-      </button>
-    </header>
+    </div>
 
     <!-- ── Lỗi ───────────────────────────────────────────────────────── -->
     <div v-if="error && !kpi" class="md-error">
@@ -155,29 +160,45 @@ const kpi = ref<Kpi | null>(null);
 const loading = ref(false);
 const error = ref(false);
 
-const firstName = computed(() => {
-  const full = auth.user?.fullName?.trim() || '';
-  if (!full) return 'bạn';
-  const parts = full.split(/\s+/);
-  return parts[parts.length - 1];
-});
+// ── Pull-to-refresh (Phương án 1: Vuốt làm mới) ─────────────────────────
+const pullDistance = ref(0);
+const isRefreshing = ref(false);
+const PULL_THRESHOLD = 50;
+let startY = 0;
+let canPull = false;
 
-const greeting = computed(() => {
-  const h = new Date().getHours();
-  if (h < 11) return 'Chào buổi sáng';
-  if (h < 14) return 'Chào buổi trưa';
-  if (h < 18) return 'Chào buổi chiều';
-  return 'Chào buổi tối';
-});
+function onTouchStart(e: TouchEvent) {
+  const container = (e.currentTarget as HTMLElement)?.closest('.m-main') || document.querySelector('.m-main');
+  if (!container || container.scrollTop <= 0) {
+    canPull = true;
+    startY = e.touches[0].clientY;
+  } else {
+    canPull = false;
+  }
+}
 
-const todayLabel = computed(() => {
-  const s = new Date().toLocaleDateString('vi-VN', {
-    weekday: 'long',
-    day: '2-digit',
-    month: '2-digit',
-  });
-  return s.charAt(0).toUpperCase() + s.slice(1);
-});
+function onTouchMove(e: TouchEvent) {
+  if (!canPull || isRefreshing.value) return;
+  const currentY = e.touches[0].clientY;
+  const diff = currentY - startY;
+  if (diff > 0) {
+    pullDistance.value = Math.min(diff * 0.4, 70);
+  } else {
+    pullDistance.value = 0;
+  }
+}
+
+async function onTouchEnd() {
+  if (!canPull || isRefreshing.value) return;
+  if (pullDistance.value >= PULL_THRESHOLD) {
+    isRefreshing.value = true;
+    pullDistance.value = 42;
+    await load();
+    isRefreshing.value = false;
+  }
+  pullDistance.value = 0;
+  canPull = false;
+}
 
 const allDone = computed(() => {
   const k = kpi.value;
@@ -220,54 +241,41 @@ function onVisible() {
 <style scoped>
 .md {
   min-height: 100%;
-  padding: 14px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 14px calc(20px + env(safe-area-inset-bottom, 0px));
   background: var(--surface-2, #f8f9fa);
 }
 
-/* ── Greeting ────────────────────────────────────────────────────────── */
-.md-hello {
+/* ── Pull-to-refresh ─────────────────────────────────────────────────── */
+.md-pull {
+  overflow: hidden;
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-.md-hello__txt {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.md-hello__hi {
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--ink, #101e34);
-}
-.md-hello__date {
-  margin-top: 3px;
-  font-size: 12.5px;
-  color: var(--ink-4, #64748b);
-}
-.md-refresh {
-  flex: 0 0 auto;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin-top: -4px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
+  transition: height 0.2s ease;
+  margin-bottom: 8px;
+}
+.md-pull__inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ink-4, #64748b);
-  cursor: pointer;
+  padding: 6px 12px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: var(--r-full, 9999px);
+  box-shadow: 0 1px 3px rgba(16, 30, 52, 0.05);
 }
-.md-refresh:active {
-  background: var(--surface-3, #f4f6f8);
+.spin-icon {
+  animation: spin 0.9s linear infinite;
 }
-.md-refresh.is-loading :deep(.v-icon) {
-  animation: md-spin 0.9s linear infinite;
-}
-@keyframes md-spin {
+@keyframes spin {
   to { transform: rotate(360deg); }
+}
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
 }
 
 /* ── Sections ────────────────────────────────────────────────────────── */

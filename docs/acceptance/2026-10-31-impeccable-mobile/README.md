@@ -48,6 +48,13 @@
      - Loại bỏ toàn bộ mã màu tím cục bộ, đồng bộ 100% token nhận diện xanh Vĩnh Phát.
      - Responsive an toàn ở kích thước 360px (zero horizontal overflow).
 
+6. **Header Mobile Gộp 1 Tầng Tinh Gọn (Phương Án 1) & Kéo Để Làm Mới (Pull-To-Refresh)**:
+   - **Tối ưu hóa không gian đỉnh màn hình**: Loại bỏ hoàn toàn khối chào `.md-hello` 2 tầng chiếm diện tích (tiết kiệm 66px chiều cao). Khối "Việc hôm nay" được nâng lên hiển thị ngay tại `top: 68px` (thay vì `134px`), đưa toàn bộ 3 công việc ưu tiên và 4 chỉ số KPI lọt trọn vẹn vào màn hình đầu tiên (above the fold) trên điện thoại mà không cần cuộn.
+   - **Thanh App Bar 1 tầng tích hợp (`.m-bar`)**:
+     - *Bên trái*: Logo thương hiệu Vĩnh Phát cùng lời chào cá nhân hóa trực tiếp (`Chào Lực` đậm + Thứ, ngày/tháng xám nhạt). Loại bỏ chữ "Tổng quan" trùng lặp vì đã hiển thị rõ ràng trên thanh Bottom Nav.
+     - *Bên phải*: Chuông thông báo (`NotificationBell`) và nút bấm Avatar người dùng (32px), loại bỏ nút 3 chấm (`⋮`) dư thừa. Bấm vào Avatar mở thẳng Bottom Sheet tài khoản.
+   - **Cử chỉ Kéo để làm mới (Pull-to-refresh)**: Tích hợp hiệu ứng kéo vuốt native mượt mà từ trên xuống để làm mới dữ liệu trang chủ, kèm spinner chỉ thị phản hồi xúc giác công thái học.
+
 ---
 
 ## 2. Danh Mục Tệp Thay Đổi
@@ -77,6 +84,8 @@
 | `frontend/src/views/settings/AiAssistantPage.vue` | Cải tiến | Robot vector icon & progress indicator thay emoji |
 | `frontend/src/views/settings/AuditLogView.vue` | Cải tiến | Clipboard icon vector & text filter sạch |
 | `frontend/src/components/settings/CrmTagManagement.vue` | Cải tiến | MDI lock icon thay emoji 🔒 |
+| `frontend/src/layouts/MobileLayout.vue` | Cải tiến | Header gộp 1 tầng Dashboard (Logo + Chào tên/ngày + Chuông + Avatar), bỏ 3 chấm thừa |
+| `frontend/src/views/mobile/MobileDashboard.vue` | Cải tiến | Bỏ header phụ .md-hello (tiết kiệm 66px), tích hợp Pull-to-refresh native mượt mà |
 | `frontend/package.json` | Cập nhật | Nâng phiên bản `3.4.0` → `3.4.1` |
 
 ---
@@ -98,6 +107,9 @@
 | Chiều cao Bottom Navigation | 52.0px | 52.0px | 52px | **PASS** |
 | Thanh chỉ thị Active Tab | Rộng 22px | Rộng 22px | Có thanh indicator | **PASS** |
 | Cỡ chữ nhãn Tab | 11.0px | 11.0px | ≥ 11px | **PASS** |
+| Vị trí đỉnh mục Việc hôm nay (Header P1) | top: 68px (tiết kiệm 66px) | top: 68px (tiết kiệm 66px) | Tiết kiệm ≥ 50px | **PASS** |
+| Avatar Header mở Sheet tài khoản | Kích thước 32px | Kích thước 32px | Chuẩn tương tác 1 chạm | **PASS** |
+| Cử chỉ Pull-to-refresh Dashboard | Hoạt động mượt mà | Hoạt động mượt mà | Kéo vuốt native cảm ứng | **PASS** |
 | Unit Test Suite | 26/26 tests passed | 26/26 tests passed | 100% pass | **PASS** |
 | TypeScript Check (`vue-tsc`) | 0 errors | 0 errors | 0 errors | **PASS** |
 | Vite Production Build | Thành công trong 7.92s | — | 0 warnings/errors | **PASS** |
@@ -134,12 +146,21 @@
 - **Đổi mật khẩu dạng Bottom Sheet trên Mobile (360×640 & 390×844)**: `assets/16-change-password-sheet-360x640.png`, `assets/16-change-password-sheet-390x844.png`
 - **Hồ sơ Khách hàng Tổng hợp Mobile (360×640 & 390×844)**: `assets/17-contact-profile-mobile-360x640.png`, `assets/17-contact-profile-mobile-390x844.png`
 
+### 4.7 Header Gộp 1 Tầng Tinh Gọn (Phương Án 1) & Pull-To-Refresh
+- **Dashboard Header 1 tầng tinh gọn (360×640 & 390×844)**: `assets/18-header-p1-dashboard-360x640.png`, `assets/18-header-p1-dashboard-390x844.png`
+- **Chạm Avatar mở Bottom Sheet Tài khoản (360×640 & 390×844)**: `assets/19-header-p1-account-sheet-360x640.png`, `assets/19-header-p1-account-sheet-390x844.png`
+
 ---
 
 ## 5. Hướng Dẫn Bàn Giao Cho Người Dùng
 
 1. **Kiểm tra trên trình duyệt di động hoặc Chế độ Ghim Màn Hình Chính (PWA)**:
    - Truy cập vào ứng dụng trên điện thoại (Safari trên iOS hoặc Chrome trên Android).
+   - **Header Dashboard mới (Phương Án 1)**:
+     - Thanh App Bar trên cùng tinh gọn chỉ 56px, hiển thị logo Vĩnh Phát bên cạnh lời chào cá nhân hóa (ví dụ: *Chào Lực* và *Thứ Bảy, 31/10*).
+     - Không còn khối chào 2 tầng cồng kềnh, mục **Việc hôm nay** và toàn bộ 4 thẻ **Hiệu suất của tôi** hiện ngay trên màn hình đầu tiên không cần cuộn.
+     - Phía trên bên phải: chuông thông báo và ảnh đại diện Avatar của bạn. Chạm trực tiếp vào Avatar để mở menu tài khoản nhanh chóng mà không cần qua nút 3 chấm cũ.
+     - **Làm mới dữ liệu**: Chỉ cần chạm ngón tay kéo từ đỉnh màn hình xuống (Pull-to-refresh) để cập nhật số liệu mới nhất.
    - Vào tab **Thêm** -> chọn **Hướng dẫn ghim ra Màn hình chính**: làm theo hướng dẫn 3 bước để ghim icon app ra màn hình chính, mở app toàn màn hình không bị vướng thanh URL của trình duyệt.
    - Quan sát thanh Bottom Nav ở đáy:
      - Tab đang chọn có thanh gạch xanh nhỏ xinh xắn trên đầu icon, nhãn chữ sắc nét 11px.
