@@ -62,7 +62,7 @@
           :class="{ active: filters.tags.includes(tag), 'is-zalo': isZaloManaged(tag) }"
           :style="{ '--tag-color': tagColor(tag) || '#6B7280' }"
           @click="toggleTag(tag)"
-        >{{ cleanTagName(tag) }}</span>
+        >{{ normalizeTagName(tag) }}</span>
 
         <button
           v-if="filters.tags.length"
@@ -325,6 +325,7 @@ import { loadTagTaxonomy, findTagBySlug, useTagTaxonomy } from '@/composables/us
 import { getAutoTagDef } from '@/constants/auto-tags';
 import PrivateBlur from '@/components/privacy/PrivateBlur.vue';
 import { usePrivacyVisibility } from '@/composables/use-privacy-visibility';
+import { deduplicateTags, normalizeTagName } from '@/utils/tag-normalizer';
 
 const privacyVisibility = usePrivacyVisibility();
 
@@ -821,15 +822,15 @@ async function fetchAvailableTags() {
       .map((z: { name?: string }) => (z?.name ?? '').toString());
     // Whitelist: bỏ tag system mặc định (Tag N), prefix auto:, độ dài < 2, hoặc rỗng.
     const SYSTEM_TAG_RE = /^(Tag\s*\d+|tag\d+)$/i;
-    const set = new Set<string>();
+    const rawList: string[] = [];
     for (const raw of [...zalo, ...crm]) {
       const trimmed = (raw || '').trim();
       if (trimmed.length < 2) continue;
       if (SYSTEM_TAG_RE.test(trimmed)) continue;
       if (trimmed.startsWith('auto:')) continue;
-      set.add(trimmed);
+      rawList.push(trimmed);
     }
-    availableTags.value = Array.from(set).sort((a, b) => a.localeCompare(b, 'vi'));
+    availableTags.value = deduplicateTags(rawList);
   } catch {
     /* non-critical */
   }

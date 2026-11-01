@@ -36,6 +36,7 @@ import { buildSendFileName } from '../media/media-routes.js';
 import { bumpUsage } from '../media/media-service.js';
 import { getOwnerScope } from '../rbac/owner-scope.js';
 import { blockVisibilityWhere } from '../../shared/ee-registry/automation.js';
+import { deduplicateTags } from '../../shared/tag-normalizer.js';
 
 type QueryParams = Record<string, string>;
 
@@ -383,16 +384,16 @@ export async function chatRoutes(app: FastifyInstance) {
       where: friendWhere,
       select: { crmTagsPerNick: true },
     });
-    const crmTagSet = new Map<string, string>(); // cleanName → cleanName (dedup)
+    const rawCrmList: string[] = [];
     for (const f of friends) {
       const arr = Array.isArray(f.crmTagsPerNick) ? (f.crmTagsPerNick as string[]) : [];
       for (const raw of arr) {
         if (typeof raw !== 'string' || !raw.trim()) continue;
         const clean = raw.startsWith('🔵 ') ? raw.slice(3) : raw; // strip mirror prefix
-        crmTagSet.set(clean, clean);
+        rawCrmList.push(clean);
       }
     }
-    const crmTags = [...crmTagSet.keys()].sort((a, b) => a.localeCompare(b, 'vi'));
+    const crmTags = deduplicateTags(rawCrmList);
 
     // 4) zaloTags — ZaloLabel của các nick trong scope, distinct theo text (giữ màu đầu tiên).
     const labelWhere: any = { orgId: user.orgId };
