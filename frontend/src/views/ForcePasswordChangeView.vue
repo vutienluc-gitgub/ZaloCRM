@@ -197,10 +197,10 @@ async function handleSubmit() {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* teal-navy HS shell — đồng bộ top-nav */
+  /* Vĩnh Phát navy shell — đồng bộ /login và top-nav */
   background:
-    radial-gradient(1100px 520px at 50% -10%, rgba(23, 134, 190, 0.18), transparent 60%),
-    linear-gradient(180deg, #0e445a 0%, #06222f 100%);
+    radial-gradient(1100px 520px at 50% -10%, rgba(238, 0, 51, 0.14), transparent 60%),
+    linear-gradient(180deg, #163870 0%, #101e34 100%);
   padding: 16px;
   /* tránh tràn ngang trên màn hẹp + cho cuộn dọc nếu card cao hơn viewport ngắn */
   overflow-x: hidden;
@@ -233,11 +233,13 @@ async function handleSubmit() {
 .fpc-bbox {
   width: 38px; height: 38px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #1786be 0%, #0b5880 100%);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 1px 2px rgba(0, 0, 0, 0.2);
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  box-shadow: 0 2px 6px rgba(16, 30, 52, 0.08);
+  padding: 5px;
   flex: none;
 }
-.fpc-bbox img { width: 26px; height: auto; display: block; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3)); }
+.fpc-bbox img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .fpc-bwm { display: flex; flex-direction: column; line-height: 1.08; }
 .fpc-b1 { font-size: 15px; font-weight: 800; color: var(--ink, #141a24); letter-spacing: .01em; }
 .fpc-b2 { font-size: 10px; font-weight: 700; letter-spacing: .26em; color: var(--brand, #1786be); text-transform: uppercase; }

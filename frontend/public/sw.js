@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Vĩnh Phát CRM — PWA Service Worker v1.0
-const CACHE_NAME = 'vpcrm-cache-v1';
+const CACHE_NAME = 'vpcrm-cache-v2';
 const STATIC_ASSETS = [
   '/',
+  '/favicon.ico',
   '/manifest.json',
   '/brand/favicon.svg',
+  '/brand/vp.ico',
   '/brand/vp-monogram.png',
-  '/brand/vp-logo.png'
+  '/brand/vp-logo.png',
+  '/brand/vp-logo-maskable.png'
 ];
 
 self.addEventListener('install', (event) => {

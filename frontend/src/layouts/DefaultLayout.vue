@@ -408,11 +408,12 @@ function logout() {
 .hs-bbox {
   width: 34px; height: 34px; border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #ee0033 0%, #c00028 100%);
-  box-shadow: inset 0 1px 1px rgba(255,255,255,.18), 0 1px 2px rgba(0,0,0,.25);
+  background: var(--surface, #ffffff);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 1px 3px rgba(0,0,0,.22);
+  padding: 4px;
   flex: none;
 }
-.hs-bbox img { width: 24px; height: auto; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+.hs-bbox img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .hs-bwm { display: flex; flex-direction: column; line-height: 1.08; white-space: nowrap; }
 .hs-b1 { font-size: 13.5px; font-weight: 800; color: #fff; letter-spacing: .01em; }
 .hs-b2 { font-size: 9.5px; font-weight: 700; letter-spacing: .26em; color: var(--nav-accent, #5bb8e5); text-transform: uppercase; }
